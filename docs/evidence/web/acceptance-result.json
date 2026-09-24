@@ -1,0 +1,32 @@
+{
+  "at": "2026-09-23T04:20:44.723Z",
+  "base": "http://127.0.0.1:5317",
+  "api": "http://127.0.0.1:8011/api/v1",
+  "checks": [
+    "administrator login and role navigation",
+    "admin desktop no horizontal page overflow",
+    "dictionary create and authenticated private image preview",
+    "dictionary edit, review and publish; published media becomes public",
+    "merchant creation and publication through UI",
+    "cross-merchant coupon redemption rejected by real API",
+    "merchant route and server operations-access guards",
+    "merchant product creation requires review; ownership cannot be crossed",
+    "merchant cultural tag application through UI",
+    "coupon redemption and repeat idempotency through UI",
+    "merchant mobile dashboard no horizontal page overflow",
+    "merchant mobile redemption no horizontal page overflow",
+    "operations approves merchant culture tag through UI",
+    "operations task QR preview and download; tourist QR token checkin",
+    "route and manual node UI creation, tourist joins, admin checkin grants one stamp and coupon reward",
+    "poster generation and share-action events appear in operations metrics; WeChat code unavailable remains explicit",
+    "all remaining operations routes render without runtime errors",
+    "recommendation weights save through UI",
+    "filtered CSV download and server export audit",
+    "soft deletion keeps auditable record and disables publication",
+    "operations mobile table no horizontal page overflow",
+    "operations mobile editor no horizontal page overflow",
+    "normal development database remains untouched"
+  ],
+  "browserErrors": [],
+  "synthetic_data_only": true
+}

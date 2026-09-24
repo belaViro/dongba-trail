@@ -1,0 +1,35 @@
+{
+  "description": "东巴寻迹 · 丽江微信小程序",
+  "packOptions": {
+    "ignore": [
+      {
+        "type": "folder",
+        "value": "tests"
+      },
+      {
+        "type": "folder",
+        "value": "tools"
+      },
+      {
+        "type": "file",
+        "value": "README.md"
+      },
+      {
+        "type": "file",
+        "value": "ASSETS.md"
+      }
+    ]
+  },
+  "setting": {
+    "es6": true,
+    "postcss": true,
+    "minified": true,
+    "urlCheck": true,
+    "enhance": true
+  },
+  "compileType": "miniprogram",
+  "libVersion": "3.7.1",
+  "appid": "touristappid",
+  "projectname": "dongba-lijiang",
+  "miniprogramRoot": "./"
+}

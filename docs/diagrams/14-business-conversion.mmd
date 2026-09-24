@@ -1,0 +1,18 @@
+flowchart LR
+  A["识别结果<br/>recognitions"] --> B["用户确认<br/>confirmed_character_id"]
+  B --> C["文化详情<br/>character_detail"]
+  C --> D["相关商户展示<br/>merchant_impression"]
+  D --> E["商户详情<br/>merchant_detail"]
+  E --> F["发起真实导航<br/>navigate"]
+  E --> G["领取优惠券<br/>服务端 coupon_claim"]
+  G --> H["到店出示券码"]
+  H --> I["所属商户核销<br/>服务端 verify"]
+  F --> H
+  I --> J["任务验证、印记和奖励"]
+  J --> K["海报与好友分享<br/>share"]
+  C -.-> L["实体ID与本人recognition_id<br/>归因与事件去重"]
+  E -.-> L
+  G -.-> L
+  I -.-> L
+  L --> M["运营 / 商户真实报表<br/>无虚构转化率"]
+

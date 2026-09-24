@@ -1,0 +1,17 @@
+flowchart LR
+  A["识别请求<br/>provider / model / request_id"] --> B["最多5个候选或UNKNOWN"]
+  B --> C["用户确认 / 都不是 / 补充说明"]
+  C --> D["feedback: pending"]
+  D --> E["运营人工复核"]
+  E -->|通过| F["approved + review_note"]
+  E -->|驳回| G["rejected + review_note"]
+  F --> H["审核后维护字典与媒体"]
+  H --> I["后续识别使用最新已发布字典"]
+  G --> J["保留复核依据及审计"]
+  F --> J
+  D --> J
+  K["用户删除或保留期届满"] --> L["清理识别及纠错记录"]
+  A -.-> L
+  D -.-> L
+  Note["用户确认不是训练真值<br/>不自动训练或自动发布文化解释"] -.-> E
+

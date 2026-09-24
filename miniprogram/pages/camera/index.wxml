@@ -1,0 +1,19 @@
+<view class="camera-page">
+  <camera wx:if="{{allowed && !image && !cameraError}}" class="camera" device-position="back" flash="{{flash}}" binderror="cameraError"></camera>
+  <image wx:if="{{image}}" class="preview" src="{{image}}" mode="aspectFit" />
+  <view wx:if="{{!image}}" class="frame"><view class="corner c1"></view><view class="corner c2"></view><view class="corner c3"></view><view class="corner c4"></view></view>
+  <view class="camera-top"><text>{{image ? '确认上传图片' : '拍照识东巴'}}</text><text class="camera-hint">{{image ? '图片将用于本次文字识别' : '请将单个东巴文字置于框内'}}</text></view>
+  <view class="camera-bottom">
+    <view wx:if="{{image}}" class="sample-options">
+      <view class="sample-consent"><text>保留图片用于人工复核</text><switch checked="{{sampleConsent}}" disabled="{{busy}}" color="#176b58" bindchange="sampleConsent" aria-label="保留图片用于人工复核" /></view>
+      <block wx:if="{{sampleConsent}}">
+        <picker range="{{sampleScenes}}" range-key="label" value="{{sampleSceneIndex}}" disabled="{{busy}}" bindchange="sampleScene"><view class="sample-scene"><text>拍摄场景</text><text>{{sampleScenes[sampleSceneIndex].label}} ▾</text></view></picker>
+        <view class="sample-purpose">用于人工复核识别与纠错；可在“我的图片样本”删除，按隐私指引保留期清理。识别未完成时也可能保留图片。</view>
+      </block>
+    </view>
+    <view wx:if="{{error}}" class="camera-error">{{error}}<view wx:if="{{requestId}}" class="trace">请求编号 {{requestId}}</view><button wx:if="{{cameraError}}" class="link" bindtap="settings">打开设置</button></view>
+    <view wx:if="{{!allowed}}" class="stack"><button class="primary" bindtap="authorize">开启相机</button><button class="privacy" bindtap="policy">隐私保护指引</button></view>
+    <view wx:elif="{{image}}" class="actions"><button disabled="{{busy}}" bindtap="retake">重新拍摄</button><button class="primary" loading="{{busy}}" disabled="{{busy}}" bindtap="recognize">{{busy ? '正在识别' : '开始识别'}}</button></view>
+    <view wx:else class="capture-controls"><button class="round-tool" bindtap="album">相册</button><button class="shutter" aria-label="拍照" bindtap="capture" disabled="{{cameraError}}"><view></view></button><button class="round-tool" bindtap="flash">{{flash === 'off' ? '补光关' : '补光开'}}</button></view>
+  </view>
+</view>

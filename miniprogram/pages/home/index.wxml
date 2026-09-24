@@ -1,0 +1,16 @@
+<view class="page">
+  <view class="location">云南 · 丽江</view><view class="brand">东巴寻迹</view><view class="slogan">在一笔一画间，遇见丽江</view>
+  <button class="recognize" bindtap="camera"><view class="camera-mark"><view></view></view><text class="camera-title">拍照识东巴</text><text class="camera-sub">相机 / 相册</text></button>
+  <view class="quick-nav"><view bindtap="map"><text class="nav-symbol">◎</text><text>东巴地图</text></view><view bindtap="quests"><text class="nav-symbol">⌁</text><text>寻迹任务</text></view><view bindtap="catalog"><text class="nav-symbol">◇</text><text>丽江好物</text></view></view>
+  <view-state loading="{{loading}}" error="{{error}}" bind:retry="load" />
+  <block wx:if="{{!loading && !error}}">
+    <view class="section"><view class="section-head"><text class="heading">今日东巴字</text><text class="caption">一字一故事</text></view>
+      <view wx:if="{{today}}" class="today row" bindtap="character"><view class="daily-glyph"><glyph-image src="{{today.image_url}}" name="{{today.cn_name}}" /></view><view class="grow"><view class="daily-name">{{today.cn_name}}</view><view class="muted">{{today.culture_summary}}</view></view><text class="chevron">›</text></view>
+      <view wx:else class="empty-inline">东巴字内容正在整理中</view>
+    </view>
+    <view class="section"><view class="section-head"><text class="heading">丽江发现</text><button class="link small" bindtap="more">全部 ›</button></view>
+      <view wx:for="{{merchants}}" wx:key="id" class="list-row" data-id="{{item.id}}" bindtap="merchant"><image wx:if="{{item.image_url}}" class="thumb" src="{{item.image_url}}" mode="aspectFill" /><view class="grow"><view class="item-title">{{item.name}}</view><view class="muted">{{item.address}}</view><view><text wx:for="{{item.tags}}" wx:for-item="tag" wx:key="*this" class="tag">{{tag}}</text></view></view><text class="caption">{{item.distance}}</text></view>
+      <view wx:if="{{!merchants.length}}" class="empty-inline">已审核的文化商户将在这里展示</view>
+    </view>
+  </block>
+</view>

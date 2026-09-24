@@ -1,0 +1,12 @@
+flowchart LR
+  A["授权原始资料<br/>人工整理编号、释义和字形"] --> B["运营字典草稿<br/>character_id / source_ref"]
+  B --> C["主图与同字异形<br/>image_url / variants"]
+  C --> D{"人工核对内容与来源"}
+  D -->|需修改| B
+  D -->|通过| E["reviewed"]
+  E --> F["published<br/>小程序与识别字典可见"]
+  F --> G["识别与文化展示"]
+  G --> H["用户确认及纠错"]
+  H --> I["人工复核与修订"]
+  I --> B
+  J["D-001 / D-013<br/>首期不自训练、不部署GPU<br/>样本运营与数据版本仍待补齐"] -.-> I

@@ -1,0 +1,51 @@
+import { createRequire } from 'node:module'
+import { readFile, readdir } from 'node:fs/promises'
+import { resolve } from 'node:path'
+const require = createRequire(resolve('web/package.json'))
+const { chromium, expect } = require('@playwright/test')
+const browser = await chromium.launch({ headless: true, executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE })
+const directory = resolve('runtime/e2e')
+const credentials = JSON.parse(await readFile(resolve(directory, 'credentials.json'), 'utf8'))
+const runs = (await readdir(directory)).filter(name => /^run-\d+-accounts\.json$/.test(name)).sort()
+const accounts = JSON.parse(await readFile(resolve(directory, runs.at(-1)), 'utf8'))
+const page = await browser.newPage({ viewport: { width: 1440, height: 960 }, locale: 'zh-CN' })
+const base = 'http://127.0.0.1:5317'
+async function capture(name) { await expect(page.locator('.el-loading-mask:visible')).toHaveCount(0); await expect(page.locator('.el-message:visible')).toHaveCount(0); await page.screenshot({ path: resolve(directory, `${name}.png`), fullPage: true, animations: 'disabled' }) }
+async function login(user) {
+  await page.goto(`${base}/login`, { waitUntil: 'networkidle' })
+  if (!(await page.title()).includes('东巴寻迹')) throw new Error('Unexpected application')
+  await page.getByLabel('登录账号', { exact: true }).fill(user.username)
+  await page.getByLabel('密码', { exact: true }).fill(user.password)
+  await page.getByRole('button', { name: '登录', exact: true }).click()
+  await page.waitForURL(/\/(admin|merchant)\/dashboard$/)
+}
+try {
+  await page.goto('http://127.0.0.1:5318/login', { waitUntil: 'networkidle' })
+  await expect(page.getByRole('heading', { name: '创建管理员' })).toBeVisible()
+  await capture('dongba-user-entry-desktop')
+  await page.setViewportSize({ width: 390, height: 844 })
+  await capture('dongba-user-entry-mobile')
+  await page.setViewportSize({ width: 1440, height: 960 })
+  await login(credentials)
+  await capture('dongba-admin-desktop')
+  await page.setViewportSize({ width: 390, height: 844 })
+  await capture('dongba-admin-mobile')
+  await page.goto(`${base}/admin/characters`, { waitUntil: 'networkidle' })
+  await capture('dongba-dictionary-mobile')
+  await page.getByRole('button', { name: '新增词条' }).click()
+  await capture('dongba-editor-mobile')
+  await page.getByRole('button', { name: '取消', exact: true }).click()
+  await page.setViewportSize({ width: 1440, height: 960 })
+  await page.getByRole('button', { name: '退出登录' }).click()
+  await page.waitForURL('**/login')
+  await login(accounts.merchantAccount)
+  await capture('dongba-merchant-desktop')
+  await page.setViewportSize({ width: 390, height: 844 })
+  await expect(page.getByRole('navigation', { name: '主导航' })).toBeHidden()
+  await capture('dongba-merchant-mobile')
+  await page.getByRole('button', { name: '打开导航' }).click()
+  await capture('dongba-mobile-navigation-open')
+  await page.getByRole('button', { name: '关闭导航' }).click()
+  await expect(page.getByRole('navigation', { name: '主导航' })).toBeHidden()
+  console.log('PASS 9 clean desktop/mobile screenshots, correct app identities, menus closed and open verified')
+} finally { await browser.close() }

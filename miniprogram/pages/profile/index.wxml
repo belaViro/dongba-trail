@@ -1,0 +1,9 @@
+<view class="page">
+  <view class="profile-header"><view class="avatar">{{user ? '迹' : '客'}}</view><view class="grow"><view class="heading">{{user ? user.display_name : '旅途，等你开启'}}</view><view class="muted">{{user ? '东巴寻迹 · 丽江' : '登录后珍藏你的东巴印记'}}</view></view><button wx:if="{{!user}}" class="primary small" bindtap="login">登录</button></view>
+  <view wx:if="{{user}}" class="metrics"><view data-page="favorites" bindtap="open"><text>{{counts.favorites}}</text><text>收藏</text></view><view data-page="stamps" bindtap="open"><text>{{counts.stamps}}</text><text>印记</text></view><view data-page="coupons" bindtap="open"><text>{{counts.coupons}}</text><text>可用券</text></view></view>
+  <view wx:if="{{user}}" class="identity"><view class="grow"><view>我的寻迹编号</view><text class="identity-value muted" selectable>{{user.id}}</text></view><button class="secondary small" bindtap="copyUserId">复制</button></view>
+  <view-state loading="{{loading}}" error="{{error}}" bind:retry="load" />
+  <view class="list-row" data-page="samples" bindtap="open"><text class="grow">我的图片样本</text><text class="chevron">›</text></view>
+  <view class="menu"><view class="list-row" data-page="history" bindtap="open"><text class="grow">识别历史</text><text class="chevron">›</text></view><view class="list-row" data-page="favorites" bindtap="open"><text class="grow">我的收藏</text><text class="chevron">›</text></view><view class="list-row" data-page="coupons" bindtap="open"><text class="grow">我的优惠券</text><text class="chevron">›</text></view><view class="list-row" data-page="stamps" bindtap="open"><text class="grow">我的印记</text><text class="chevron">›</text></view><view class="list-row" data-page="poster" bindtap="open"><text class="grow">制作旅行海报</text><text class="chevron">›</text></view><view class="list-row" bindtap="privacy"><text class="grow">隐私保护指引</text><text class="chevron">›</text></view></view>
+  <button wx:if="{{user}}" class="link section" bindtap="logout">退出登录</button>
+</view>

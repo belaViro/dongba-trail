@@ -1,0 +1,14 @@
+<view class="page"><view class="page-title">我的优惠券</view><view class="tabs section"><button class="{{filter === 'available' ? 'active' : ''}}" data-type="available" bindtap="filter">待使用</button><button class="{{filter === 'used' ? 'active' : ''}}" data-type="used" bindtap="filter">已使用</button><button class="{{filter === 'expired' ? 'active' : ''}}" data-type="expired" bindtap="filter">已过期</button></view><view-state loading="{{loading}}" error="{{error}}" empty="{{!items.length}}" empty-text="暂无该状态的优惠券" bind:retry="load" /><view wx:if="{{!loading}}" class="coupon" wx:for="{{items}}" wx:key="id"><view class="row between"><view class="heading grow">{{item.title}}</view><text class="tag">{{item.state_text}}</text></view><view class="body muted">{{item.rule}}</view><view class="caption section">有效期至 {{item.end_date}}</view><view class="actions"><button class="secondary small" data-id="{{item.merchant_id}}" bindtap="merchant">查看商户</button><button wx:if="{{item.status === 'available'}}" class="primary small" data-id="{{item.id}}" bindtap="code">出示券码</button></view></view></view>
+<block wx:if="{{activeCoupon}}">
+  <view class="code-mask" bindtap="closeCode"></view>
+  <view class="code-sheet">
+    <view class="section-head"><text class="heading grow">{{activeCoupon.title}}</text><button class="icon-btn close-code" aria-label="关闭券码" bindtap="closeCode">×</button></view>
+    <view class="code-image">
+      <image wx:if="{{qrImage}}" src="{{qrImage}}" mode="aspectFit" />
+      <text wx:elif="{{qrLoading}}" class="muted">正在加载券码</text>
+      <view wx:else class="stack"><text class="muted">{{qrError}}</text><button class="small secondary" bindtap="loadCode">重新加载</button></view>
+    </view>
+    <view class="code-value">{{activeCoupon.code}}</view><view class="caption">有效期至 {{activeCoupon.end_date}}</view>
+    <button class="secondary section" bindtap="copyCode">复制券码</button>
+  </view>
+</block>

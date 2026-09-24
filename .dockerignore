@@ -1,0 +1,12 @@
+.git
+.venv
+.env
+**/.env
+**/.env.*
+runtime
+**/node_modules
+**/dist
+**/__pycache__
+**/.pytest_cache
+**/.ruff_cache
+*.docx

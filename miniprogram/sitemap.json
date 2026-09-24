@@ -1,0 +1,17 @@
+{
+  "desc": "仅公开文化内容允许索引",
+  "rules": [
+    {
+      "action": "allow",
+      "page": "pages/character/index"
+    },
+    {
+      "action": "allow",
+      "page": "pages/home/index"
+    },
+    {
+      "action": "disallow",
+      "page": "*"
+    }
+  ]
+}

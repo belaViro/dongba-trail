@@ -1,0 +1,9 @@
+<view class="page login">
+  <view class="eyebrow">丽江 · 文化寻迹</view><view class="brand">东巴寻迹</view><view class="muted">收藏旅途里的每一次发现</view>
+  <view-state loading="{{loading}}" error="{{error}}" request-id="{{requestId}}" bind:retry="load" />
+  <view wx:if="{{!loading && policy}}">
+    <view wx:if="{{!policy.published}}" class="notice">隐私保护指引尚未发布，登录暂不可用。</view>
+    <checkbox-group bindchange="toggle"><label class="consent row"><checkbox value="yes" checked="{{accepted}}" color="#176b58" /><text class="grow">我已阅读并同意</text><text class="policy" catchtap="policy">隐私保护指引</text></label></checkbox-group>
+    <button class="primary" disabled="{{busy || !accepted || !policy.published}}" loading="{{busy}}" bindtap="login">微信登录</button>
+  </view>
+</view>

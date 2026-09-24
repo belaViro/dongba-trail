@@ -1,0 +1,31 @@
+sequenceDiagram
+  actor Visitor as 游客
+  participant Mini as 微信小程序
+  participant API as FastAPI
+  participant Provider as 可替换提供方
+  participant DB as MySQL
+  Visitor->>Mini: 选择照片并开始识别
+  Mini->>API: POST /api/v1/recognize (Bearer / image / scene)
+  API->>API: request_id、鉴权、图片与质量检查
+  API->>DB: 获取已发布词条与审核信息
+  alt 提供方未配置
+    API->>DB: 保存失败元数据
+    API-->>Mini: 503 PROVIDER_NOT_CONFIGURED
+  else 提供方已配置
+    API->>Provider: 图片与候选词典约束
+    Provider-->>API: 候选ID、参考分数、model_version
+    API->>API: 验证返回格式，过滤未知或未发布ID
+    API->>DB: 保存请求、候选与提供方版本
+    API-->>Mini: request_id / NEED_USER_CONFIRM 或 UNKNOWN
+    Visitor->>Mini: 确认候选或提交纠错
+    Mini->>API: POST /recognize/{request_id}/confirm
+    API->>DB: 验证本人请求与候选集合，保存反馈
+    API-->>Mini: 确认结果
+    Mini->>API: GET /characters/{id}
+    API->>DB: 已发布文化内容
+    API-->>Mini: 图片、异形、释义、音频与来源
+    Mini->>API: GET /characters/{id}/nearby
+    API-->>Mini: 相关商户及可用优惠
+  end
+  Note over Mini,DB: 原始识别图片不持久化；用户反馈先人工审核
+

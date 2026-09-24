@@ -1,0 +1,11 @@
+<view class="page">
+  <view class="page-title">我的图片样本</view>
+  <view-state loading="{{loading}}" error="{{error}}" empty="{{!items.length}}" empty-text="暂无留存图片样本" bind:retry="load" />
+  <view wx:if="{{!loading}}" wx:for="{{items}}" wx:key="id" class="sample-row">
+    <view class="row between"><text class="item-title">{{item.scene_text}}</text><text class="tag">{{item.review_text}}</text></view>
+    <view class="caption">{{item.date}}</view>
+    <view wx:if="{{item.character_id}}" class="caption text-wrap">标注词条：{{item.character_id}}</view>
+    <view wx:if="{{item.review_note}}" class="body sample-note">{{item.review_note}}</view>
+    <view class="sample-actions"><button class="secondary small" data-id="{{item.id}}" loading="{{previewing === item.id}}" disabled="{{!!previewing || deleting === item.id}}" bindtap="preview">查看图片</button><button class="link small danger" data-id="{{item.id}}" loading="{{deleting === item.id}}" disabled="{{!!deleting}}" bindtap="remove">删除</button></view>
+  </view>
+</view>

@@ -1,0 +1,1 @@
+.coupon{display:flex;align-items:center;gap:24rpx;padding:28rpx 0;border-bottom:1rpx dashed #cbd9ce}.coupon .caption{margin-top:10rpx}

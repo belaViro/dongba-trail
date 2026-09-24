@@ -1,0 +1,33 @@
+flowchart TB
+  subgraph Clients["终端"]
+    Mini["微信原生小程序"]
+    Operations["Vue运营后台"]
+    Merchant["Vue商户后台"]
+  end
+  subgraph Entry["接入"]
+    TLS["HTTPS反向代理<br/>请求大小与流量限制"]
+    Auth["微信 / 账号登录<br/>会话、角色与商户归属"]
+  end
+  subgraph Backend["FastAPI模块化业务后端"]
+    Content["字典、内容、审核与媒体"]
+    Places["商户、POI和推荐"]
+    Coupon["领券与核销"]
+    Quest["路线、节点、印记和奖励"]
+    Metrics["事件、统计与审计"]
+    Recognition["识别编排<br/>request_id贯通"]
+    Share["PNG海报和微信分享码"]
+    Retention["保留期清理任务"]
+  end
+  Adapter["可替换 RecognitionProvider"]
+  External["用户后续配置的模型接口"]
+  Wechat["微信登录 / 分享码服务"]
+  DB[("MySQL 8.0+ / InnoDB / utf8mb4")]
+  Media[("审核媒体与海报存储卷")]
+  Clients --> TLS --> Auth
+  Auth --> Content & Places & Coupon & Quest & Metrics & Recognition & Share
+  Recognition --> Adapter -.-> External
+  Auth --> Wechat
+  Share --> Wechat
+  Content & Places & Coupon & Quest & Metrics & Recognition & Retention --> DB
+  Content & Share & Retention --> Media
+

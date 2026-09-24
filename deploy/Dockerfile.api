@@ -1,0 +1,16 @@
+FROM python:3.11-slim
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
+WORKDIR /app
+RUN apt-get update && apt-get install -y --no-install-recommends fonts-noto-cjk \
+    && rm -rf /var/lib/apt/lists/* \
+    && useradd --uid 10001 --create-home dongba
+COPY backend/requirements.txt backend/requirements.txt
+RUN pip install --no-cache-dir -r backend/requirements.txt
+COPY backend backend
+COPY data data
+COPY scripts scripts
+COPY deploy/start-api.sh /app/start-api.sh
+RUN mkdir -p /app/runtime/media && chown -R dongba:dongba /app
+USER dongba
+EXPOSE 8010
+CMD ["sh", "/app/start-api.sh"]

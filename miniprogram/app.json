@@ -1,0 +1,70 @@
+{
+  "pages": [
+    "pages/home/index",
+    "pages/quests/index",
+    "pages/map/index",
+    "pages/profile/index",
+    "pages/login/index",
+    "pages/privacy/index",
+    "pages/camera/index",
+    "pages/result/index",
+    "pages/character/index",
+    "pages/merchants/index",
+    "pages/merchant/index",
+    "pages/catalog/index",
+    "pages/coupons/index",
+    "pages/quest/index",
+    "pages/history/index",
+    "pages/samples/index",
+    "pages/favorites/index",
+    "pages/stamps/index",
+    "pages/poster/index"
+  ],
+  "window": {
+    "navigationBarTitleText": "东巴寻迹 · 丽江",
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f5f7f6",
+    "backgroundTextStyle": "dark",
+    "enablePullDownRefresh": true
+  },
+  "tabBar": {
+    "color": "#69756f",
+    "selectedColor": "#176b58",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/home/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/quests/index",
+        "text": "寻迹"
+      },
+      {
+        "pagePath": "pages/map/index",
+        "text": "地图"
+      },
+      {
+        "pagePath": "pages/profile/index",
+        "text": "我的"
+      }
+    ]
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于显示附近文化地点、地图导航及验证寻迹到店任务"
+    }
+  },
+  "requiredPrivateInfos": [
+    "getLocation"
+  ],
+  "__usePrivacyCheck__": true,
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "usingComponents": {
+    "view-state": "/components/view-state/index",
+    "glyph-image": "/components/glyph-image/index"
+  }
+}

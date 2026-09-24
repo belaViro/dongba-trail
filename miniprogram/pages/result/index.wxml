@@ -1,0 +1,15 @@
+<view class="page">
+  <image wx:if="{{image}}" class="result-image" src="{{image}}" mode="aspectFit" />
+  <view wx:if="{{submitted}}" class="section"><view class="heading">已提交人工复核</view><view class="muted section">感谢你的反馈，我们会核对这次识别结果。</view><button class="primary section" bindtap="retake">继续识别</button></view>
+  <block wx:elif="{{result}}">
+    <view class="section heading">{{candidates.length ? '请选择最接近的东巴字' : '暂未找到可靠结果'}}</view>
+    <view class="muted">{{candidates.length ? '识别结果需要你确认' : '试着靠近目标、保持清晰后重新拍摄'}}</view>
+    <view wx:for="{{candidates}}" wx:key="id" class="candidate {{selected === item.id ? 'selected' : ''}}" data-id="{{item.id}}" bindtap="choose"><view class="candidate-glyph"><glyph-image src="{{item.image_url}}" name="{{item.cn_name}}" /></view><view class="grow"><view class="item-title">{{item.cn_name}}</view><view class="muted">{{item.culture_summary}}</view></view><view class="score"><text>{{item.score_text}}</text><text wx:if="{{item.score_text}}" class="caption">参考分数</text><radio color="#176b58" checked="{{selected === item.id}}" /></view></view>
+    <view class="section"><textarea class="input textarea" maxlength="500" placeholder="补充说明（选填）" value="{{comment}}" bindinput="comment" /></view>
+    <view wx:if="{{error}}" class="notice error-note">{{error}}</view>
+    <button wx:if="{{candidates.length}}" class="primary section" disabled="{{!selected || busy}}" loading="{{busy}}" bindtap="submit">确认并查看文化故事</button>
+    <button class="secondary section" disabled="{{busy}}" data-unknown="true" bindtap="submit">都不是，提交人工复核</button>
+    <button class="link section" bindtap="retake">重新拍摄</button>
+  </block>
+  <view wx:else class="section"><view class="notice">{{error}}</view><button class="primary" bindtap="retake">重新识别</button></view>
+</view>

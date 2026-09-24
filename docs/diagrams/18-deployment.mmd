@@ -1,0 +1,22 @@
+flowchart LR
+  Visitors["微信用户"] --> HTTPS["公开HTTPS域名<br/>有效证书与微信合法域名"]
+  Staff["商户 / 运营浏览器"] --> HTTPS
+  subgraph Host["Docker Compose目标部署"]
+    Nginx["web容器<br/>Nginx / Vue静态文件"]
+    API["api容器<br/>FastAPI / Uvicorn / 迁移"]
+    MySQL[("db容器<br/>MySQL 8.4")]
+    VolumeDB[("mysql_data")]
+    VolumeMedia[("media")]
+    Nginx -->|内部API代理| API
+    API --> MySQL --> VolumeDB
+    API --> VolumeMedia
+  end
+  HTTPS --> Nginx
+  API -.-> Supplier["用户后续提供的模型接口"]
+  API --> Wechat["微信API"]
+  Operator["运维"] --> Backup["数据库与媒体备份<br/>独立恢复演练"]
+  VolumeDB & VolumeMedia -.-> Backup
+  Operator --> Logs["运行日志、健康检查<br/>识别就绪状态"]
+  API --> Logs
+  Note["当前为部署设计与配置<br/>公网证书、域名及真实服务上线另行验收"] -.-> HTTPS
+

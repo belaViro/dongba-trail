@@ -1,0 +1,20 @@
+flowchart LR
+  Character["已审核东巴词条<br/>entities: characters"] -->|category_l1 / tags| Theme["文化分类与主题"]
+  Character -->|character_ids| Product["商品"]
+  Character -->|审核后的character_ids| Merchant["商户"]
+  Character -->|character_ids| POI["文化POI"]
+  Product -->|merchant_id| Merchant
+  POI -->|merchant_id 可选| Merchant
+  Merchant -->|merchant_id| Coupon["优惠券"]
+  Merchant -->|merchant_id| Activity["文化活动"]
+  Character -->|character_id| Node["寻迹节点"]
+  Merchant -->|merchant_id| Node
+  POI -->|poi_id| Node
+  Node -->|quest_id| Quest["寻迹路线"]
+  Merchant --> Rank["推荐排序<br/>文化关联准入 + 配置权重"]
+  Theme -.-> Rank
+  Coupon --> Rank
+  User["本人收藏与确认历史"] --> Rank
+  Location["授权当前位置<br/>GCJ-02"] --> Rank
+  Note["关系以MySQL实体与JSON字段维护<br/>首期无独立图数据库"] -.-> Character
+

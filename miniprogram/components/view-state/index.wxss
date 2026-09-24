@@ -1,0 +1,2 @@
+.state{min-height:260rpx;padding:44rpx 24rpx;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18rpx;text-align:center;color:#7b8b82;font-size:26rpx}.title{font-size:30rpx;color:#50675a}.request{font-size:20rpx;word-break:break-all}.state button{background:#e5eee7;color:#176b58;font-size:26rpx;border-radius:10rpx;padding:10rpx 34rpx}.state button::after{border:0}.loader{width:34rpx;height:34rpx;border:4rpx solid #d6e4d9;border-top-color:#176b58;border-radius:50%;animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+

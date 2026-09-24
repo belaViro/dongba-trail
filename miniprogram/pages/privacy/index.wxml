@@ -1,0 +1,13 @@
+<view class="page">
+  <view class="page-title">隐私保护指引</view><view-state loading="{{loading}}" error="{{error}}" bind:retry="load" />
+  <block wx:if="{{policy}}">
+    <view class="muted">版本 {{policy.version}}</view><view wx:if="{{!policy.published}}" class="notice">当前指引尚未发布，相关授权服务暂不可用。</view>
+    <view class="section body">{{policy.content}}</view>
+    <view wx:if="{{policy.provider_name}}" class="list-row">图片处理服务：{{policy.provider_name === 'unconfigured' ? '尚未启用' : policy.provider_name}}</view>
+    <view class="section body">图片默认仅用于本次识别。单独开启留样后，图片可保留用于人工复核识别与纠错；识别未完成时也可能保留合法图片。可在“我的图片样本”删除，清空识别历史时会一并删除相关样本。</view>
+    <view wx:if="{{policy.retention_days !== null && policy.retention_days !== undefined}}" class="list-row">识别结果、纠错、图片样本、访问事件与海报保留：{{policy.retention_days}} 天</view>
+    <view wx:if="{{policy.contact}}" class="list-row text-wrap">联系运营方：{{policy.contact}}</view>
+    <button class="link section" bindtap="openWechat">查看微信隐私保护指引</button>
+    <button wx:if="{{authorize}}" id="agree-privacy" class="primary section" open-type="agreePrivacyAuthorization" bindagreeprivacyauthorization="agree" disabled="{{!policy.published}}">同意并继续</button>
+  </block>
+</view>
