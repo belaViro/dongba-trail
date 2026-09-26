@@ -1,5 +1,6 @@
 const api = require('../../utils/api')
 const helpers = require('../../utils/helpers')
+const recognition = require('../../utils/recognition')
 Page({
   data: { loading: true, error: '', characters: [], merchants: [], today: null },
   onLoad() { this.load() },
@@ -15,7 +16,7 @@ Page({
     } catch (error) { this.setData({ error: error.message }) }
     finally { this.setData({ loading: false }) }
   },
-  camera() { wx.navigateTo({ url: '/pages/camera/index' }) },
+  camera() { recognition.chooseCamera() },
   character() { if (this.data.today) wx.navigateTo({ url: '/pages/character/index?id=' + encodeURIComponent(this.data.today.id) }) },
   merchant(event) { wx.navigateTo({ url: '/pages/merchant/index?id=' + encodeURIComponent(event.currentTarget.dataset.id) }) },
   map() { wx.switchTab({ url: '/pages/map/index' }) },

@@ -1,0 +1,104 @@
+{
+  "dataset": "OPS_DEMO_IMAGES_20260925_V1",
+  "notice": "Unsplash stock images selected for fictional operational demo records. They illustrate each category and are not photographs of verified merchants, products, or locations.",
+  "license_name": "Unsplash License",
+  "license_url": "https://unsplash.com/license",
+  "images": [
+    {
+      "entity_id": "OPS_MERCHANT_PAPER",
+      "resource": "merchants",
+      "label": "东巴纸坊·古城文化体验店",
+      "source_url": "https://images.unsplash.com/photo-1599378097300-a2e33dc51a81?auto=format&fit=crop&w=1600&q=88",
+      "source_page": "https://unsplash.com/s/photos/handmade-paper",
+      "source_description": "pressed flowers and handmade artistic paper"
+    },
+    {
+      "entity_id": "OPS_PRODUCT_PAPER_KIT",
+      "resource": "products",
+      "label": "东巴纸绘体验套装",
+      "source_url": "https://images.unsplash.com/photo-1452860606245-08befc0ff44b?auto=format&fit=crop&w=1600&q=88",
+      "source_page": "https://unsplash.com/s/photos/paper-craft-tools",
+      "source_description": "paper craft tools arranged on a blue work surface"
+    },
+    {
+      "entity_id": "OPS_PRODUCT_PAPER_MARK",
+      "resource": "products",
+      "label": "手工纸象形书签",
+      "source_url": "https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1600&q=88",
+      "source_page": "https://unsplash.com/s/photos/handwritten-paper",
+      "source_description": "fountain pen and handwritten paper"
+    },
+    {
+      "entity_id": "OPS_MERCHANT_TEA",
+      "resource": "merchants",
+      "label": "纳西茶香小院",
+      "source_url": "https://images.unsplash.com/photo-1594631252845-29fc4cc8cde9?auto=format&fit=crop&w=1600&q=88",
+      "source_page": "https://unsplash.com/s/photos/tea-house",
+      "source_description": "glass teapot beside an open book in warm light"
+    },
+    {
+      "entity_id": "OPS_PRODUCT_TEA_TABLE",
+      "resource": "products",
+      "label": "雪山红茶双人茶席",
+      "source_url": "https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=1600&q=88",
+      "source_page": "https://unsplash.com/s/photos/tea-cup",
+      "source_description": "porcelain tea cup and cookies on a simple table"
+    },
+    {
+      "entity_id": "OPS_PRODUCT_TEA_PACK",
+      "resource": "products",
+      "label": "纳西烤茶体验包",
+      "source_url": "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=1600&q=88",
+      "source_page": "https://unsplash.com/s/photos/tea-leaves",
+      "source_description": "loose green tea leaves prepared for brewing"
+    },
+    {
+      "entity_id": "OPS_MERCHANT_SILVER",
+      "resource": "merchants",
+      "label": "玉水银饰手作馆",
+      "source_url": "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=1600&q=88",
+      "source_page": "https://unsplash.com/s/photos/handmade-jewelry",
+      "source_description": "elegant jewelry displayed in a presentation box"
+    },
+    {
+      "entity_id": "OPS_PRODUCT_SILVER_PENDANT",
+      "resource": "products",
+      "label": "东巴纹银坠体验",
+      "source_url": "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=1600&q=88",
+      "source_page": "https://unsplash.com/s/photos/silver-jewelry",
+      "source_description": "ornate silver-toned jewelry with blue stones"
+    },
+    {
+      "entity_id": "OPS_PRODUCT_SILVER_MARK",
+      "resource": "products",
+      "label": "银片錾刻书签",
+      "source_url": "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?auto=format&fit=crop&w=1600&q=88",
+      "source_page": "https://unsplash.com/s/photos/artisan-jewelry",
+      "source_description": "metal jewelry arranged on natural stone"
+    },
+    {
+      "entity_id": "OPS_MERCHANT_GIFT",
+      "resource": "merchants",
+      "label": "雪山礼物与哈达工坊",
+      "source_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1600&q=88",
+      "source_page": "https://unsplash.com/s/photos/snow-mountain",
+      "source_description": "snow mountains above a sea of clouds at sunset"
+    },
+    {
+      "entity_id": "OPS_PRODUCT_HADA_BOX",
+      "resource": "products",
+      "label": "哈达祝福礼盒",
+      "source_url": "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=1600&q=88",
+      "source_page": "https://unsplash.com/s/photos/gift-box-ribbon",
+      "source_description": "gift box tied with a gold ribbon"
+    },
+    {
+      "entity_id": "OPS_PRODUCT_SNOW_POSTCARD",
+      "resource": "products",
+      "label": "雪山主题明信片组",
+      "source_url": "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=1600&q=88",
+      "source_page": "https://unsplash.com/s/photos/art-print-wall",
+      "source_description": "curated wall of framed art prints"
+    }
+  ]
+}

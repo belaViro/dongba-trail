@@ -9,6 +9,7 @@ const RecordsView = () => import('./views/RecordsView.vue')
 const ProfileView = () => import('./views/ProfileView.vue')
 const RedeemView = () => import('./views/RedeemView.vue')
 const SettingsView = () => import('./views/SettingsView.vue')
+const SystemConfigView = () => import('./views/SystemConfigView.vue')
 const TagsView = () => import('./views/TagsView.vue')
 const SamplesView = () => import('./views/SamplesView.vue')
 
@@ -23,6 +24,7 @@ const routes = [
   { path: '/merchant/redeem', component: RedeemView },
   { path: '/merchant/tag-claims', component: TagsView },
   { path: '/admin/settings', component: SettingsView },
+  { path: '/admin/system-config', component: SystemConfigView },
   { path: '/admin/samples', component: SamplesView },
   ...Object.keys(resources).map((resource) => ({
     path: `/admin/${resource}`,
@@ -48,6 +50,7 @@ router.beforeEach(async (to) => {
   if (to.meta.public) return session.user ? homePath() : true
   if (!session.user) return { path: '/login', query: { redirect: to.fullPath } }
   if (session.user.role === 'merchant' && !to.path.startsWith('/merchant/')) return '/merchant/dashboard'
+  if (to.path === '/admin/system-config' && session.user.role !== 'admin') return '/admin/dashboard'
   if (['admin', 'operator'].includes(session.user.role) && !to.path.startsWith('/admin/'))
     return '/admin/dashboard'
   if (!['admin', 'operator', 'merchant'].includes(session.user.role)) return '/login'

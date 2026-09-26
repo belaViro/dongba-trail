@@ -216,6 +216,7 @@ export const resources: Record<string, Resource> = {
       { key: 'title', label: '优惠券名称' },
       { key: 'stock', label: '总库存', width: 100 },
       { key: 'claimed_count', label: '已领取', width: 100 },
+      { key: 'remaining_count', label: '剩余库存', width: 100 },
       { key: 'end_at', label: '有效期至', type: 'date', width: 180 },
       statusColumn,
     ],

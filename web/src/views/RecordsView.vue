@@ -1,12 +1,16 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, onUnmounted, reactive, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import { api, dateText, errorText, query, save, type Collection, type Row } from '../api'
 import StatusTag from '../components/StatusTag.vue'
 import ExportButton from '../components/ExportButton.vue'
 import { session } from '../session'
+import { recordSampleLink, sampleRecordLink } from '../samples'
 const props = defineProps<{ resource: string }>()
+const route = useRoute()
+const router = useRouter()
 const titles: Record<string, string> = {
   feedback: '识别纠错',
   'tag-claims': '文化标签审核',
@@ -99,6 +103,11 @@ const endpoint = computed(
   () => `/${session.user?.role === 'merchant' ? 'merchant' : 'admin'}/${props.resource}`,
 )
 const reviewable = computed(() => ['feedback', 'tag-claims'].includes(props.resource))
+const sampleRelated = computed(() => ['feedback', 'recognitions'].includes(props.resource))
+function showSamples(row: Row) {
+  const target = recordSampleLink(props.resource, row)
+  if (target) void router.push(target)
+}
 const detail = ref<Row | null>(null)
 const detailOpen = ref(false)
 function openDetail(row: Row) {
@@ -113,22 +122,31 @@ const review = reactive({
   busy: false,
   error: '',
 })
+let generation = 0
 async function load() {
+  const current = ++generation
   loading.value = true
   error.value = ''
   try {
-    if (props.resource === 'provider') provider.value = await api(endpoint.value)
-    else {
+    if (props.resource === 'provider') {
+      const result = await api(endpoint.value)
+      if (current === generation) provider.value = result
+    } else {
       const data = await api<Collection>(
         `${endpoint.value}?${query({ q: filter.q, status: filter.status, offset: (filter.page - 1) * filter.limit, limit: filter.limit })}`,
       )
+      if (current !== generation) return
       items.value = data.items
       total.value = data.total
     }
   } catch (e) {
-    error.value = errorText(e)
+    if (current === generation) {
+      items.value = []
+      total.value = 0
+      error.value = errorText(e)
+    }
   } finally {
-    loading.value = false
+    if (current === generation) loading.value = false
   }
 }
 function search() {
@@ -166,7 +184,21 @@ function display(value: unknown): string {
   if (typeof value === 'object') return JSON.stringify(value, null, 2)
   return String(value)
 }
-onMounted(load)
+// Samples link through the supported records q filter; query-only navigation also reloads.
+watch(
+  () => [props.resource, route.query.q],
+  () => {
+    filter.q = typeof route.query.q === 'string' ? route.query.q : ''
+    filter.status = ''
+    detailOpen.value = false
+    review.visible = false
+    search()
+  },
+  { immediate: true },
+)
+onUnmounted(() => {
+  generation++
+})
 </script>
 <template>
   <div class="page-heading">
@@ -257,10 +289,13 @@ onMounted(load)
           <span v-else>{{ display(row[column.key]) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" :width="reviewable ? 140 : 90" fixed="right">
+      <el-table-column label="操作" :width="sampleRelated ? 220 : reviewable ? 140 : 90" fixed="right">
         <template #default="{ row }">
           <el-button link type="primary" @click="openDetail(row)">详情</el-button>
           <el-button v-if="reviewable" link type="primary" @click="openReview(row)">审核</el-button>
+          <el-button v-if="recordSampleLink(resource, row)" link type="primary" @click="showSamples(row)">
+            图片样本
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -278,6 +313,18 @@ onMounted(load)
     </div>
   </template>
   <el-drawer v-model="detailOpen" title="记录详情" size="min(720px, 100vw)">
+    <div v-if="detail && recordSampleLink(resource, detail)" class="detail-status">
+      <el-button type="primary" plain @click="showSamples(detail)">联查图片样本</el-button>
+      <el-button
+        v-if="resource === 'recognitions'"
+        @click="router.push(sampleRecordLink('feedback', detail.request_id))"
+      >
+        查看文字反馈
+      </el-button>
+      <el-button v-else @click="router.push(sampleRecordLink('recognitions', detail.recognition_id))">
+        查看识别记录
+      </el-button>
+    </div>
     <el-descriptions v-if="detail" :column="1" border>
       <el-descriptions-item v-for="(value, key) in detail" :key="key" :label="labels[key] || key">
         <StatusTag v-if="key === 'status'" :value="String(value)" />
@@ -288,6 +335,21 @@ onMounted(load)
     </el-descriptions>
   </el-drawer>
   <el-dialog v-model="review.visible" title="审核记录" width="min(500px, 94vw)" :close-on-click-modal="false">
+    <el-alert
+      v-if="resource === 'feedback'"
+      title="此处仅审核文字反馈，不会将关联图片样本自动标记为审核通过。"
+      type="info"
+      :closable="false"
+      class="form-alert"
+    />
+    <el-button
+      v-if="review.row && recordSampleLink(resource, review.row)"
+      link
+      type="primary"
+      @click="showSamples(review.row)"
+    >
+      先查看关联图片样本
+    </el-button>
     <el-alert v-if="review.error" :title="review.error" type="error" :closable="false" class="form-alert" />
     <el-form label-position="top">
       <el-form-item label="审核结果">

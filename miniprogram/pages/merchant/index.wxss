@@ -1,1 +1,2 @@
-.coupon{display:flex;align-items:center;gap:24rpx;padding:28rpx 0;border-bottom:1rpx dashed #cbd9ce}.coupon .caption{margin-top:10rpx}
+.cover{height:390rpx;border-radius:24rpx;box-shadow:0 12rpx 28rpx rgba(53,43,29,.1)}.page-title{font-family:serif;color:#3d3026}
+.coupon{display:flex;align-items:center;gap:24rpx;padding:28rpx 24rpx;margin:18rpx 0;background:#fffdf8;border:1rpx solid #e3d7c5;border-left:7rpx solid #a73529;border-radius:16rpx}.coupon .caption{margin-top:10rpx}.coupon>button{flex-shrink:0}.coupon .primary{background:#a73529;box-shadow:none}

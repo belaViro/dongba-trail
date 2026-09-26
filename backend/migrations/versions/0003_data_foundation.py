@@ -32,7 +32,9 @@ def upgrade():
     op.create_table(
         "samples",
         sa.Column("id", sa.String(64), primary_key=True),
-        sa.Column("recognition_id", sa.String(64), sa.ForeignKey("recognitions.request_id"), nullable=True),
+        sa.Column(
+            "recognition_id", sa.String(64), sa.ForeignKey("recognitions.request_id"), nullable=True
+        ),
         sa.Column("user_id", sa.String(64), sa.ForeignKey("users.id"), nullable=True),
         sa.Column("character_id", sa.String(64), sa.ForeignKey("entities.id"), nullable=True),
         sa.Column("image_uri", sa.String(1000), nullable=False),
@@ -53,7 +55,14 @@ def upgrade():
         sa.Column("updated_at", sa.String(40), nullable=False),
         **OPTIONS,
     )
-    for field in ("recognition_id", "user_id", "character_id", "review_status", "dataset_version", "created_at"):
+    for field in (
+        "recognition_id",
+        "user_id",
+        "character_id",
+        "review_status",
+        "dataset_version",
+        "created_at",
+    ):
         op.create_index(f"ix_samples_{field}", "samples", [field])
 
     connection = op.get_bind()
@@ -62,22 +71,47 @@ def upgrade():
     for row in connection.execute(sa.select(entities)).mappings():
         snapshot = {
             **row["data"],
-            **{field: row[field] for field in (
-                "id", "status", "created_at", "updated_at", "reviewed_by", "reviewed_at"
-            )},
+            **{
+                field: row[field]
+                for field in (
+                    "id",
+                    "status",
+                    "created_at",
+                    "updated_at",
+                    "reviewed_by",
+                    "reviewed_at",
+                )
+            },
         }
         if row["kind"] == "characters":
             snapshot["character_id"] = row["id"]
-            for key, default in (("source_no", None), ("alias", []), ("keywords", []), ("commercial_tags", [])):
+            for key, default in (
+                ("source_no", None),
+                ("alias", []),
+                ("keywords", []),
+                ("commercial_tags", []),
+            ):
                 snapshot.setdefault(key, default)
         if row["kind"] == "coupons":
-            inventory = connection.execute(sa.select(stock).where(stock.c.coupon_id == row["id"])).mappings().first()
+            inventory = (
+                connection.execute(sa.select(stock).where(stock.c.coupon_id == row["id"]))
+                .mappings()
+                .first()
+            )
             if inventory:
                 snapshot.update(stock=inventory["stock"], claimed_count=inventory["claimed_count"])
-        connection.execute(revisions.insert().values(
-            id=str(uuid4()), entity_id=row["id"], resource=row["kind"], version=1,
-            action="baseline", actor_id=None, created_at=row["updated_at"], snapshot=snapshot,
-        ))
+        connection.execute(
+            revisions.insert().values(
+                id=str(uuid4()),
+                entity_id=row["id"],
+                resource=row["kind"],
+                version=1,
+                action="baseline",
+                actor_id=None,
+                created_at=row["updated_at"],
+                snapshot=snapshot,
+            )
+        )
 
 
 def downgrade():

@@ -1,4 +1,5 @@
 const api = require('../../utils/api')
+const recognition = require('../../utils/recognition')
 const helpers = require('../../utils/helpers')
 const session = require('../../utils/session')
 Page({
@@ -22,7 +23,7 @@ Page({
     const item = this.data.items.find(value => value.request_id === event.currentTarget.dataset.id)
     if (!item) return
     if (item.status === 'FAILED') {
-      wx.showModal({ title: '识别未完成', content: api.errorFrom(503, { code: item.error_code }).message, confirmText: '重新拍摄', success: response => { if (response.confirm) wx.navigateTo({ url: '/pages/camera/index' }) } })
+      wx.showModal({ title: '识别未完成', content: api.errorFrom(503, { code: item.error_code }).message, confirmText: '重新拍摄', success: response => { if (response.confirm) recognition.chooseCamera() } })
       return
     }
     if (item.confirmed_character_id) wx.navigateTo({ url: '/pages/character/index?id=' + encodeURIComponent(item.confirmed_character_id) + '&recognition_id=' + encodeURIComponent(item.request_id) })

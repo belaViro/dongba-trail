@@ -11,7 +11,7 @@ from fastapi import APIRouter, Depends, File, Query, Request, UploadFile
 from fastapi.responses import FileResponse, Response
 from PIL import Image, ImageOps
 from pydantic import Field, field_validator
-from sqlalchemy import event, or_, select
+from sqlalchemy import and_, event, or_, select
 from starlette.concurrency import run_in_threadpool
 
 from backend.app.errors import ApiError
@@ -84,7 +84,9 @@ def _delete_rows(session, settings, rows):
         session.delete(row)
     # A failed transaction must keep both the row and its image.
     if image_uris:
-        event.listen(session, "after_commit", lambda _: remove_sample_files(settings, image_uris), once=True)
+        event.listen(
+            session, "after_commit", lambda _: remove_sample_files(settings, image_uris), once=True
+        )
     return len(rows)
 
 
@@ -96,13 +98,19 @@ def delete_samples(
     query = select(Sample)
     if user_id is not None:
         query = query.where(Sample.user_id == user_id)
+    expiration = []
     if recognition_ids is not None:
-        query = query.where(Sample.recognition_id.in_(recognition_ids))
+        expiration.append(Sample.recognition_id.in_(recognition_ids))
     if created_before is not None:
-        query = query.where(
-            Sample.created_at < created_before,
-            or_(Sample.recognition_id.is_not(None), Sample.consent_version.is_not(None)),
+        expiration.append(
+            and_(
+                Sample.created_at < created_before,
+                or_(Sample.recognition_id.is_not(None), Sample.consent_version.is_not(None)),
+            )
         )
+    if expiration:
+        # Expiring either the recognition or the consented image ends retention.
+        query = query.where(or_(*expiration))
     rows = session.scalars(query.with_for_update() if not dry_run else query).all()
     return len(rows) if dry_run else _delete_rows(session, settings, rows)
 
@@ -126,11 +134,15 @@ def store_recognition_sample(
     image_uri = None
     try:
         with database.write() as session:
-            record = session.scalar(select(RecognitionRecord).where(
-                RecognitionRecord.request_id == recognition_id,
-                RecognitionRecord.user_id == user_id,
-                RecognitionRecord.history_deleted.is_(False),
-            ).with_for_update())
+            record = session.scalar(
+                select(RecognitionRecord)
+                .where(
+                    RecognitionRecord.request_id == recognition_id,
+                    RecognitionRecord.user_id == user_id,
+                    RecognitionRecord.history_deleted.is_(False),
+                )
+                .with_for_update()
+            )
             if record is None:
                 raise ApiError(404, "RECOGNITION_NOT_FOUND", "Recognition does not exist")
             existing = session.scalar(select(Sample).where(Sample.recognition_id == recognition_id))
@@ -138,8 +150,11 @@ def store_recognition_sample(
                 return serialize(existing)
             image_uri = _save_image(settings, content, user_id)
             row = Sample(
-                **metadata.model_dump(), recognition_id=recognition_id, user_id=user_id,
-                image_uri=image_uri, consent_version=consent_version,
+                **metadata.model_dump(),
+                recognition_id=recognition_id,
+                user_id=user_id,
+                image_uri=image_uri,
+                consent_version=consent_version,
             )
             session.add(row)
             session.flush()
@@ -151,7 +166,9 @@ def store_recognition_sample(
 
 
 def record_sample_correction(session, recognition_id, character_id):
-    for row in session.scalars(select(Sample).where(Sample.recognition_id == recognition_id).with_for_update()):
+    for row in session.scalars(
+        select(Sample).where(Sample.recognition_id == recognition_id).with_for_update()
+    ):
         # A visitor correction never overwrites an operator's completed review.
         if row.review_status == "pending":
             row.character_id = character_id
@@ -177,30 +194,55 @@ def _filtered(session, filters, user_id=None):
     rows = session.scalars(query.order_by(Sample.created_at.desc(), Sample.id)).all()
     if filters.q:
         search = filters.q.casefold()
-        rows = [row for row in rows if search in " ".join(str(getattr(row, field) or "") for field in (
-            "id", "recognition_id", "character_id", "scene", "dataset_version", "source_ref", "review_note"
-        )).casefold()]
+        rows = [
+            row
+            for row in rows
+            if search
+            in " ".join(
+                str(getattr(row, field) or "")
+                for field in (
+                    "id",
+                    "recognition_id",
+                    "character_id",
+                    "scene",
+                    "dataset_version",
+                    "source_ref",
+                    "review_note",
+                )
+            ).casefold()
+        ]
     return rows
 
 
 @router.get("/admin/samples")
 def list_samples(
-    request: Request, user: User = Depends(require_operations), filters: SampleFilters = Depends(),
-    offset: int = Query(default=0, ge=0), limit: int = Query(default=100, ge=1, le=100),
+    request: Request,
+    user: User = Depends(require_operations),
+    filters: SampleFilters = Depends(),
+    offset: int = Query(default=0, ge=0),
+    limit: int = Query(default=100, ge=1, le=100),
 ):
     with request.app.state.database.session() as session:
         rows = _filtered(session, filters)
-        return {"items": [serialize(row) for row in rows[offset:offset + limit]], "total": len(rows)}
+        return {
+            "items": [serialize(row) for row in rows[offset : offset + limit]],
+            "total": len(rows),
+        }
 
 
 @router.get("/me/samples")
 def my_samples(
-    request: Request, user: User = Depends(current_user),
-    offset: int = Query(default=0, ge=0), limit: int = Query(default=100, ge=1, le=100),
+    request: Request,
+    user: User = Depends(current_user),
+    offset: int = Query(default=0, ge=0),
+    limit: int = Query(default=100, ge=1, le=100),
 ):
     with request.app.state.database.session() as session:
         rows = _filtered(session, SampleFilters(), user.id)
-        return {"items": [serialize(row) for row in rows[offset:offset + limit]], "total": len(rows)}
+        return {
+            "items": [serialize(row) for row in rows[offset : offset + limit]],
+            "total": len(rows),
+        }
 
 
 @router.post("/admin/samples/upload")
@@ -243,9 +285,19 @@ def update_sample(
             data = SampleMetadata.model_validate({**previous, **changes}).model_dump()
         except ValidationError as exc:
             raise ApiError(422, "INVALID_SAMPLE", "Sample metadata is invalid") from exc
-        label_fields = ("character_id", "bbox", "sample_type", "scene", "quality_score", "label_source", "source_ref")
-        if row.review_status == "approved" and "review_status" not in changes and any(
-            data[key] != previous[key] for key in label_fields
+        label_fields = (
+            "character_id",
+            "bbox",
+            "sample_type",
+            "scene",
+            "quality_score",
+            "label_source",
+            "source_ref",
+        )
+        if (
+            row.review_status == "approved"
+            and "review_status" not in changes
+            and any(data[key] != previous[key] for key in label_fields)
         ):
             data["review_status"] = "pending"
         if data["character_id"]:
@@ -253,9 +305,15 @@ def update_sample(
         else:
             character = None
         if data["review_status"] == "approved" and (
-            character is None or character.status not in {"reviewed", "published"} or not data["source_ref"]
+            character is None
+            or character.status not in {"reviewed", "published"}
+            or not data["source_ref"]
         ):
-            raise ApiError(422, "SAMPLE_REVIEW_INCOMPLETE", "Approval requires a reviewed character and a source")
+            raise ApiError(
+                422,
+                "SAMPLE_REVIEW_INCOMPLETE",
+                "Approval requires a reviewed character and a source",
+            )
         if data["review_status"] == "rejected" and not data["review_note"]:
             raise ApiError(422, "REVIEW_NOTE_REQUIRED", "A rejection needs an explanation")
         path = sample_path(settings, row.image_uri)
@@ -265,7 +323,9 @@ def update_sample(
             with Image.open(path) as image:
                 x, y, width, height = data["bbox"]
                 if x + width > image.width or y + height > image.height:
-                    raise ApiError(422, "INVALID_SAMPLE_BBOX", "Bounding box exceeds image dimensions")
+                    raise ApiError(
+                        422, "INVALID_SAMPLE_BBOX", "Bounding box exceeds image dimensions"
+                    )
         for key, value in data.items():
             setattr(row, key, value)
         row.updated_at = now()
@@ -273,9 +333,18 @@ def update_sample(
             row.reviewed_by, row.reviewed_at = None, None
         elif "review_status" in changes or any(data[key] != previous[key] for key in label_fields):
             row.reviewed_by, row.reviewed_at = user.id, now()
-        audit(session, user, "review" if "review_status" in changes else "update", "samples", row.id, {
-            "fields": sorted(changes), "previous_status": previous["review_status"], "review_status": row.review_status
-        })
+        audit(
+            session,
+            user,
+            "review" if "review_status" in changes else "update",
+            "samples",
+            row.id,
+            {
+                "fields": sorted(changes),
+                "previous_status": previous["review_status"],
+                "review_status": row.review_status,
+            },
+        )
         return serialize(row)
 
 
@@ -317,11 +386,13 @@ def remove_my_sample(sample_id: str, request: Request, user: User = Depends(curr
 
 
 @router.post("/admin/samples/export")
-def export_samples(payload: SampleExport, request: Request, user: User = Depends(require_operations)):
+def export_samples(
+    payload: SampleExport, request: Request, user: User = Depends(require_operations)
+):
     settings = request.app.state.business_settings
     with request.app.state.database.write() as session:
         all_rows = _filtered(session, payload)
-        rows = all_rows[:payload.limit]
+        rows = all_rows[: payload.limit]
         output = BytesIO()
         manifest = []
         total_bytes = 0
@@ -329,24 +400,59 @@ def export_samples(payload: SampleExport, request: Request, user: User = Depends
             for row in rows:
                 path = sample_path(settings, row.image_uri)
                 if not path.is_file():
-                    raise ApiError(409, "SAMPLE_IMAGE_UNAVAILABLE", "A selected sample image is unavailable")
+                    raise ApiError(
+                        409, "SAMPLE_IMAGE_UNAVAILABLE", "A selected sample image is unavailable"
+                    )
                 total_bytes += path.stat().st_size
                 if total_bytes > 100 * 1024 * 1024:
-                    raise ApiError(413, "EXPORT_TOO_LARGE", "Narrow filters or reduce the export limit")
+                    raise ApiError(
+                        413, "EXPORT_TOO_LARGE", "Narrow filters or reduce the export limit"
+                    )
                 name = f"images/{row.id}.png"
                 archive.write(path, name)
-                manifest.append({**serialize(row), "image_uri": name, "approved_ground_truth": row.review_status == "approved"})
-            archive.writestr("manifest.json", json.dumps({
-                "format_version": 1, "exported_at": now(), "review_status": payload.review_status,
-                "total": len(manifest), "matched_total": len(all_rows), "truncated": len(all_rows) > len(rows),
-                "items": manifest,
-            }, ensure_ascii=False, indent=2))
-        audit(session, user, "export", "samples", "collection", {
-            "row_count": len(rows), "review_status": payload.review_status,
-            "dataset_version": payload.dataset_version, "search_applied": bool(payload.q),
-            "truncated": len(all_rows) > len(rows),
-        })
+                manifest.append(
+                    {
+                        **serialize(row),
+                        "image_uri": name,
+                        "approved_ground_truth": row.review_status == "approved",
+                    }
+                )
+            archive.writestr(
+                "manifest.json",
+                json.dumps(
+                    {
+                        "format_version": 1,
+                        "exported_at": now(),
+                        "review_status": payload.review_status,
+                        "total": len(manifest),
+                        "matched_total": len(all_rows),
+                        "truncated": len(all_rows) > len(rows),
+                        "items": manifest,
+                    },
+                    ensure_ascii=False,
+                    indent=2,
+                ),
+            )
+        audit(
+            session,
+            user,
+            "export",
+            "samples",
+            "collection",
+            {
+                "row_count": len(rows),
+                "review_status": payload.review_status,
+                "dataset_version": payload.dataset_version,
+                "search_applied": bool(payload.q),
+                "truncated": len(all_rows) > len(rows),
+            },
+        )
     filename = f"dongba-samples-{datetime.now(UTC):%Y%m%dT%H%M%SZ}.zip"
-    return Response(output.getvalue(), media_type="application/zip", headers={
-        "Content-Disposition": f'attachment; filename="{filename}"', "Cache-Control": "no-store"
-    })
+    return Response(
+        output.getvalue(),
+        media_type="application/zip",
+        headers={
+            "Content-Disposition": f'attachment; filename="{filename}"',
+            "Cache-Control": "no-store",
+        },
+    )

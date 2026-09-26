@@ -340,6 +340,9 @@ def test_coupon_limits_expiry_and_idempotent_owned_redemption(context):
     _, stranger = context.actor("merchant", other["id"])
     claim = context.client.post(f"/api/v1/coupons/{coupon['id']}/claim", headers=headers)
     assert claim.status_code == 200
+    listed = context.client.get(f"/api/v1/coupons/{coupon['id']}")
+    assert listed.status_code == 200
+    assert listed.json()["remaining_count"] == 0
     assert (
         context.client.post(f"/api/v1/coupons/{coupon['id']}/claim", headers=headers).json()["code"]
         == "CLAIM_LIMIT"

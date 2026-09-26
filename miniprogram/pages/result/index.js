@@ -21,16 +21,18 @@ Page({
   retake() {
     const pages = typeof getCurrentPages === 'function' ? getCurrentPages() : []
     const previous = pages[pages.length - 2]
-    if (previous && previous.route === 'pages/camera/index') {
-      previous.retake(); wx.navigateBack()
-    } else wx.redirectTo({ url: '/pages/camera/index' })
+    if (previous && previous.route === 'pages/home/index') {
+      wx.navigateBack()
+    } else wx.redirectTo({ url: '/pages/home/index' })
   },
   async submit(event) {
     const characterId = event.currentTarget.dataset.unknown ? null : this.data.selected
     if (this.data.busy || !this.data.result || (!event.currentTarget.dataset.unknown && !characterId)) return
     this.setData({ busy: true, error: '' })
     try {
-      await api.request('/recognize/' + encodeURIComponent(this.data.result.request_id) + '/confirm', { method: 'POST', auth: true, data: { character_id: characterId, comment: this.data.comment || (characterId ? '' : '候选均不匹配，请人工复核') } })
+      const payload = { comment: this.data.comment || (characterId ? '' : '候选均不匹配，请人工复核') }
+      if (characterId) payload.character_id = characterId
+      await api.request('/recognize/' + encodeURIComponent(this.data.result.request_id) + '/confirm', { method: 'POST', auth: true, data: payload })
       const app = getApp()
       if (characterId) {
         if (app.globalData.activeQuest) {

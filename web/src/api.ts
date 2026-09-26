@@ -62,6 +62,10 @@ const messages: Record<string, string> = {
   MEDIA_NOT_FOUND: '图片不存在或无权访问',
   FILE_TOO_LARGE: '图片文件过大',
   INVALID_IMAGE: '图片格式无效',
+  INVALID_SAMPLE: '样本元数据格式不符合要求，请检查表单',
+  SAMPLE_REVIEW_INCOMPLETE: '审核通过需要关联已审核或已发布词条，并填写资料来源',
+  SAMPLE_IMAGE_UNAVAILABLE: '样本图片不可用，请检查记录或缩小导出范围',
+  INVALID_SAMPLE_BBOX: '标注框不能超出图片边界',
 }
 export const tokenStore = {
   get: () => sessionStorage.getItem(TOKEN_KEY),

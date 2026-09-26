@@ -2,6 +2,7 @@
 
 from backend.app.config import Settings
 from backend.app.providers import RecognitionProvider, UnconfiguredProvider
+from backend.app.volcengine_provider import DEFAULT_ENDPOINT, VolcengineArkProvider
 
 
 def create_provider(settings: Settings) -> RecognitionProvider:
@@ -10,8 +11,18 @@ def create_provider(settings: Settings) -> RecognitionProvider:
     Available configuration: provider_endpoint, provider_api_key (SecretStr),
     provider_model, provider_timeout_seconds. Never expose these secrets to clients.
 
-    The adapter must implement RecognitionProvider and return ProviderResult with
-    canonical dictionary IDs. See docs/contracts/recognition.md. Merely filling
-    the environment variables must not claim that an adapter is implemented.
+    The adapter returns ProviderResult candidates using canonical dictionary IDs.
+    See docs/contracts/recognition.md. Server defaults come from environment;
+    encrypted runtime overrides are stored separately. Secrets are never exposed.
     """
+    provider_name = settings.provider_name.casefold().strip()
+    if provider_name in {"ark", "volcengine", "volcengine-ark"}:
+        return VolcengineArkProvider(
+            endpoint=settings.provider_endpoint or DEFAULT_ENDPOINT,
+            api_key=(
+                settings.provider_api_key.get_secret_value() if settings.provider_api_key else ""
+            ),
+            model=settings.provider_model,
+            timeout=settings.provider_timeout_seconds,
+        )
     return UnconfiguredProvider()

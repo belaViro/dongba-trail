@@ -1,4 +1,5 @@
 const api = require('../../utils/api')
+const recognition = require('../../utils/recognition')
 const helpers = require('../../utils/helpers')
 const platform = require('../../utils/platform')
 const session = require('../../utils/session')
@@ -45,7 +46,7 @@ Page({
     const node = this.data.nodes.find(value => value.id === event.currentTarget.dataset.id)
     if (!node || node.completed) return
     if (node.condition === 'recognition') {
-      wx.navigateTo({ url: '/pages/camera/index?quest=' + encodeURIComponent(this.questId) + '&node=' + encodeURIComponent(node.id) }); return
+      recognition.chooseCamera({ quest: this.questId, node: node.id }); return
     }
     if (node.condition === 'manual') {
       const userId = session.get().user.id

@@ -10,12 +10,15 @@ from starlette.concurrency import run_in_threadpool
 
 from backend.app.business.models import (
     Entity,
+    EntityRevision,
     Event,
     Feedback,
     LoginAttempt,
     RecognitionRecord,
+    Sample,
     SessionToken,
 )
+from backend.app.business.samples import delete_samples
 from backend.app.media import ASSET_NAME, referenced_asset_names
 
 logger = logging.getLogger(__name__)
@@ -24,7 +27,14 @@ logger = logging.getLogger(__name__)
 def purge_expired(database, settings, *, current_time=None, dry_run=False):
     current_time = current_time or datetime.now(UTC)
     cutoff = current_time - timedelta(days=settings.retention_days)
-    counts = {"recognitions": 0, "feedback": 0, "events": 0, "sessions": 0, "media": 0}
+    counts = {
+        "recognitions": 0,
+        "feedback": 0,
+        "events": 0,
+        "sessions": 0,
+        "samples": 0,
+        "media": 0,
+    }
     with database.write() as session:
         # Lock before deleting related rows so concurrent confirmations cannot race cleanup.
         ids = session.scalars(
@@ -33,6 +43,14 @@ def purge_expired(database, settings, *, current_time=None, dry_run=False):
             .with_for_update()
         ).all()
         counts["recognitions"] = len(ids)
+        counts["samples"] = delete_samples(
+            session,
+            settings,
+            recognition_ids=ids,
+            created_before=cutoff.isoformat(),
+            dry_run=dry_run,
+        )
+        session.flush()
         queries = {
             "feedback": (Feedback, Feedback.recognition_id.in_(ids)),
             "events": (Event, Event.created_at < cutoff.isoformat()),
@@ -55,6 +73,14 @@ def purge_expired(database, settings, *, current_time=None, dry_run=False):
             )
         referenced = referenced_asset_names(
             settings, (row.data for row in session.scalars(select(Entity)).all())
+        )
+        referenced.update(
+            referenced_asset_names(settings, session.scalars(select(EntityRevision.snapshot)).all())
+        )
+        # Dictionary source samples are operator-managed. Active samples must not
+        # be removed by the generic unused-media sweep (including during dry-run).
+        referenced.update(
+            uri.rsplit("/", 1)[-1] for uri in session.scalars(select(Sample.image_uri))
         )
     for metadata_path in settings.media_directory.glob("*.png.json"):
         name = metadata_path.name.removesuffix(".json")

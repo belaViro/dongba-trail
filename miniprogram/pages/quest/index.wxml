@@ -1,12 +1,12 @@
 <view class="page">
   <view-state loading="{{loading}}" error="{{error}}" bind:retry="load" />
   <block wx:if="{{item && !loading}}">
-    <view class="muted">{{item.area || '丽江'}}</view><view class="page-title">{{item.name}}</view>
+    <view class="route-eyebrow">{{item.area || '丽江'}} · 文化寻迹</view><view class="page-title">{{item.name}}</view>
     <view class="body section">{{item.description}}</view>
     <view wx:if="{{closed}}" class="notice">路线当前未开放，你已获得的印记和奖励记录会继续保留。</view>
     <view class="progress-band section">
       <view class="row between"><text class="heading">{{completed}} / {{nodes.length}}</text><text class="muted">枚东巴印记</text></view>
-      <progress percent="{{percent}}" activeColor="#176b58" backgroundColor="#dce7dc" stroke-width="5" border-radius="5" />
+      <progress percent="{{percent}}" activeColor="#a73529" backgroundColor="#e9ddcb" stroke-width="5" border-radius="5" />
       <view wx:if="{{progress && progress.status === 'completed'}}" class="complete">已完成本次寻迹</view>
     </view>
     <view wx:if="{{reward}}" class="notice" bindtap="wallet">已获得 {{reward.title}}，前往我的优惠券查看 ›</view>
@@ -26,6 +26,7 @@
       </view>
       <view wx:if="{{!nodes.length}}" class="empty-inline">路线节点正在准备中</view>
     </view>
+    <feature-note label="待实现" detail="当前提供按节点集章与整条路线奖励；参考图中的分阶段奖励尚无后台配置及发放逻辑。" />
     <button wx:if="{{completed}}" class="secondary section" bindtap="share">生成我的东巴印记</button>
   </block>
 </view>

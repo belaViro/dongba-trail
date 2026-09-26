@@ -5,11 +5,11 @@ import pytest
 from alembic import command
 from alembic.config import Config
 from dotenv import dotenv_values
-from sqlalchemy import MetaData, Table, create_engine, inspect, text
+from sqlalchemy import MetaData, Table, create_engine, inspect, select, text
 from sqlalchemy.engine import make_url
 from sqlalchemy.orm import Session
 
-from backend.app.business.models import Base, Entity, Favorite, SessionToken, User
+from backend.app.business.models import Base, Entity, EntityRevision, Favorite, SessionToken, User
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -78,7 +78,7 @@ def test_storage_upgrade_preserves_records_and_foreign_keys(migration_target):
         with engine.connect() as connection:
             connection.execute(text("SET FOREIGN_KEY_CHECKS=0"))
             try:
-                for table in Base.metadata.tables:
+                for table in inspect(engine).get_table_names():
                     connection.execute(
                         text(
                             f"ALTER TABLE `{table}` CONVERT TO CHARACTER SET utf8mb4 "
@@ -93,5 +93,12 @@ def test_storage_upgrade_preserves_records_and_foreign_keys(migration_target):
     with Session(engine) as session:
         assert session.get(User, "fixture-user").username == "fixture"
         assert session.get(Entity, "fixture-glyph").data == {}
+        revision = session.scalar(
+            select(EntityRevision).where(EntityRevision.entity_id == "fixture-glyph")
+        )
+        assert revision.action == "baseline" and revision.version == 1
+        assert revision.actor_id is None
+        assert revision.snapshot["id"] == "fixture-glyph"
+        assert revision.snapshot["status"] == "draft"
         assert session.get(Favorite, ("fixture-user", "fixture-glyph")) is not None
         assert session.get(SessionToken, "f" * 64).user_id == "fixture-user"

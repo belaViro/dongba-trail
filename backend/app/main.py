@@ -85,6 +85,14 @@ def create_app(
             ]
         )
 
+    def current_provider():
+        if not business_enabled or provider is not None:
+            return recognition_provider, configuration
+        from backend.app.system_config import active_provider
+
+        with application.state.database.session() as session:
+            return active_provider(session, configuration)
+
     @application.middleware("http")
     async def request_identifier(request: Request, call_next: RequestResponseEndpoint) -> Response:
         request.state.request_id = getattr(request.state, "request_id", str(uuid4()))
@@ -136,8 +144,13 @@ def create_app(
     )
     async def ready(response: Response) -> ReadinessResponse:
         reasons = []
-        if not recognition_provider.configured:
-            reasons.append("PROVIDER_NOT_CONFIGURED")
+        try:
+            provider_now, _ = await run_in_threadpool(current_provider)
+            if not provider_now.configured:
+                reasons.append("PROVIDER_NOT_CONFIGURED")
+        except ApiError:
+            provider_now = recognition_provider
+            reasons.append("PROVIDER_CONFIG_UNAVAILABLE")
         from sqlalchemy.exc import SQLAlchemyError
 
         try:
@@ -151,7 +164,8 @@ def create_app(
             response.status_code = HTTP_503_SERVICE_UNAVAILABLE
         return ReadinessResponse(
             status="not_ready" if reasons else "ready",
-            provider_configured=recognition_provider.configured,
+            provider_configured=provider_now.configured
+            and "PROVIDER_CONFIG_UNAVAILABLE" not in reasons,
             published_characters=count,
             reasons=reasons,
         )
@@ -172,11 +186,15 @@ def create_app(
 
     @application.get("/api/v1/privacy", tags=["Privacy"])
     async def privacy_policy():
+        try:
+            provider_now, _ = await run_in_threadpool(current_provider)
+        except ApiError:
+            provider_now = recognition_provider
         return {
             "published": configuration.privacy_policy_published
             and bool(configuration.privacy_contact),
             "version": configuration.privacy_version,
-            "provider_name": recognition_provider.name,
+            "provider_name": provider_now.name,
             "retention_days": configuration.retention_days,
             "sample_retention_days": configuration.retention_days,
             "contact": configuration.privacy_contact,
@@ -198,11 +216,66 @@ def create_app(
         from fastapi import Depends
         from sqlalchemy import select
 
-        from backend.app.business.auth import require_operations
+        from backend.app.business.auth import current_user, require_operations
+        from backend.app.business.content import audit
         from backend.app.business.models import RecognitionRecord
+        from backend.app.system_config import SystemConfigUpdate, public_config, stored, update
+
+        def require_admin(user=Depends(current_user)):
+            if user.role != "admin":
+                raise ApiError(403, "FORBIDDEN", "Administrator permission is required")
+            return user
+
+        @application.get("/api/v1/public/map-config", tags=["Map"])
+        def map_config(response: Response):
+            response.headers["Cache-Control"] = "no-store"
+            with application.state.database.session() as session:
+                data = stored(session)
+                return {
+                    "web_key": data.get("map_web_key", ""),
+                    "center_longitude": data.get("map_center_longitude", 100.235),
+                    "center_latitude": data.get("map_center_latitude", 26.875),
+                    "default_zoom": data.get("map_default_zoom", 12),
+                }
+
+        @application.get("/api/v1/admin/system-config", tags=["System configuration"])
+        def get_system_config(user=Depends(require_admin)):
+            with application.state.database.session() as session:
+                return public_config(session, configuration)
+
+        @application.put("/api/v1/admin/system-config", tags=["System configuration"])
+        def save_system_config(payload: SystemConfigUpdate, user=Depends(require_admin)):
+            with application.state.database.write() as session:
+                result = update(session, configuration, payload)
+                audit(
+                    session,
+                    user,
+                    "update",
+                    "system_config",
+                    "runtime",
+                    {
+                        "fields": [
+                            "provider_name",
+                            "provider_endpoint",
+                            "provider_model",
+                            "provider_timeout_seconds",
+                            "map_web_key",
+                            "map_center_longitude",
+                            "map_center_latitude",
+                            "map_default_zoom",
+                        ],
+                        "provider_key_action": "replaced"
+                        if payload.provider_api_key
+                        else "cleared"
+                        if payload.clear_provider_api_key
+                        else "unchanged",
+                    },
+                )
+                return result
 
         @application.get("/api/v1/admin/provider", tags=["Model operations"])
         def provider_status(user=Depends(require_operations)):
+            provider_now, active_settings = current_provider()
             with application.state.database.session() as session:
                 rows = session.scalars(
                     select(RecognitionRecord)
@@ -211,11 +284,11 @@ def create_app(
                 ).all()
                 latencies = sorted(row.latency_ms for row in rows if not row.error_code)
             return {
-                "configured": recognition_provider.configured,
-                "name": recognition_provider.name,
-                "model": configuration.provider_model,
-                "endpoint_configured": bool(configuration.provider_endpoint),
-                "timeout_seconds": configuration.provider_timeout_seconds,
+                "configured": provider_now.configured,
+                "name": provider_now.name,
+                "model": active_settings.provider_model,
+                "endpoint_configured": bool(active_settings.provider_endpoint),
+                "timeout_seconds": active_settings.provider_timeout_seconds,
                 "recent_requests": len(rows),
                 "recent_errors": sum(bool(row.error_code) for row in rows),
                 "p95_latency_ms": latencies[min(len(latencies) - 1, int(len(latencies) * 0.95))]
@@ -247,6 +320,7 @@ def create_app(
             await image.close()
         started_at = perf_counter()
         media_type = None
+        provider_now, active_settings = await run_in_threadpool(current_provider)
 
         async def retain_sample(recognition_id: str):
             if sample_consent and user is not None and media_type is not None:
@@ -272,9 +346,9 @@ def create_app(
                 image=content,
                 media_type=media_type,
                 request_id=request.state.request_id,
-                provider=recognition_provider,
+                provider=provider_now,
                 dictionary=records,
-                settings=configuration,
+                settings=active_settings,
             )
         except ApiError as exc:
             if user is not None:
@@ -283,8 +357,8 @@ def create_app(
                     request_id=request.state.request_id,
                     user_id=user.id,
                     status="FAILED",
-                    provider=recognition_provider.name,
-                    model=configuration.provider_model,
+                    provider=provider_now.name,
+                    model=active_settings.provider_model,
                     candidates=[],
                     latency_ms=round((perf_counter() - started_at) * 1000),
                     scene=scene,

@@ -30,6 +30,7 @@ test.beforeEach(() => {
   storage = {}; sent = []; response = { statusCode: 200, data: {} }
   app = { globalData: { recognition: null, recognitionImage: '' } }
   session.clear()
+  global.getApp = () => app
 })
 test('protected actions cannot send unauthenticated requests or fake a login', async () => {
   await assert.rejects(api.request('/me/coupons', { auth: true }), error => error.code === 'AUTH_REQUIRED')
@@ -63,17 +64,37 @@ test('none-of-the-above feedback sends no invented character ID', async () => {
   result.data.result = { request_id: 'R-real-request' }
   await result.submit({ currentTarget: { dataset: { unknown: true } } })
   assert.equal(sent[0].url.endsWith('/recognize/R-real-request/confirm'), true)
-  assert.equal(sent[0].data.character_id, null)
+  assert.equal(sent[0].data.character_id, undefined)
   assert.ok(sent[0].data.comment.length)
   assert.equal(result.data.submitted, true)
 })
-test('generic camera entry clears stale quest recognition context', () => {
+test('generic camera entry clears stale quest recognition context', async () => {
   app.globalData.activeQuest = { quest_id: 'Q-old', node_id: 'N-old' }
-  const camera = page('camera')
-  camera.onLoad({})
+  const home = page('home')
+  const originalChooseImage = wx.chooseImage
+  wx.chooseImage = options => options.success({ tempFilePaths: ['/isolated-camera-shot.png'], tempFiles: [{ tempFilePath: '/isolated-camera-shot.png', size: 1024 }] })
+  try { await home.camera({}) } finally { wx.chooseImage = originalChooseImage }
   assert.equal(app.globalData.activeQuest, null)
-  camera.onLoad({ quest: 'Q-next', node: 'N-next' })
-  assert.equal(app.globalData.activeQuest.quest_id, 'Q-next')
+})
+
+test('home recognition button opens the native camera directly', async () => {
+  const calls = []
+  const originalAccountInfo = wx.getAccountInfoSync
+  const originalChooseImage = wx.chooseImage
+  wx.getAccountInfoSync = () => ({ miniProgram: { envVersion: 'trial' } })
+  wx.chooseImage = options => {
+    calls.push(options)
+    options.success({ tempFilePaths: ['/isolated-camera-shot.png'], tempFiles: [{ tempFilePath: '/isolated-camera-shot.png', size: 1024 }] })
+  }
+  try {
+    const home = page('home')
+    await home.camera({})
+    assert.equal(calls.length, 1)
+    assert.equal(calls[0].sourceType[0], 'camera')
+  } finally {
+    wx.getAccountInfoSync = originalAccountInfo
+    wx.chooseImage = originalChooseImage
+  }
 })
 test('candidate confirmation supplies a string comment accepted by the server schema', async () => {
   session.save({ access_token: 'test-only-token', user: { id: 'U' } })
@@ -122,13 +143,13 @@ test('failed recognition history opens a retake dialog instead of candidate conf
   assert.ok(modal.content.includes('暂未开通'))
   assert.equal(app.globalData.recognition, null)
 })
-test('retake from historical result navigates to camera', () => {
+test('retake from historical result navigates to home', () => {
   const result = page('result')
   let destination
   const original = wx.redirectTo
   wx.redirectTo = value => { destination = value.url }
   try { result.retake() } finally { wx.redirectTo = original }
-  assert.equal(destination, '/pages/camera/index')
+  assert.equal(destination, '/pages/home/index')
 })
 test('private favorites clear cached data when the user is no longer authenticated', async () => {
   const favorites = page('favorites')

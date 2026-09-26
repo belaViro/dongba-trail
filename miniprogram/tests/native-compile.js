@@ -5,7 +5,12 @@ const { spawnSync } = require('child_process')
 
 const installation = process.argv[2]
 if (!installation) throw new Error('Pass the installed WeChat developer-tools directory as the first argument')
-const compilerRoot = path.join(installation, 'code/package.nw/node_modules/wcc-exec')
+const compilerRoots = [
+  path.join(installation, 'resources/app.asar.unpacked/node_modules/wcc-exec'),
+  path.join(installation, 'code/package.nw/node_modules/wcc-exec')
+]
+const compilerRoot = compilerRoots.find(candidate => fs.existsSync(path.join(candidate, 'wcc.exe')))
+if (!compilerRoot) throw new Error('WeChat WCC/WCSC compilers were not found under ' + installation)
 const root = path.resolve(__dirname, '..')
 const files = []
 function visit(directory) {

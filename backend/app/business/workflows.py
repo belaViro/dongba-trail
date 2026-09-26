@@ -294,13 +294,19 @@ def complete_node(session, quest_id: str, payload, user: User, *, manual_actor=N
     }
 
 
-def delete_user_history(session, user_id: str):
+def delete_user_history(session, user_id: str, settings):
+    from .samples import delete_samples
+
     ids = list(
         session.scalars(
-            select(RecognitionRecord.request_id).where(RecognitionRecord.user_id == user_id)
+            select(RecognitionRecord.request_id)
+            .where(RecognitionRecord.user_id == user_id)
+            .with_for_update()
         ).all()
     )
     if ids:
+        delete_samples(session, settings, recognition_ids=ids)
+        session.flush()
         session.execute(delete(Feedback).where(Feedback.recognition_id.in_(ids)))
         session.execute(
             update(Event).where(Event.recognition_id.in_(ids)).values(recognition_id=None)

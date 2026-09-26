@@ -1,0 +1,97 @@
+{
+  "dataset": "OPS_DEMO_20260925_V1",
+  "notice": "平台运营演示商户（虚构资料），用于功能体验；正式上线前需由实际商户确认。",
+  "merchants": [
+    {
+      "id": "OPS_MERCHANT_PAPER",
+      "name": "东巴纸坊·古城文化体验店",
+      "description": "提供东巴纸制作、象形文字临摹与书签手作体验。",
+      "address": "丽江市古城区七一街兴文巷18号（示范地址）",
+      "latitude": 26.87082,
+      "longitude": 100.23531,
+      "phone": "0888-000-0101",
+      "opening_hours": "09:30-21:00",
+      "tags": ["东巴文化", "非遗手作", "亲子体验"],
+      "character_ids": ["DB1404_1241", "DB1404_1261", "DB1404_1266", "DB1404_0268", "DB1404_0269"],
+      "merchant_quality": 0.92,
+      "operation_weight": 0.88,
+      "username": "merchant.paperhouse",
+      "display_name": "纸坊店长"
+    },
+    {
+      "id": "OPS_MERCHANT_TEA",
+      "name": "纳西茶香小院",
+      "description": "以纳西烤茶、雪山红茶和小型茶席讲解为主要体验。",
+      "address": "丽江市古城区五一街文治巷27号（示范地址）",
+      "latitude": 26.87214,
+      "longitude": 100.23806,
+      "phone": "0888-000-0102",
+      "opening_hours": "10:00-22:00",
+      "tags": ["纳西茶饮", "文化讲解", "休闲体验"],
+      "character_ids": ["DB1404_0237", "DB1404_0217", "DB1404_0046", "DB1404_0203"],
+      "merchant_quality": 0.89,
+      "operation_weight": 0.84,
+      "username": "merchant.teayard",
+      "display_name": "茶香小院店长"
+    },
+    {
+      "id": "OPS_MERCHANT_SILVER",
+      "name": "玉水银饰手作馆",
+      "description": "展示银片錾刻工艺，并提供东巴纹样银饰手作课程。",
+      "address": "丽江市古城区新义街密士巷36号（示范地址）",
+      "latitude": 26.87511,
+      "longitude": 100.23376,
+      "phone": "0888-000-0103",
+      "opening_hours": "09:00-20:30",
+      "tags": ["银饰", "手工艺", "纹样体验"],
+      "character_ids": ["DB1404_1359", "DB1404_0114", "DB1404_1266"],
+      "merchant_quality": 0.91,
+      "operation_weight": 0.86,
+      "username": "merchant.silverwork",
+      "display_name": "银饰馆店长"
+    },
+    {
+      "id": "OPS_MERCHANT_GIFT",
+      "name": "雪山礼物与哈达工坊",
+      "description": "提供哈达礼盒、雪山主题纸品和礼仪文化分享。",
+      "address": "丽江市古城区束河街道青龙路12号（示范地址）",
+      "latitude": 26.92056,
+      "longitude": 100.20542,
+      "phone": "0888-000-0104",
+      "opening_hours": "09:30-19:30",
+      "tags": ["哈达", "雪山文创", "伴手礼"],
+      "character_ids": ["DB1404_1351", "DB1404_0030", "DB1404_0425", "DB1404_0466", "DB1404_0449"],
+      "merchant_quality": 0.87,
+      "operation_weight": 0.82,
+      "username": "merchant.snowgift",
+      "display_name": "雪山礼物店长"
+    }
+  ],
+  "products": [
+    ["OPS_PRODUCT_PAPER_KIT", 0, "东巴纸绘体验套装", "含手工纸、临摹卡与基础工具。", 68.0, ["DB1404_0268", "DB1404_0269", "DB1404_1266"]],
+    ["OPS_PRODUCT_PAPER_MARK", 0, "手工纸象形书签", "现场选择代表字完成上色与装裱。", 29.0, ["DB1404_0269", "DB1404_1241"]],
+    ["OPS_PRODUCT_TEA_TABLE", 1, "雪山红茶双人茶席", "双人茶席及约30分钟冲泡讲解。", 88.0, ["DB1404_0237", "DB1404_0217"]],
+    ["OPS_PRODUCT_TEA_PACK", 1, "纳西烤茶体验包", "含烤茶原料、冲泡说明和纪念卡。", 49.0, ["DB1404_0237", "DB1404_0203"]],
+    ["OPS_PRODUCT_SILVER_PENDANT", 2, "东巴纹银坠体验", "完成选纹、錾刻和打磨的基础体验。", 228.0, ["DB1404_1359", "DB1404_1266"]],
+    ["OPS_PRODUCT_SILVER_MARK", 2, "银片錾刻书签", "以东巴纹样完成一枚银片书签。", 168.0, ["DB1404_1359", "DB1404_0114"]],
+    ["OPS_PRODUCT_HADA_BOX", 3, "哈达祝福礼盒", "含哈达、祝福卡和礼仪说明。", 99.0, ["DB1404_1351"]],
+    ["OPS_PRODUCT_SNOW_POSTCARD", 3, "雪山主题明信片组", "以雪山、江水和彩虹为主题的六张纸品。", 36.0, ["DB1404_0030", "DB1404_0425", "DB1404_0449"]]
+  ],
+  "coupons": [
+    ["OPS_COUPON_PAPER_20", 0, "纸绘体验立减20元", "到店购买满68元可使用，每位用户限领1张，不与其他优惠同享。", 120],
+    ["OPS_COUPON_PAPER_PAIR", 0, "纸绘双人同行券", "两人同行参加纸绘体验，结算时立减25元，每位用户限领1张。", 80],
+    ["OPS_COUPON_TEA_15", 1, "双人茶席立减15元", "到店购买双人茶席可立减15元，每位用户限领1张。", 100],
+    ["OPS_COUPON_TEA_85", 1, "烤茶体验八五折券", "烤茶体验项目享八五折，每位用户限领1张。", 80],
+    ["OPS_COUPON_SILVER_30", 2, "银饰手作满200减30元", "银饰手作消费满200元立减30元，每位用户限领1张。", 60],
+    ["OPS_COUPON_SILVER_90", 2, "錾刻体验九折券", "银片錾刻体验享九折，每位用户限领1张。", 90],
+    ["OPS_COUPON_HADA_20", 3, "哈达礼盒满99减20元", "哈达礼盒消费满99元立减20元，每位用户限领1张。", 80],
+    ["OPS_COUPON_POSTCARD", 3, "明信片第二件半价券", "雪山主题明信片组第二件半价，每位用户限领1张。", 120]
+  ],
+  "activities": [
+    ["OPS_ACTIVITY_PAPER", 0, "东巴象形文字临摹体验", "认识常见象形字，在手工纸上完成临摹、上色和装裱。", 16],
+    ["OPS_ACTIVITY_TEA", 1, "纳西茶席与烤茶讲解", "从茶具、火候和待客礼仪了解纳西烤茶的日常场景。", 12],
+    ["OPS_ACTIVITY_SILVER", 2, "银饰纹样手作公开课", "了解基础工具与安全规范，完成一枚入门级纹样作品。", 10],
+    ["OPS_ACTIVITY_HADA", 3, "哈达礼仪与雪山文化分享", "通过实物和图文了解哈达使用场景与雪山主题文创设计。", 20]
+  ],
+  "recognition_characters": ["DB1404_1241", "DB1404_0237", "DB1404_1359", "DB1404_1351", "DB1404_0269", "DB1404_0449", "DB1404_1266", "DB1404_0046"]
+}

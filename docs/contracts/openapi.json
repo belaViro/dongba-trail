@@ -137,6 +137,17 @@
             "title": "Image",
             "type": "string"
           },
+          "sample_consent": {
+            "default": false,
+            "title": "Sample Consent",
+            "type": "boolean"
+          },
+          "sample_scene": {
+            "default": "other",
+            "maxLength": 100,
+            "title": "Sample Scene",
+            "type": "string"
+          },
           "scene": {
             "default": "camera",
             "enum": [
@@ -167,9 +178,31 @@
         "title": "Body_upload_media_api_v1_media_post",
         "type": "object"
       },
+      "Body_upload_sample_api_v1_admin_samples_upload_post": {
+        "properties": {
+          "file": {
+            "format": "binary",
+            "title": "File",
+            "type": "string"
+          }
+        },
+        "required": [
+          "file"
+        ],
+        "title": "Body_upload_sample_api_v1_admin_samples_upload_post",
+        "type": "object"
+      },
       "CharacterInput": {
         "additionalProperties": false,
         "properties": {
+          "alias": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 50,
+            "title": "Alias",
+            "type": "array"
+          },
           "audio_url": {
             "default": "",
             "maxLength": 1000,
@@ -193,6 +226,14 @@
             "minLength": 1,
             "title": "Cn Name",
             "type": "string"
+          },
+          "commercial_tags": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 50,
+            "title": "Commercial Tags",
+            "type": "array"
           },
           "culture_detail": {
             "default": "",
@@ -223,6 +264,26 @@
             "maxLength": 1000,
             "title": "Image Url",
             "type": "string"
+          },
+          "keywords": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 100,
+            "title": "Keywords",
+            "type": "array"
+          },
+          "source_no": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source No"
           },
           "source_ref": {
             "default": "",
@@ -267,6 +328,14 @@
       "CharacterInputPatch": {
         "additionalProperties": false,
         "properties": {
+          "alias": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 50,
+            "title": "Alias",
+            "type": "array"
+          },
           "audio_url": {
             "maxLength": 1000,
             "title": "Audio Url",
@@ -287,6 +356,14 @@
             "minLength": 1,
             "title": "Cn Name",
             "type": "string"
+          },
+          "commercial_tags": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 50,
+            "title": "Commercial Tags",
+            "type": "array"
           },
           "culture_detail": {
             "maxLength": 20000,
@@ -314,6 +391,26 @@
             "maxLength": 1000,
             "title": "Image Url",
             "type": "string"
+          },
+          "keywords": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 100,
+            "title": "Keywords",
+            "type": "array"
+          },
+          "source_no": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source No"
           },
           "source_ref": {
             "maxLength": 1000,
@@ -2146,6 +2243,178 @@
         "title": "Review",
         "type": "object"
       },
+      "SampleExport": {
+        "additionalProperties": false,
+        "properties": {
+          "character_id": {
+            "anyOf": [
+              {
+                "maxLength": 64,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Character Id"
+          },
+          "dataset_version": {
+            "anyOf": [
+              {
+                "maxLength": 100,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dataset Version"
+          },
+          "limit": {
+            "default": 1000,
+            "maximum": 10000.0,
+            "minimum": 1.0,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "q": {
+            "default": "",
+            "maxLength": 200,
+            "title": "Q",
+            "type": "string"
+          },
+          "recognition_id": {
+            "anyOf": [
+              {
+                "maxLength": 64,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recognition Id"
+          },
+          "review_status": {
+            "default": "approved",
+            "enum": [
+              "pending",
+              "approved",
+              "rejected"
+            ],
+            "title": "Review Status",
+            "type": "string"
+          }
+        },
+        "title": "SampleExport",
+        "type": "object"
+      },
+      "SampleMetadataPatch": {
+        "additionalProperties": false,
+        "properties": {
+          "bbox": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "integer"
+                },
+                "maxItems": 4,
+                "minItems": 4,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bbox"
+          },
+          "character_id": {
+            "anyOf": [
+              {
+                "maxLength": 64,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Character Id"
+          },
+          "dataset_split": {
+            "enum": [
+              "unassigned",
+              "train",
+              "val",
+              "test"
+            ],
+            "title": "Dataset Split",
+            "type": "string"
+          },
+          "dataset_version": {
+            "maxLength": 100,
+            "title": "Dataset Version",
+            "type": "string"
+          },
+          "label_source": {
+            "enum": [
+              "source_material",
+              "manual",
+              "user_correction"
+            ],
+            "title": "Label Source",
+            "type": "string"
+          },
+          "quality_score": {
+            "anyOf": [
+              {
+                "maximum": 1.0,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Quality Score"
+          },
+          "review_note": {
+            "maxLength": 2000,
+            "title": "Review Note",
+            "type": "string"
+          },
+          "review_status": {
+            "enum": [
+              "pending",
+              "approved",
+              "rejected"
+            ],
+            "title": "Review Status",
+            "type": "string"
+          },
+          "sample_type": {
+            "enum": [
+              "dictionary",
+              "augmented",
+              "real_photo"
+            ],
+            "title": "Sample Type",
+            "type": "string"
+          },
+          "scene": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Scene",
+            "type": "string"
+          },
+          "source_ref": {
+            "maxLength": 1000,
+            "title": "Source Ref",
+            "type": "string"
+          }
+        },
+        "title": "SampleMetadataPatch",
+        "type": "object"
+      },
       "Setup": {
         "additionalProperties": false,
         "properties": {
@@ -2175,6 +2444,77 @@
           "display_name"
         ],
         "title": "Setup",
+        "type": "object"
+      },
+      "SystemConfigUpdate": {
+        "properties": {
+          "clear_provider_api_key": {
+            "default": false,
+            "title": "Clear Provider Api Key",
+            "type": "boolean"
+          },
+          "map_center_latitude": {
+            "default": 26.875,
+            "maximum": 54.0,
+            "minimum": 3.0,
+            "title": "Map Center Latitude",
+            "type": "number"
+          },
+          "map_center_longitude": {
+            "default": 100.235,
+            "maximum": 135.0,
+            "minimum": 73.0,
+            "title": "Map Center Longitude",
+            "type": "number"
+          },
+          "map_default_zoom": {
+            "default": 12,
+            "maximum": 18.0,
+            "minimum": 3.0,
+            "title": "Map Default Zoom",
+            "type": "integer"
+          },
+          "map_web_key": {
+            "maxLength": 256,
+            "title": "Map Web Key",
+            "type": "string"
+          },
+          "provider_api_key": {
+            "default": "",
+            "maxLength": 4096,
+            "title": "Provider Api Key",
+            "type": "string"
+          },
+          "provider_endpoint": {
+            "maxLength": 500,
+            "title": "Provider Endpoint",
+            "type": "string"
+          },
+          "provider_model": {
+            "maxLength": 160,
+            "title": "Provider Model",
+            "type": "string"
+          },
+          "provider_name": {
+            "maxLength": 40,
+            "title": "Provider Name",
+            "type": "string"
+          },
+          "provider_timeout_seconds": {
+            "exclusiveMinimum": 0.0,
+            "maximum": 60.0,
+            "title": "Provider Timeout Seconds",
+            "type": "number"
+          }
+        },
+        "required": [
+          "provider_name",
+          "provider_endpoint",
+          "provider_model",
+          "provider_timeout_seconds",
+          "map_web_key"
+        ],
+        "title": "SystemConfigUpdate",
         "type": "object"
       },
       "TagRequest": {
@@ -2784,6 +3124,46 @@
         ]
       }
     },
+    "/api/v1/admin/activities/{entity_id}/revisions": {
+      "get": {
+        "operationId": "admin_revisions_activities_api_v1_admin_activities__entity_id__revisions_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "entity_id",
+            "required": true,
+            "schema": {
+              "title": "Entity Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Admin Revisions Activities",
+        "tags": [
+          "Business"
+        ]
+      }
+    },
     "/api/v1/admin/audit": {
       "get": {
         "operationId": "admin_list_audit_api_v1_admin_audit_get",
@@ -3069,6 +3449,46 @@
         ]
       }
     },
+    "/api/v1/admin/characters/{entity_id}/revisions": {
+      "get": {
+        "operationId": "admin_revisions_characters_api_v1_admin_characters__entity_id__revisions_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "entity_id",
+            "required": true,
+            "schema": {
+              "title": "Entity Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Admin Revisions Characters",
+        "tags": [
+          "Business"
+        ]
+      }
+    },
     "/api/v1/admin/coupons": {
       "get": {
         "operationId": "admin_list_coupons_api_v1_admin_coupons_get",
@@ -3269,6 +3689,46 @@
           }
         },
         "summary": "Admin Update Coupons",
+        "tags": [
+          "Business"
+        ]
+      }
+    },
+    "/api/v1/admin/coupons/{entity_id}/revisions": {
+      "get": {
+        "operationId": "admin_revisions_coupons_api_v1_admin_coupons__entity_id__revisions_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "entity_id",
+            "required": true,
+            "schema": {
+              "title": "Entity Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Admin Revisions Coupons",
         "tags": [
           "Business"
         ]
@@ -3661,6 +4121,46 @@
         ]
       }
     },
+    "/api/v1/admin/merchants/{entity_id}/revisions": {
+      "get": {
+        "operationId": "admin_revisions_merchants_api_v1_admin_merchants__entity_id__revisions_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "entity_id",
+            "required": true,
+            "schema": {
+              "title": "Entity Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Admin Revisions Merchants",
+        "tags": [
+          "Business"
+        ]
+      }
+    },
     "/api/v1/admin/pois": {
       "get": {
         "operationId": "admin_list_pois_api_v1_admin_pois_get",
@@ -3866,6 +4366,46 @@
         ]
       }
     },
+    "/api/v1/admin/pois/{entity_id}/revisions": {
+      "get": {
+        "operationId": "admin_revisions_pois_api_v1_admin_pois__entity_id__revisions_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "entity_id",
+            "required": true,
+            "schema": {
+              "title": "Entity Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Admin Revisions Pois",
+        "tags": [
+          "Business"
+        ]
+      }
+    },
     "/api/v1/admin/products": {
       "get": {
         "operationId": "admin_list_products_api_v1_admin_products_get",
@@ -4066,6 +4606,46 @@
           }
         },
         "summary": "Admin Update Products",
+        "tags": [
+          "Business"
+        ]
+      }
+    },
+    "/api/v1/admin/products/{entity_id}/revisions": {
+      "get": {
+        "operationId": "admin_revisions_products_api_v1_admin_products__entity_id__revisions_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "entity_id",
+            "required": true,
+            "schema": {
+              "title": "Entity Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Admin Revisions Products",
         "tags": [
           "Business"
         ]
@@ -4295,6 +4875,46 @@
         ]
       }
     },
+    "/api/v1/admin/quest-nodes/{entity_id}/revisions": {
+      "get": {
+        "operationId": "admin_revisions_quest_nodes_api_v1_admin_quest_nodes__entity_id__revisions_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "entity_id",
+            "required": true,
+            "schema": {
+              "title": "Entity Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Admin Revisions Quest-Nodes",
+        "tags": [
+          "Business"
+        ]
+      }
+    },
     "/api/v1/admin/quests": {
       "get": {
         "operationId": "admin_list_quests_api_v1_admin_quests_get",
@@ -4500,6 +5120,46 @@
         ]
       }
     },
+    "/api/v1/admin/quests/{entity_id}/revisions": {
+      "get": {
+        "operationId": "admin_revisions_quests_api_v1_admin_quests__entity_id__revisions_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "entity_id",
+            "required": true,
+            "schema": {
+              "title": "Entity Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Admin Revisions Quests",
+        "tags": [
+          "Business"
+        ]
+      }
+    },
     "/api/v1/admin/quests/{quest_id}/complete-node": {
       "post": {
         "operationId": "manual_node_api_v1_admin_quests__quest_id__complete_node_post",
@@ -4630,6 +5290,349 @@
         ]
       }
     },
+    "/api/v1/admin/samples": {
+      "get": {
+        "operationId": "list_samples_api_v1_admin_samples_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "default": "",
+              "maxLength": 200,
+              "title": "Q",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "review_status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "pending",
+                    "approved",
+                    "rejected"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Review Status"
+            }
+          },
+          {
+            "in": "query",
+            "name": "character_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 64,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Character Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "recognition_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 64,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Recognition Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "dataset_version",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 100,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Dataset Version"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Samples",
+        "tags": [
+          "Image samples"
+        ]
+      }
+    },
+    "/api/v1/admin/samples/export": {
+      "post": {
+        "operationId": "export_samples_api_v1_admin_samples_export_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SampleExport"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Export Samples",
+        "tags": [
+          "Image samples"
+        ]
+      }
+    },
+    "/api/v1/admin/samples/upload": {
+      "post": {
+        "operationId": "upload_sample_api_v1_admin_samples_upload_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_sample_api_v1_admin_samples_upload_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Upload Sample",
+        "tags": [
+          "Image samples"
+        ]
+      }
+    },
+    "/api/v1/admin/samples/{sample_id}": {
+      "delete": {
+        "operationId": "remove_sample_api_v1_admin_samples__sample_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "sample_id",
+            "required": true,
+            "schema": {
+              "title": "Sample Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Remove Sample",
+        "tags": [
+          "Image samples"
+        ]
+      },
+      "patch": {
+        "operationId": "update_sample_api_v1_admin_samples__sample_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "sample_id",
+            "required": true,
+            "schema": {
+              "title": "Sample Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SampleMetadataPatch"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Sample",
+        "tags": [
+          "Image samples"
+        ]
+      }
+    },
+    "/api/v1/admin/samples/{sample_id}/image": {
+      "get": {
+        "operationId": "sample_image_api_v1_admin_samples__sample_id__image_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "sample_id",
+            "required": true,
+            "schema": {
+              "title": "Sample Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Sample Image",
+        "tags": [
+          "Image samples"
+        ]
+      }
+    },
     "/api/v1/admin/settings": {
       "get": {
         "operationId": "get_settings_api_v1_admin_settings_get",
@@ -4704,6 +5707,62 @@
         "summary": "Admin Stats",
         "tags": [
           "Business"
+        ]
+      }
+    },
+    "/api/v1/admin/system-config": {
+      "get": {
+        "operationId": "get_system_config_api_v1_admin_system_config_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get System Config",
+        "tags": [
+          "System configuration"
+        ]
+      },
+      "put": {
+        "operationId": "save_system_config_api_v1_admin_system_config_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SystemConfigUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Save System Config",
+        "tags": [
+          "System configuration"
         ]
       }
     },
@@ -6019,6 +7078,140 @@
         ]
       }
     },
+    "/api/v1/me/samples": {
+      "get": {
+        "operationId": "my_samples_api_v1_me_samples_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "My Samples",
+        "tags": [
+          "Image samples"
+        ]
+      }
+    },
+    "/api/v1/me/samples/{sample_id}": {
+      "delete": {
+        "operationId": "remove_my_sample_api_v1_me_samples__sample_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "sample_id",
+            "required": true,
+            "schema": {
+              "title": "Sample Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Remove My Sample",
+        "tags": [
+          "Image samples"
+        ]
+      }
+    },
+    "/api/v1/me/samples/{sample_id}/image": {
+      "get": {
+        "operationId": "my_sample_image_api_v1_me_samples__sample_id__image_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "sample_id",
+            "required": true,
+            "schema": {
+              "title": "Sample Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "My Sample Image",
+        "tags": [
+          "Image samples"
+        ]
+      }
+    },
     "/api/v1/me/stamps": {
       "get": {
         "operationId": "my_stamps_api_v1_me_stamps_get",
@@ -7276,6 +8469,25 @@
         "summary": "Get Products",
         "tags": [
           "Business"
+        ]
+      }
+    },
+    "/api/v1/public/map-config": {
+      "get": {
+        "operationId": "map_config_api_v1_public_map_config_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Map Config",
+        "tags": [
+          "Map"
         ]
       }
     },

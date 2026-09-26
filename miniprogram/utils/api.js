@@ -55,12 +55,17 @@ function request(path, options) {
 }
 function upload(filePath, scene, options) {
   const opts = options || {}
+  const formData = { scene: scene === 'album' ? 'album' : 'camera' }
+  if (opts.sampleConsent === true) {
+    formData.sample_consent = 'true'
+    formData.sample_scene = opts.sampleScene || 'other'
+  }
   return new Promise((resolve, reject) => {
     const auth = session.get()
     if (!auth) { reject(errorFrom(401, { code: 'AUTH_REQUIRED' })); return }
     wx.uploadFile({
       url: config.apiBase + '/recognize', filePath, name: 'image',
-      formData: { scene, sample_consent: opts.sampleConsent === true ? 'true' : 'false', sample_scene: opts.sampleScene || 'other' }, timeout: config.recognitionTimeout,
+      formData, timeout: config.recognitionTimeout,
       header: { Authorization: 'Bearer ' + auth.access_token },
       success(response) {
         let body
@@ -68,7 +73,13 @@ function upload(filePath, scene, options) {
         if (response.statusCode >= 200 && response.statusCode < 300) resolve(body)
         else reject(errorFrom(response.statusCode, body))
       },
-      fail() { reject(new Error('图片上传失败，请检查网络后重试')) }
+      fail(error) {
+        const detail = error && error.errMsg ? error.errMsg : ''
+        const failure = new Error(detail ? '图片上传失败：' + detail : '图片上传失败，请检查网络后重试')
+        failure.code = 'NETWORK_ERROR'
+        failure.errMsg = detail
+        reject(failure)
+      }
     })
   })
 }

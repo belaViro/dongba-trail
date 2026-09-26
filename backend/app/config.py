@@ -30,6 +30,7 @@ class Settings(BaseSettings):
     provider_endpoint: str = ""
     provider_api_key: SecretStr | None = None
     provider_model: str = ""
+    system_config_encryption_key: SecretStr | None = None
     request_limit_per_minute: int = Field(default=120, ge=1, le=10000)
     recognition_limit_per_minute: int = Field(default=10, ge=1, le=120)
     trusted_hosts: list[str] = ["localhost", "127.0.0.1", "testserver"]

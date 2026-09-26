@@ -1,1 +1,6 @@
-.quest-row{padding:30rpx 0 36rpx;border-bottom:1rpx solid #d8e3da}.area{color:#a3604f;font-size:24rpx}.quest-name{font-size:37rpx;font-weight:700;margin:12rpx 0 14rpx}.continue{color:#176b58;font-size:25rpx}
+.quests-page{background:radial-gradient(circle at 95% 3%,#e9d7c1,transparent 36%),#f6f1e8;min-height:100vh}
+.quest-hero{padding:32rpx 26rpx;background:#fffaf0;border:1rpx solid #dfcfb7;border-radius:22rpx;box-shadow:0 12rpx 30rpx rgba(71,55,37,.06)}
+.quest-hero .page-title{font-family:serif;font-size:50rpx;margin:8rpx 0;color:#3d3026}.quest-hero .row>view{flex:1;min-width:0}.quest-hero button{flex-shrink:0}
+.eyebrow{letter-spacing:3rpx;color:#a73529;font-size:20rpx;font-weight:600}.hero-line{width:90rpx;height:4rpx;background:#a73529;margin:24rpx 0 14rpx}.hero-copy{font-size:25rpx;color:#756553;line-height:1.8}
+.tabs .active{background:#a73529}.quest-row{padding:30rpx 26rpx;margin:22rpx 0 0;background:#fffdf8;border:1rpx solid #e3d7c5;border-radius:20rpx;box-shadow:0 8rpx 24rpx rgba(67,53,37,.05)}
+.area{color:#a73529;font-size:23rpx;letter-spacing:2rpx}.quest-name{font-family:serif;font-size:38rpx;font-weight:700;margin:16rpx 0 14rpx;color:#3d3026}.continue{color:#a73529;font-size:25rpx}.quest-row .section{padding-top:20rpx;border-top:1rpx dashed #ddcbb3;margin-top:26rpx}

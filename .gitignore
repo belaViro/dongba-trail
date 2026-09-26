@@ -17,3 +17,8 @@ coverage/
 *.log
 .DS_Store
 miniprogram/project.private.config.json
+
+# Local source datasets and deployment snapshots are not repository artifacts
+/数据集/
+/tmp-web-prev/
+miniprogram/project.private.config.json.bak

@@ -9,6 +9,7 @@ from .content import (
     audit,
     claim_dict,
     disable_entity,
+    ensure_revision_baseline,
     entity,
     list_entities,
     nearby,
@@ -22,6 +23,7 @@ from .models import (
     Claim,
     Enrollment,
     Entity,
+    EntityRevision,
     Event,
     Favorite,
     Feedback,
@@ -31,6 +33,7 @@ from .models import (
     TagClaim,
     User,
 )
+from .samples import record_sample_correction
 from .schemas import (
     MERCHANT_CREATE_SCHEMAS,
     PATCH_SCHEMAS,
@@ -235,7 +238,7 @@ def history(
 def clear_history(request: Request, user: User = Depends(current_user)):
     with request.app.state.database.write() as session:
         lock_user(session, user.id)
-        removed = delete_user_history(session, user.id)
+        removed = delete_user_history(session, user.id, request.app.state.business_settings)
         audit(session, user, "delete_history", "users", user.id, {"removed": removed})
     return {"deleted": removed}
 
@@ -308,6 +311,7 @@ def confirm(
             session.add(feedback)
         feedback.character_id, feedback.comment = payload.character_id, payload.comment
         record.confirmed_character_id = payload.character_id
+        record_sample_correction(session, recognition_id, payload.character_id)
         session.flush()
         return serialize(feedback)
 
@@ -536,6 +540,25 @@ def redemptions(
 
 
 def register_admin(resource):
+    def revisions(entity_id: str, request: Request, user: User = Depends(require_operations)):
+        with request.app.state.database.write() as session:
+            row = entity(session, resource, entity_id, lock=True)
+            ensure_revision_baseline(session, row)
+            rows = session.scalars(
+                select(EntityRevision)
+                .where(EntityRevision.entity_id == row.id, EntityRevision.resource == resource)
+                .order_by(EntityRevision.version.desc())
+            ).all()
+            return {"items": [serialize(revision) for revision in rows], "total": len(rows)}
+
+    if resource != "users":
+        router.add_api_route(
+            f"/admin/{resource}/{{entity_id}}/revisions",
+            revisions,
+            methods=["GET"],
+            name=f"admin_revisions_{resource}",
+        )
+
     def listing(
         request: Request,
         user: User = Depends(require_operations),

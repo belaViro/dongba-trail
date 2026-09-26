@@ -10,6 +10,7 @@ import EntityForm from '../components/EntityForm.vue'
 import StatusTag from '../components/StatusTag.vue'
 import MediaImage from '../components/MediaImage.vue'
 import ExportButton from '../components/ExportButton.vue'
+import RevisionHistory from '../components/RevisionHistory.vue'
 const props = defineProps<{ resource: string }>()
 const config = computed(() => resources[props.resource]!)
 const merchant = computed(() => session.user?.role === 'merchant')
@@ -27,6 +28,12 @@ const saving = ref(false)
 const formError = ref('')
 const detail = ref<Row | null>(null)
 const showDetail = ref(false)
+const historyId = ref('')
+const showHistory = ref(false)
+function openHistory(row: Row) {
+  historyId.value = row.id
+  showHistory.value = true
+}
 const qr = reactive({ visible: false, image: '', name: '', id: '', loading: false, error: '' })
 async function showQr(row: Row) {
   Object.assign(qr, { visible: true, image: '', name: row.name, id: row.id, loading: true, error: '' })
@@ -47,6 +54,7 @@ function downloadQr() {
 }
 function handleCommand(command: string, row: Row) {
   if (command === 'delete') void remove(row)
+  else if (command === 'history') openHistory(row)
   else if (command === 'qr') void showQr(row)
   else if (command === 'manual') Object.assign(manual, { visible: true, node: row, user_id: '', error: '' })
   else void changeStatus(row, command)
@@ -285,6 +293,9 @@ onMounted(load)
             <el-button :icon="More" text aria-label="更多操作" />
             <template #dropdown>
               <el-dropdown-menu>
+                <el-dropdown-item v-if="resource === 'characters' && !merchant" command="history">
+                  历史版本
+                </el-dropdown-item>
                 <template v-if="!merchant">
                   <el-dropdown-item
                     v-if="resource === 'users'"
@@ -368,6 +379,14 @@ onMounted(load)
       <div class="detail-status">
         <StatusTag :value="detail.status" />
         <span>{{ detail.id }}</span>
+        <el-button
+          v-if="resource === 'characters' && !merchant"
+          link
+          type="primary"
+          @click="openHistory(detail)"
+        >
+          历史版本
+        </el-button>
       </div>
       <el-descriptions :column="1" border>
         <el-descriptions-item
@@ -399,6 +418,14 @@ onMounted(load)
         </el-descriptions-item>
       </el-descriptions>
     </template>
+  </el-drawer>
+  <el-drawer v-model="showHistory" title="词条历史版本" size="min(780px, 100vw)" destroy-on-close>
+    <RevisionHistory
+      v-if="showHistory"
+      :key="`${resource}/${historyId}`"
+      :resource="resource"
+      :entity-id="historyId"
+    />
   </el-drawer>
   <el-dialog v-model="manual.visible" title="人工确认打卡" width="min(460px, 94vw)">
     <el-alert v-if="manual.error" :title="manual.error" type="error" :closable="false" class="form-alert" />

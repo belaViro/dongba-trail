@@ -70,13 +70,21 @@ def serialize(row, session=None, *, privileged=False) -> dict:
         "reviewed_at": row.reviewed_at,
     }
     if row.kind == "characters":
-        for key, default in (("source_no", None), ("alias", []), ("keywords", []), ("commercial_tags", [])):
+        for key, default in (
+            ("source_no", None),
+            ("alias", []),
+            ("keywords", []),
+            ("commercial_tags", []),
+        ):
             output.setdefault(key, default)
         output["character_id"] = row.id
     if row.kind == "coupons" and session is not None:
         inventory = session.get(CouponStock, row.id)
-        output["stock"] = inventory.stock if inventory else 0
-        output["claimed_count"] = inventory.claimed_count if inventory else 0
+        stock = inventory.stock if inventory else 0
+        claimed_count = inventory.claimed_count if inventory else 0
+        output["stock"] = stock
+        output["claimed_count"] = claimed_count
+        output["remaining_count"] = max(stock - claimed_count, 0)
     if not privileged:
         output.pop("qr_token", None)
     return output
@@ -84,9 +92,12 @@ def serialize(row, session=None, *, privileged=False) -> dict:
 
 def record_revision(session, row: Entity, action: str, actor_id: str | None):
     # Callers hold the entity lock, keeping version assignment in the same transaction.
-    latest = session.scalar(
-        select(func.max(EntityRevision.version)).where(EntityRevision.entity_id == row.id)
-    ) or 0
+    latest = (
+        session.scalar(
+            select(func.max(EntityRevision.version)).where(EntityRevision.entity_id == row.id)
+        )
+        or 0
+    )
     revision = EntityRevision(
         entity_id=row.id,
         resource=row.kind,
@@ -101,7 +112,9 @@ def record_revision(session, row: Entity, action: str, actor_id: str | None):
 
 
 def ensure_revision_baseline(session, row: Entity):
-    if not session.scalar(select(EntityRevision.id).where(EntityRevision.entity_id == row.id).limit(1)):
+    if not session.scalar(
+        select(EntityRevision.id).where(EntityRevision.entity_id == row.id).limit(1)
+    ):
         record_revision(session, row, "baseline", None)
 
 
@@ -392,7 +405,16 @@ def list_entities(
             and q.casefold()
             not in " ".join(
                 str(row.data.get(key, ""))
-                for key in ("name", "cn_name", "title", "description", "source_no", "alias", "keywords", "commercial_tags")
+                for key in (
+                    "name",
+                    "cn_name",
+                    "title",
+                    "description",
+                    "source_no",
+                    "alias",
+                    "keywords",
+                    "commercial_tags",
+                )
             ).casefold()
         ):
             continue

@@ -1,0 +1,1 @@
+<view class="feature-note" role="note"><text class="label">{{label}}</text><text class="detail">{{detail}}</text></view>

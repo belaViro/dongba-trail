@@ -18,5 +18,9 @@ async function navigate(place) {
   return call('openLocation', { latitude: Number(place.latitude), longitude: Number(place.longitude), name: place.name, address: place.address || '', scale: 17 })
 }
 function openSettings() { return call('openSetting') }
-module.exports = { call, privacy, locate, navigate, openSettings }
-
+function isExperience() {
+  if (!require('../config').experienceMode || !wx.getAccountInfoSync) return false
+  const info = wx.getAccountInfoSync()
+  return !!(info.miniProgram && ['trial', 'develop'].includes(info.miniProgram.envVersion))
+}
+module.exports = { call, privacy, locate, navigate, openSettings, isExperience }

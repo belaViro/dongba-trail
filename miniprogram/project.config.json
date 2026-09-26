@@ -3,33 +3,58 @@
   "packOptions": {
     "ignore": [
       {
-        "type": "folder",
-        "value": "tests"
+        "value": "tests",
+        "type": "folder"
       },
       {
-        "type": "folder",
-        "value": "tools"
+        "value": "tools",
+        "type": "folder"
       },
       {
-        "type": "file",
-        "value": "README.md"
+        "value": "数据集",
+        "type": "folder"
       },
       {
-        "type": "file",
-        "value": "ASSETS.md"
+        "value": "README.md",
+        "type": "file"
+      },
+      {
+        "value": "ASSETS.md",
+        "type": "file"
       }
-    ]
+    ],
+    "include": []
   },
   "setting": {
     "es6": true,
     "postcss": true,
     "minified": true,
-    "urlCheck": true,
-    "enhance": true
+    "urlCheck": false,
+    "enhance": true,
+    "compileWorklet": false,
+    "uglifyFileName": false,
+    "uploadWithSourceMap": true,
+    "packNpmManually": false,
+    "packNpmRelationList": [],
+    "minifyWXSS": true,
+    "minifyWXML": true,
+    "localPlugins": false,
+    "disableUseStrict": false,
+    "useCompilerPlugins": false,
+    "condition": false,
+    "swc": false,
+    "disableSWC": true,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    }
   },
   "compileType": "miniprogram",
-  "libVersion": "3.7.1",
-  "appid": "touristappid",
+  "libVersion": "3.17.3",
+  "appid": "wxdf7628b04857f041",
   "projectname": "dongba-lijiang",
-  "miniprogramRoot": "./"
+  "miniprogramRoot": "./",
+  "simulatorPluginLibVersion": {},
+  "editorSetting": {}
 }
