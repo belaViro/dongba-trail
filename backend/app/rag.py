@@ -30,6 +30,9 @@ from .business.models import Sample, User
 
 router = APIRouter(prefix="/api/v1", tags=["RAG case library"])
 SEARCHABLE_STATUSES = {"approved", "indexed"}
+# AI-01 / D-065: reviewed memory is advisory. A lexical hit below this score is
+# too weak to introduce a dictionary entry the vision provider never returned.
+MIN_APPLY_SCORE = 0.45
 TOKEN_RE = re.compile(r"[\u4e00-\u9fff]|[^\W\u4e00-\u9fff]+", re.UNICODE)
 
 
@@ -325,22 +328,41 @@ def reindex_all(database) -> dict[str, int]:
 
 
 def apply_hits(candidates, hits: list[dict], dictionary):
-    """Re-rank provider candidates and optionally add known dictionary matches."""
-    if not hits:
+    """Add reviewed memory candidates without letting memory outrank the model.
+
+    D-065: reviewed corrections accumulate across all visitors, so a lexical
+    hit is a memory of *some past* photo, not evidence about this one. Provider
+    candidates therefore keep their own order and RAG may only append published
+    entries the provider did not return. Memory defines the order only when the
+    provider returned no usable candidate at all, where an advisory suggestion
+    is still better than a blank result.
+    """
+    ordered_ids: list[str] = []
+    for hit in hits:
+        score = hit.get("score")
+        if score is not None and float(score) < MIN_APPLY_SCORE:
+            continue
+        character_id = hit.get("character_id")
+        if character_id and character_id not in ordered_ids:
+            ordered_ids.append(character_id)
+    if not ordered_ids:
         return candidates, False
-    hit_order = {}
-    for hit in hits:
-        hit_order.setdefault(hit["character_id"], len(hit_order))
-    candidates = list(candidates)
-    present = {candidate.character_id for candidate in candidates}
-    for hit in hits:
-        character = dictionary.get(hit["character_id"])
+
+    merged = list(candidates)
+    present = {candidate.character_id for candidate in merged}
+    provider_ranked = bool(merged)
+    for character_id in ordered_ids:
+        if len(merged) >= 5:
+            break
+        character = dictionary.get(character_id)
         if character is None or character.character_id in present:
             continue
-        candidates.append(dictionary_candidate(character, provider_score=None))
+        merged.append(dictionary_candidate(character, provider_score=None))
         present.add(character.character_id)
-    candidates.sort(key=lambda item: hit_order.get(item.character_id, len(hit_order) + 1))
-    return candidates[:5], True
+    if provider_ranked:
+        # Only report memory as applied when it actually contributed a candidate.
+        return merged[:5], len(merged) > len(candidates)
+    return merged[:5], bool(merged)
 
 
 def dictionary_candidate(character, provider_score=None):

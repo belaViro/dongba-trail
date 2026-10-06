@@ -64,6 +64,7 @@ Page({
   },
   merchantImageError(event) { this.setData({ merchants: this.data.merchants.map(item => item.id === event.currentTarget.dataset.id ? Object.assign({}, item, { imageFailed: true }) : item) }) },
   camera() { return recognition.chooseCamera() },
+  album() { return recognition.chooseAlbum() },
   character() { if (this.data.today) wx.navigateTo({ url: '/pages/character/index?id=' + encodeURIComponent(this.data.today.id) }) },
   merchant(event) { wx.navigateTo({ url: '/pages/merchant/index?id=' + encodeURIComponent(event.currentTarget.dataset.id) }) },
   map() { wx.switchTab({ url: '/pages/map/index' }) },

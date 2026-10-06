@@ -49,7 +49,10 @@ class Settings(BaseSettings):
     privacy_version: str = "2026-09-23.1"
     retention_days: int = Field(default=30, ge=1, le=365)
     quality_checks_enabled: bool = True
-    quality_min_edge: int = Field(default=96, ge=16, le=1024)
+    # Screenshots and heavily compressed photos lose the thin strokes that
+    # separate similar Dongba glyphs. Require a real camera-resolution crop
+    # instead of silently scoring a blurred thumbnail as a wrong character.
+    quality_min_edge: int = Field(default=200, ge=16, le=1024)
     quality_min_edge_variance: float = Field(default=2.0, ge=0, le=100)
 
     @model_validator(mode="after")

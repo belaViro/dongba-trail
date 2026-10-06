@@ -21,6 +21,8 @@ page { background: #f3f4f7; }
 .camera-mark { display: block; width: 98rpx; height: 86rpx; margin-bottom: 12rpx; }
 .camera-title { font-size: 31rpx; font-weight: 700; letter-spacing: 1rpx; line-height: 1.5; }
 .camera-sub { font-size: 21rpx; line-height: 1.5; font-weight: 400; margin-top: 4rpx; }
+.album-shortcut { position: absolute; right: 2rpx; bottom: 46rpx; z-index: 4; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 112rpx; height: 112rpx; min-height: 112rpx; padding: 0; border-radius: 50%; color: #24506e; background: rgba(255,255,255,.92); box-shadow: 0 6rpx 18rpx rgba(31,58,84,.22), inset 0 0 0 2rpx rgba(120,170,210,.5); font-size: 20rpx; line-height: 1.4; }
+.album-shortcut-icon { font-size: 36rpx; line-height: 1.1; }
 .home-content { position: relative; padding: 0 24rpx; }
 .home-state { position: relative; z-index: 2; }
 .daily-card { position: relative; z-index: 2; margin-top: -12rpx; overflow: hidden; border-radius: 22rpx; padding: 24rpx 26rpx 26rpx; background: #fcf3e4; box-shadow: 0 8rpx 28rpx rgba(97,75,44,.05); }

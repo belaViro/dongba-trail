@@ -17,6 +17,7 @@
       <button class="recognize" bindtap="camera" aria-label="拍照识东巴，打开微信系统相机">
         <image class="camera-mark" src="/assets/home/camera.png" mode="aspectFit" /><text class="camera-title">拍照识东巴</text><text class="camera-sub">一拍即识 · 探索千年</text>
       </button>
+      <button class="album-shortcut" bindtap="album" aria-label="从相册选择东巴字图片识别"><text class="album-shortcut-icon">▣</text><text>相册</text></button>
     </view>
   </view>
   <view class="home-content">

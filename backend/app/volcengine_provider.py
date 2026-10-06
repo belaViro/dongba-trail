@@ -57,9 +57,12 @@ class VolcengineArkProvider:
         if not self.configured:
             raise ProviderUnavailable("Volcengine Ark provider is not configured")
         prompt = (
-            "识别图片中的单个东巴字，并先抄录图片中实际看到的文字。只从下面的已审核候选中选择，不能创建新编号，"
-            "不能编造文化解释。返回严格 JSON："
-            '{"observed_text":"图片中读到的文字","keywords":[],"scene":"","candidates":[{"character_id":"候选编号","score":0.0}]}。'
+            "识别图片中央由四角取景框圈住的单个东巴文字。只抄录实际看到的东巴字形笔画，"
+            "忽略框外环境、手指、纸张边缘、阴影、装饰和其他文字；框内若有多个字形，只取中央最完整的一个。"
+            "不要把字形联想成动物或物体，也不要描述画面内容；"
+            "若框内没有可辨认的东巴文字，必须返回空 candidates，不要猜测。"
+            "只从下面的已审核候选中选择，不能创建新编号，不能编造文化解释。返回严格 JSON："
+            '{"observed_text":"框内东巴字的笔画或读法","keywords":[],"scene":"","candidates":[{"character_id":"候选编号","score":0.0}]}。'
             "最多返回5个候选；不确定时返回空 candidates。候选目录：\n" + self._catalog(characters)
         )
         payload = {

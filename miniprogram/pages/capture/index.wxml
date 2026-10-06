@@ -1,0 +1,39 @@
+<view class="capture-page">
+  <block wx:if="{{view === 'camera'}}">
+    <camera class="camera-view" device-position="{{facing}}" flash="{{flash}}" resolution="high" binderror="cameraError" />
+    <view class="camera-top" style="padding-top:{{32 + safeTop}}px">
+      <button size="mini" class="icon-button" bindtap="close" aria-label="关闭拍摄"><text>✕</text></button>
+      <text class="camera-title">拍摄东巴字</text>
+      <button size="mini" class="icon-button" bindtap="toggleFlash" aria-label="{{flash === 'on' ? '关闭闪光灯' : '打开闪光灯'}}"><text>{{flash === 'on' ? '⚡' : '☀'}}</text></button>
+    </view>
+    <view class="frame-guide" aria-hidden="true"><view class="guide-corner tl"></view><view class="guide-corner tr"></view><view class="guide-corner bl"></view><view class="guide-corner br"></view></view>
+    <view class="camera-bottom" style="bottom:{{96 + safeBottom}}px">
+      <button size="mini" class="album-entry" bindtap="album" disabled="{{busy}}"><text class="album-icon">▣</text><text>相册</text></button>
+      <button size="mini" class="shutter" bindtap="shoot" disabled="{{busy}}" loading="{{busy}}" aria-label="拍照"><view class="shutter-inner"></view></button>
+      <button size="mini" class="flip-entry" bindtap="flip" disabled="{{busy}}"><text class="album-icon">⟲</text><text>翻转</text></button>
+    </view>
+    <view class="camera-hint" style="bottom:{{42 + safeBottom}}px">把东巴字放进四个角内，避开其他文字和背景</view>
+  </block>
+
+  <block wx:else>
+    <view class="crop-head" style="padding-top:{{28 + safeTop}}px"><button size="mini" class="icon-button dark" bindtap="retake" aria-label="重新拍摄"><text>‹</text></button><text class="crop-title">框选东巴字</text><text class="crop-source">{{source === 'album' ? '来自相册' : '刚刚拍摄'}}</text></view>
+    <view class="crop-stage" style="height:{{stage ? stage.height + 'px' : ''}}">
+      <image wx:if="{{cropPath}}" class="crop-image" src="{{cropPath}}" mode="scaleToFill" style="left:{{display.left}}px;top:{{display.top}}px;width:{{display.width}}px;height:{{display.height}}px" />
+      <view wx:if="{{frame}}" class="crop-frame" style="left:{{frame.x}}px;top:{{frame.y}}px;width:{{frame.width}}px;height:{{frame.height}}px" data-role="move" catchtouchstart="touchStart" catchtouchmove="touchMove" catchtouchend="touchEnd">
+        <view class="corner tl" data-role="nw" catchtouchstart="touchStart" catchtouchmove="touchMove" catchtouchend="touchEnd"></view>
+        <view class="corner tr" data-role="ne" catchtouchstart="touchStart" catchtouchmove="touchMove" catchtouchend="touchEnd"></view>
+        <view class="corner bl" data-role="sw" catchtouchstart="touchStart" catchtouchmove="touchMove" catchtouchend="touchEnd"></view>
+        <view class="corner br" data-role="se" catchtouchstart="touchStart" catchtouchmove="touchMove" catchtouchend="touchEnd"></view>
+      </view>
+    </view>
+    <view class="crop-tip">拖动方框和四角，只保留东巴字，去掉周围环境和其他文字。</view>
+    <view class="crop-actions" style="padding-bottom:{{40 + safeBottom}}px">
+      <button size="mini" class="crop-reset" bindtap="reset" disabled="{{busy}}">重置</button>
+      <button size="mini" class="crop-retake" bindtap="retake" disabled="{{busy}}">重拍</button>
+      <button size="mini" class="crop-confirm" bindtap="confirm" disabled="{{busy}}" loading="{{busy}}">{{busy ? '识别中' : '识别这个字'}}</button>
+    </view>
+  </block>
+
+  <view wx:if="{{error}}" class="capture-error" role="alert">{{error}}</view>
+  <canvas canvas-id="crop-canvas" class="crop-canvas" />
+</view>

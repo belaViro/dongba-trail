@@ -17,7 +17,8 @@
     "pages/samples/index",
     "pages/favorites/index",
     "pages/stamps/index",
-    "pages/poster/index"
+    "pages/poster/index",
+    "pages/capture/index"
   ],
   "window": {
     "navigationBarTitleText": "东巴寻迹 · 丽江",

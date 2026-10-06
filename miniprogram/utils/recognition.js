@@ -1,36 +1,19 @@
-const api = require('./api')
-const platform = require('./platform')
-const session = require('./session')
-const config = require('../config')
-
-async function chooseCamera(options) {
+// MINI-01 / AI-01, D-065: route recognition through the framing capture page.
+// Photos are taken at original resolution, framed with the four-corner guide
+// and cropped locally before upload, so surrounding text/background is excluded.
+// A gallery entry reuses the same framing step.
+function start(options) {
   const opts = options || {}
-  try {
-    const result = await platform.call('chooseImage', {
-      count: 1,
-      sourceType: ['camera'],
-      sizeType: ['compressed']
-    })
-    const path = result.tempFilePaths && result.tempFilePaths[0]
-    const file = result.tempFiles && result.tempFiles[0]
-    const tempPath = path || (file && file.tempFilePath)
-    if (!tempPath) throw new Error('未取得图片，请重新拍摄')
-    if (file && file.size > config.maxImageBytes) throw new Error('图片过大，请选择不超过 8 MB 的图片')
-    const app = getApp()
-    app.globalData.activeQuest = opts.quest && opts.node ? {
-      quest_id: opts.quest,
-      node_id: opts.node
-    } : null
-    app.globalData.recognitionImage = tempPath
-    if (!session.requireLogin()) return
-    if (wx.showLoading) wx.showLoading({ title: '正在识别', mask: true })
-    app.globalData.recognition = await api.upload(tempPath, 'camera')
-    wx.navigateTo({ url: '/pages/result/index' })
-  } catch (error) {
-    if (!/cancel/i.test(error.errMsg || '')) api.showError(error)
-  } finally {
-    if (wx.hideLoading) wx.hideLoading()
-  }
+  const app = getApp()
+  app.globalData.activeQuest = opts.quest && opts.node ? { quest_id: opts.quest, node_id: opts.node } : null
+  const query = []
+  if (opts.source === 'album') query.push('source=album')
+  if (opts.quest) query.push('quest=' + encodeURIComponent(opts.quest))
+  if (opts.node) query.push('node=' + encodeURIComponent(opts.node))
+  wx.navigateTo({ url: '/pages/capture/index' + (query.length ? '?' + query.join('&') : '') })
 }
-
-module.exports = { chooseCamera }
+function camera(options) { start(options) }
+function album(options) { start(Object.assign({}, options || {}, { source: 'album' })) }
+function chooseCamera(options) { return camera(options) }
+function chooseAlbum(options) { return album(options) }
+module.exports = { start, camera, album, chooseCamera, chooseAlbum }

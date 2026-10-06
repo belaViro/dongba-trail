@@ -44,7 +44,7 @@ test('first candidate is only a preview; published content/media are cached and 
   assert.equal(page.data.selected, '')
   assert.equal(page.data.preview.id, 'A')
   assert.equal(page.data.preview.available, true)
-  assert.equal(page.data.preview.score_text, '68.2%')
+  assert.equal(page.data.preview.score_text, '中等')
   assert.equal(page.data.candidates[1].score_text, '')
   assert.equal(page.data.preview.culture_detail, '夹具正文')
   assert.equal(page.data.preview.variants[0].image_url, 'media:/variant.png')
@@ -57,7 +57,7 @@ test('deduplicates and caps candidates at five without discarding an explicit ze
   const { page } = setup({ result: { request_id: 'r', candidates: [candidate('A', 0), candidate('A', 0), ...['B','C','D','E','F'].map(id => candidate(id, null))] } })
   await page.onLoad()
   assert.equal(page.data.candidates.length, 5)
-  assert.equal(page.data.preview.score_text, '0.0%')
+  assert.equal(page.data.preview.score_text, '较低')
   assert.deepEqual(Array.from(page.data.candidates, item => item.rank), [1,2,3,4,5])
 })
 test('explicit choice changes published preview and scoped merchants without confirming', async () => {
@@ -180,7 +180,7 @@ test('empty/failed/expired results stay explicit and never invent candidates', a
 })
 test('markup uses bounded mini buttons and avoids unbacked video, sales, ratings or confident claims', () => {
   assert.ok([...markup.matchAll(/<button\b([^>]*)>/g)].every(match => /size="mini"/.test(match[1])))
-  assert.match(markup, /不代表准确率/)
+  assert.match(markup, /未经准确率校准/)
   assert.match(markup, /disabled="{{!selected \|\| busy}}"/)
   assert.doesNotMatch(markup, /<video\b|96\.8%|月销|评分|满30减5|置信度/)
 })

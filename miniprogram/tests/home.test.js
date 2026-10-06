@@ -47,7 +47,7 @@ function setup(options = {}) {
     getSetting: ({ success }) => success({ authSetting: { 'scope.userLocation': !!options.authorized } }),
     navigateTo: value => routes.push(value.url), switchTab: value => routes.push(value.url), stopPullDownRefresh() {}
   }
-  vm.runInNewContext(homeSource, { Page(value) { home = value }, require(id) { return ({ '../../utils/api': api, '../../utils/helpers': helpers, '../../utils/platform': platform, '../../utils/recognition': { chooseCamera: () => 'native-camera' } })[id] }, wx })
+  vm.runInNewContext(homeSource, { Page(value) { home = value }, require(id) { return ({ '../../utils/api': api, '../../utils/helpers': helpers, '../../utils/platform': platform, '../../utils/recognition': { chooseCamera: () => 'native-camera', chooseAlbum: () => 'native-album' } })[id] }, wx })
   home.data = JSON.parse(JSON.stringify(home.data))
   home.setData = values => Object.assign(home.data, values)
   return { home, api, wx, calls, routes, locationCalls: () => locationCalls }
@@ -164,7 +164,9 @@ test('detail, quick navigation, merchant navigation and camera retain working ro
   assert.equal(routes[0], '/pages/character/index?id=' + encodeURIComponent('汉 字/1'))
   assert.deepEqual(routes.slice(1, 5), ['/pages/map/index', '/pages/quests/index', '/pages/catalog/index', '/pages/merchants/index'])
   assert.equal(home.camera(), 'native-camera')
+  assert.equal(home.album(), 'native-album')
   assert.match(markup, /<button\b[^>]*class="daily-detail"[^>]*bindtap="character"/)
+  assert.match(markup, /<button\b[^>]*class="album-shortcut"[^>]*bindtap="album"/)
   assert.doesNotMatch(markup, /DAILY GLYPH|NEARBY DISCOVERIES|月销|item\.rating|feature-note/)
 })
 test('failed merchant cover affects only its own card and preserves navigation identity', async () => {

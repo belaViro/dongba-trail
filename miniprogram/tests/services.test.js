@@ -120,33 +120,126 @@ test('expired local image is not reported as an attached correction', async () =
   assert.equal(result.data.submitted, false)
   assert.match(result.data.error, /照片已失效/)
 })
-test('generic camera entry clears stale quest recognition context', async () => {
+test('generic camera entry clears stale quest context and opens the framing capture page', () => {
+  const recognition = require('../utils/recognition')
   app.globalData.activeQuest = { quest_id: 'Q-old', node_id: 'N-old' }
-  const home = page('home')
-  const originalChooseImage = wx.chooseImage
-  wx.chooseImage = options => options.success({ tempFilePaths: ['/isolated-camera-shot.png'], tempFiles: [{ tempFilePath: '/isolated-camera-shot.png', size: 1024 }] })
-  try { await home.camera({}) } finally { wx.chooseImage = originalChooseImage }
+  const routes = []
+  const originalNavigate = wx.navigateTo
+  wx.navigateTo = value => routes.push(value.url)
+  try { recognition.chooseCamera({}) } finally { wx.navigateTo = originalNavigate }
   assert.equal(app.globalData.activeQuest, null)
+  assert.deepEqual(routes, ['/pages/capture/index'])
 })
 
-test('home recognition button opens the native camera directly', async () => {
-  const calls = []
-  const originalAccountInfo = wx.getAccountInfoSync
-  const originalChooseImage = wx.chooseImage
-  wx.getAccountInfoSync = () => ({ miniProgram: { envVersion: 'trial' } })
-  wx.chooseImage = options => {
-    calls.push(options)
-    options.success({ tempFilePaths: ['/isolated-camera-shot.png'], tempFiles: [{ tempFilePath: '/isolated-camera-shot.png', size: 1024 }] })
-  }
+test('camera and album entries both open the framing capture page with their source', () => {
+  const recognition = require('../utils/recognition')
+  const routes = []
+  const originalNavigate = wx.navigateTo
+  wx.navigateTo = value => routes.push(value.url)
   try {
-    const home = page('home')
-    await home.camera({})
-    assert.equal(calls.length, 1)
-    assert.equal(calls[0].sourceType[0], 'camera')
-  } finally {
-    wx.getAccountInfoSync = originalAccountInfo
-    wx.chooseImage = originalChooseImage
+    recognition.chooseCamera({ quest: 'Q/1', node: 'N 2' })
+    recognition.chooseAlbum({ quest: 'Q/1', node: 'N 2' })
+  } finally { wx.navigateTo = originalNavigate }
+  assert.deepEqual(routes, [
+    '/pages/capture/index?quest=Q%2F1&node=N%202',
+    '/pages/capture/index?source=album&quest=Q%2F1&node=N%202'
+  ])
+})
+
+test('capture page keeps original album photos and crops before uploading', async () => {
+  session.save({ access_token: 'test-only-token', user: { id: 'U' } })
+  const capture = page('capture')
+  const chosen = [], uploaded = [], drawn = []
+  const original = { chooseImage: wx.chooseImage, upload: api.upload, getImageInfo: wx.getImageInfo, query: wx.createSelectorQuery }
+  wx.chooseImage = options => {
+    chosen.push(options)
+    options.success({ tempFilePaths: ['/album/original.png'], tempFiles: [{ tempFilePath: '/album/original.png', size: 2 * 1024 * 1024 }] })
   }
+  wx.getImageInfo = options => options.success({ width: 4000, height: 3000, path: '/album/original.png' })
+  wx.createSelectorQuery = () => ({ select: () => ({ boundingClientRect: callback => { callback({ width: 375, height: 480 }); return { exec() {} } } }) })
+  api.upload = async (path, scene) => { uploaded.push({ path, scene }); return { request_id: 'R' } }
+  const context = { drawImage(...args) { drawn.push(args) }, draw(_keep, callback) { callback() } }
+  const originalNextTick = wx.nextTick
+  const originalCanvasContext = wx.createCanvasContext
+  const originalCanvasToTempFilePath = wx.canvasToTempFilePath
+  wx.nextTick = callback => callback()
+  wx.createCanvasContext = () => context
+  wx.canvasToTempFilePath = (options, owner) => { options.success({ tempFilePath: '/cropped.png' }) }
+  try {
+    capture.captureOpts = {}
+    capture.onLoad({ source: 'album' })
+    for (let tick = 0; tick < 5; tick += 1) await new Promise(resolve => setImmediate(resolve))
+    assert.equal(chosen[0].sizeType[0], 'original')
+    assert.equal(chosen[0].sourceType[0], 'album')
+    assert.equal(capture.data.view, 'crop')
+    await capture.confirm()
+    // 4000x3000 fits a 375x480 stage at scale 0.09375; the default frame is
+    // 72% of the short edge, so the source region must be ~2165px, not ~203px.
+    assert.ok(Math.abs(drawn[0][3] - 2165) < 2, 'crop width uses source pixels: ' + drawn[0][3])
+    assert.ok(drawn[0][7] === 1200 && drawn[0][8] === 1200, 'export is capped at 1200px')
+    assert.equal(uploaded[0].scene, 'album')
+    assert.equal(uploaded[0].path, '/cropped.png')
+  } finally {
+    wx.chooseImage = original.chooseImage; api.upload = original.upload
+    wx.getImageInfo = original.getImageInfo; wx.createSelectorQuery = original.query
+    wx.nextTick = originalNextTick
+    wx.createCanvasContext = originalCanvasContext; wx.canvasToTempFilePath = originalCanvasToTempFilePath
+  }
+})
+test('capture page frames a full-resolution shot deterministically on real window sizes', async () => {
+  session.save({ access_token: 'test-only-token', user: { id: 'U' } })
+  const capture = page('capture')
+  const drawn = [], uploaded = []
+  const original = {
+    camera: wx.createCameraContext, info: wx.getImageInfo, window: wx.getWindowInfo,
+    upload: api.upload, canvas: wx.createCanvasContext, export: wx.canvasToTempFilePath
+  }
+  wx.getWindowInfo = () => ({ windowWidth: 375, windowHeight: 812, statusBarHeight: 44, safeArea: { bottom: 778 } })
+  wx.createCameraContext = () => ({ takePhoto: options => { assert.equal(options.quality, 'high'); options.success({ tempImagePath: '/shot.png' }) } })
+  wx.getImageInfo = options => options.success({ width: 4032, height: 3024, path: '/shot.png' })
+  wx.createCanvasContext = () => ({ drawImage: (...args) => drawn.push(args), draw(_keep, callback) { callback() } })
+  wx.canvasToTempFilePath = options => { options.success({ tempFilePath: '/cropped.jpg' }) }
+  api.upload = async (path, scene) => { uploaded.push({ path, scene }); return { request_id: 'R' } }
+  try {
+    capture.onLoad({})
+    capture.shoot()
+    for (let tick = 0; tick < 5; tick += 1) await new Promise(resolve => setImmediate(resolve))
+    assert.equal(capture.data.source, 'camera')
+    assert.equal(capture.data.view, 'crop')
+    assert.ok(capture.data.stage.height > 300, 'crop stage is a real height: ' + capture.data.stage.height)
+    assert.equal(capture.data.frame.width, capture.data.frame.height)
+    await capture.confirm()
+    const region = drawn[0]
+    assert.ok(region[1] >= 0 && region[2] >= 0, 'crop origin inside the photo')
+    assert.ok(region[1] + region[3] <= 4032 && region[2] + region[4] <= 3024, 'crop stays inside the photo')
+    assert.ok(region[3] > region[7], 'source region is larger than the export')
+    assert.ok(region[7] >= 200 && region[8] >= 200, 'export clears the backend 200px floor: ' + region[7])
+    assert.ok(region[7] <= 1200 && region[8] <= 1200, 'export stays bounded: ' + region[7])
+    assert.equal(uploaded[0].scene, 'camera')
+    assert.equal(uploaded[0].path, '/cropped.jpg')
+  } finally {
+    wx.createCameraContext = original.camera; wx.getImageInfo = original.info; wx.getWindowInfo = original.window
+    api.upload = original.upload; wx.createCanvasContext = original.canvas; wx.canvasToTempFilePath = original.export
+  }
+})
+test('capture page frame dragging clamps inside the photo', () => {
+  const capture = page('capture')
+  capture.data.display = { left: 0, top: 0, width: 300, height: 300, scale: 0.1 }
+  const frame = () => JSON.parse(JSON.stringify(capture.data.frame))
+  const drag = (role, from, to) => {
+    capture.touchStart({ touches: [{ clientX: from[0], clientY: from[1] }], currentTarget: { dataset: { role } } })
+    capture.touchMove({ touches: [{ clientX: to[0], clientY: to[1] }] })
+    capture.touchEnd()
+  }
+  Object.assign(capture.data, { frame: { x: 100, y: 100, width: 80, height: 80 } })
+  drag('nw', [100, 100], [-50, -40])
+  assert.deepEqual(frame(), { x: 0, y: 0, width: 180, height: 180 })
+  Object.assign(capture.data, { frame: { x: 60, y: 60, width: 80, height: 80 } })
+  drag('se', [140, 140], [40, 40])
+  assert.deepEqual(frame(), { x: 60, y: 60, width: 80, height: 80 })
+  Object.assign(capture.data, { frame: { x: 60, y: 60, width: 80, height: 80 } })
+  drag('move', [80, 80], [999, 999])
+  assert.deepEqual(frame(), { x: 220, y: 220, width: 80, height: 80 })
 })
 test('candidate confirmation supplies a string comment accepted by the server schema', async () => {
   session.save({ access_token: 'test-only-token', user: { id: 'U' } })

@@ -13,7 +13,10 @@ test('missing distance and confidence do not become fictional zero values', () =
   assert.equal(h.distance(0), '0 m')
   assert.equal(h.distance(1530), '1.5 km')
   assert.equal(h.score(null), '')
-  assert.equal(h.score(0.612), '61.2%')
+  assert.equal(h.score(0.612), '中等')
+  assert.equal(h.score(0.9), '较高')
+  assert.equal(h.score(0.1), '较低')
+  assert.equal(h.score(2), '较高')
 })
 test('check-ins send only evidence appropriate to their configured condition', () => {
   assert.deepEqual(h.checkinPayload({ id: 'N', condition: 'qr' }, { qr_token: 'actual-code', latitude: 30, recognition_id: 'R' }), { node_id: 'N', qr_token: 'actual-code' })
@@ -29,4 +32,3 @@ test('query parameters are escaped and undefined values are omitted', () => {
 test('favorite and recognition records normalize and deduplicate by canonical ID', () => {
   assert.deepEqual(h.uniqueCharacters([{ character_id: 'DB1', cn_name: 'A' }, { id: 'DB1', cn_name: 'B' }, { id: 'DB2' }]).map(value => value.id), ['DB1','DB2'])
 })
-

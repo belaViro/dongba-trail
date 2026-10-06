@@ -28,7 +28,15 @@ function metersBetween(origin, target) {
   return 6371000 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(Math.max(0, 1 - a)))
 }
 function normalizeCharacter(value) { return Object.assign({}, value, { id: identifier(value) }) }
-function score(value) { return typeof value === 'number' && Number.isFinite(value) ? (value * 100).toFixed(1) + '%' : '' }
+// D-065: the provider score is an uncalibrated model self-report, not a match
+// probability. Present it as a coarse tier instead of a false "%" figure.
+function score(value) {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return ''
+  const clamped = Math.min(1, Math.max(0, value))
+  if (clamped >= 0.75) return '较高'
+  if (clamped >= 0.4) return '中等'
+  return '较低'
+}
 function uniqueCharacters(values) {
   const map = new Map()
   values.forEach(item => { if (identifier(item)) map.set(identifier(item), normalizeCharacter(item)) })

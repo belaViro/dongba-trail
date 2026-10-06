@@ -13,14 +13,14 @@
         <view class="hero-copy">
           <view class="hero-rank-row"><text class="hero-rank">Top-{{preview.rank}}</text><text class="confirmation-state">{{selected === preview.id ? '已选择 · 待确认' : '候选预览'}}</text></view>
           <view class="hero-name-row"><text class="hero-name">{{preview.cn_name}}</text><button wx:if="{{preview.audio_url}}" size="mini" class="hero-audio" bindtap="audio" aria-label="{{playing ? '暂停词条音频' : '播放词条音频'}}"><text class="audio-disc">{{playing ? 'Ⅱ' : '♪'}}</text></button></view>
-          <view class="hero-score"><text>参考分数</text><text class="hero-score-value">{{preview.score_text || '未提供'}}</text></view>
+          <view class="hero-score"><text>候选参考</text><text class="hero-score-value">{{preview.score_text || '未提供'}}</text></view>
           <view class="hero-tags"><text wx:for="{{preview.display_tags}}" wx:key="*this" class="result-tag">{{item}}</text></view>
           <button wx:if="{{preview.available}}" size="mini" class="hero-save {{saved ? 'is-saved' : ''}}" bindtap="favorite" disabled="{{favoriteBusy || favoriteLoading}}" loading="{{favoriteBusy}}"><text>{{saved ? '♥' : '♡'}}</text><text>{{favoriteLoading ? '读取中' : favoriteError ? '重试收藏' : saved ? '已收藏' : '收藏词条'}}</text></button>
         </view>
       </view>
       <view wx:if="{{preview.available && preview.culture_summary}}" class="hero-summary">{{preview.culture_summary}}</view>
       <view wx:if="{{favoriteError}}" class="result-muted">{{favoriteError}}</view>
-      <view class="confidence-note">分数由识别服务提供，不代表准确率；收藏词条不会确认识别。</view>
+      <view class="confidence-note">候选排序由识别服务提供，未经准确率校准，仅供参考；收藏词条不会确认识别。</view>
     </view>
     <view wx:else class="result-card unknown-card"><view class="result-heading">暂未找到可靠结果</view><image wx:if="{{image}}" class="unknown-photo" src="{{image}}" mode="aspectFit" binderror="photoError" /><view class="result-muted">可重新拍摄，或提交人工复核，不强行给出答案。</view></view>
 

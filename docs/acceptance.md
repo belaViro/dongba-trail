@@ -11,7 +11,7 @@
 | --- | --- | --- |
 | GOV-01 | 验收通过 | [原文核对](source-audit.md)：35项需求、决策、缺口与关闭条件已落盘，历史指纹和证据保留；文档一致性不等于业务全部通过 |
 | INF-01 | 验收通过 | [集成证据](evidence/integration-acceptance.md)：HTTP、请求追踪、79路径OpenAPI与一致性检查通过 |
-| AI-01 | 实现中 | [RAG本机证据](evidence/rag-local.md)：独立MySQL审核记忆检索、HTTP识别及故障回退通过；夹具不证明准确率。GAP-10目标占比检测仍未实现，真实检测待供应商 |
+| AI-01 | 实现中 | [RAG本机证据](evidence/rag-local.md)：独立MySQL审核记忆检索、HTTP识别及故障回退通过；夹具不证明准确率。D-065将RAG纠错记忆改为只追加不前置（分数≥0.45且provider未返回的已发布词条），避免多人累积污染新图片，见[识别质量证据](evidence/recognition-quality-20261006.md)。GAP-10目标占比检测仍未实现，真实检测待供应商 |
 | AI-02 | 待外部依赖 | 模型协议、凭据、审核字典和真实评测图片由用户后补，不以夹具成绩代替模型效果 |
 | AUTH-01 | 待外部依赖 | 已实现真实微信兑换及隐私状态；[客户端HTTP闭环](../miniprogram/VERIFICATION.md)通过，实际微信账号与真机待配置 |
 | AUTH-02 | 验收通过 | [业务证据](evidence/business-acceptance.md)：账号、登录退出、权限与商户范围通过MySQL及接口验证；D-053界面文案及错误提示边界已完成专项验证，Web已上线、小程序待上传，见[封装性证据](evidence/user-copy-20260927.md) |
@@ -19,8 +19,8 @@
 | DATA-02 | 验收通过 | [集成证据](evidence/integration-acceptance.md)：真实MySQL迁移、持久化、备份恢复与媒体访问通过 |
 | DATA-03 | 实现中 | D-046纠错附图取消独立样本审核/数据集入口；D-048补显式授权补传、失败阻断和历史缺图说明。保留授权、预览、删除及清理。[附图修复](evidence/feedback-image-20260927.md)、[单次核验](evidence/feedback-single-review.md)；微信发布及真机跨端仍待验收 |
 | DATA-04 | 待开发 | GAP-03：只保留当前内容和字段名审计，无可查的历史文化文本/字形/来源版本 |
-| MINI-01 | 实现中 | [直达相机证据](evidence/camera-direct-launch.md)：18页；独立识别页已删除，首页/历史/任务点击后直接调用 `chooseImage` 拉起相机。[首页资源压缩](evidence/home-assets-map-density-20260927.md)将实际背景压至179457字节并添加200000字节上限测试，原图继续排除打包；缺即时质量提示，真机仍需重新上传体验版验收 |
-| AI-03 | 验收通过 | [客户端证据](../miniprogram/VERIFICATION.md)：候选、拒识、确认与原请求绑定；[RAG本机证据](evidence/rag-local.md)：辅助候选仍需用户确认，HTTP返回及记录持久化已测，非真实模型效果验收；[图03结果页回归](evidence/result-reference-20260927.md)：默认预览不自动选择/确认、异步候选切换、缺内容、收藏独立性及原请求/附图授权均保留，夹具测试不代表真实识别准确率 |
+| MINI-01 | 实现中 | [识别质量证据](evidence/recognition-quality-20261006.md)：19页；D-065以四角框选拍摄/裁剪页替代D-027的 `chooseImage` 直拉相机，原生相机取原图、长边≤1200px只降不升，相册入口复用同一裁剪流程；后端 `quality_min_edge` 96→200，裁剪过小在客户端先提示。[首页资源压缩](evidence/home-assets-map-density-20260927.md)将实际背景压至179457字节并添加200000字节上限测试，原图继续排除打包；真机相机/相册/裁剪仍需重新上传体验版验收，夹具不证明真实识别准确率 |
+| AI-03 | 验收通过 | [客户端证据](../miniprogram/VERIFICATION.md)：候选、拒识、确认与原请求绑定；[RAG本机证据](evidence/rag-local.md)：辅助候选仍需用户确认，HTTP返回及记录持久化已测，非真实模型效果验收；[图03结果页回归](evidence/result-reference-20260927.md)：默认预览不自动选择/确认、异步候选切换、缺内容、收藏独立性及原请求/附图授权均保留；D-065结果页“参考分数”改为未校准的“候选参考”档位并明示收藏词条不确认识别，见[识别质量证据](evidence/recognition-quality-20261006.md)，夹具测试不代表真实识别准确率 |
 | CONTENT-01 | 实现中 | [DB1404服务器录入证据](evidence/db1404-server-import.md)：已发布80条释义及160张同编号手写图；[图03结果页](evidence/result-reference-20260927.md)接入已有已发布字典详情、异形、来源及音频字段，缺失内容明确提示；仍缺结果页关联POI/活动及文化视频能力，音视频等正式文化素材仍待补充；D-053界面文案及错误提示边界已完成专项验证，Web已上线、小程序待上传，见[封装性证据](evidence/user-copy-20260927.md)；D-064详情页已重做并移除写法卡片，多写法数据及结果页保持，真实音频/来源/关联内容仍按接口展示，见[详情页改版证据](evidence/character-detail-redesign-20260929.md)；不因此完成原有视频/POI/活动缺口 |
 | USER-01 | 验收通过 | [集成证据](evidence/integration-acceptance.md)：收藏、历史、清空、失败记录重拍及跨页数据同步 |
 | FEEDBACK-01 | 实现中 | D-046采纳直接入RAG、驳回不入库；入库失败保持待处理，跨库孤立写入不得检索，重试去重。D-048授权附图先上传后提交、失败不静默丢图。[单次核验](evidence/feedback-single-review.md)、[附图修复](evidence/feedback-image-20260927.md)；微信发布与真实模型效果仍未验收；D-049排版、维护状态与选填说明已部署并完成8080/HTTPS读取校验，见[本次证据](evidence/feedback-layout-20260927.md)；详情全宽工作页和去重操作已发布，见[体验优化证据](evidence/feedback-workspace-20260927.md)；D-053界面文案及错误提示边界已完成专项验证，Web已上线、小程序待上传，见[封装性证据](evidence/user-copy-20260927.md)；D-054统一宽抽屉、信息精简及维护操作按需展示已完成102项Web测试、28项浏览器检查和构建，已部署8080/HTTPS并通过8项公网资源校验，见[抽屉统一证据](evidence/feedback-drawer-20260928.md) |

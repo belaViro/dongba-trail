@@ -1,0 +1,37 @@
+page { background: #101314; }
+.capture-page { position: relative; width: 100%; min-height: 100vh; overflow: hidden; color: #fff; background: #101314; }
+.camera-view { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.camera-top { position: absolute; top: 0; left: 0; right: 0; z-index: 4; display: flex; align-items: center; justify-content: space-between; padding: 32rpx 28rpx; }
+.camera-title { font-size: 30rpx; font-weight: 600; letter-spacing: 2rpx; text-shadow: 0 2rpx 8rpx rgba(0,0,0,.5); }
+.icon-button { display: flex; align-items: center; justify-content: center; width: 76rpx; height: 76rpx; min-height: 76rpx; padding: 0; border-radius: 50%; background: rgba(18,24,26,.42); color: #fff; font-size: 34rpx; line-height: 1; }
+.icon-button.dark { background: rgba(0,0,0,.06); color: #2c2a26; }
+.frame-guide { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 560rpx; height: 560rpx; }
+.guide-corner { position: absolute; width: 76rpx; height: 76rpx; border: 6rpx solid rgba(255,255,255,.92); }
+.guide-corner.tl { top: 0; left: 0; border-right: none; border-bottom: none; border-radius: 12rpx 0 0 0; }
+.guide-corner.tr { top: 0; right: 0; border-left: none; border-bottom: none; border-radius: 0 12rpx 0 0; }
+.guide-corner.bl { bottom: 0; left: 0; border-right: none; border-top: none; border-radius: 0 0 0 12rpx; }
+.guide-corner.br { bottom: 0; right: 0; border-left: none; border-top: none; border-radius: 0 0 12rpx 0; }
+.camera-bottom { position: absolute; bottom: 96rpx; left: 0; right: 0; z-index: 4; display: flex; align-items: center; justify-content: space-around; padding: 0 48rpx; }
+.album-entry, .flip-entry { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 128rpx; height: 108rpx; min-height: 108rpx; padding: 0; background: transparent; color: #fff; font-size: 22rpx; line-height: 1.4; }
+.album-icon { font-size: 40rpx; line-height: 1.1; }
+.shutter { display: flex; align-items: center; justify-content: center; width: 140rpx; height: 140rpx; min-height: 140rpx; padding: 0; border-radius: 50%; background: rgba(255,255,255,.28); }
+.shutter-inner { width: 108rpx; height: 108rpx; border-radius: 50%; background: #fff; box-shadow: inset 0 0 0 3rpx rgba(0,0,0,.08); }
+.camera-hint { position: absolute; bottom: 42rpx; left: 0; right: 0; z-index: 4; text-align: center; font-size: 23rpx; color: rgba(255,255,255,.9); text-shadow: 0 2rpx 6rpx rgba(0,0,0,.5); }
+.crop-head { display: flex; align-items: center; gap: 16rpx; padding: 28rpx 28rpx 18rpx; background: #f6f1e8; }
+.crop-title { flex: 1; color: #2c2a26; font-size: 32rpx; font-weight: 700; }
+.crop-source { color: #8a8178; font-size: 22rpx; }
+.crop-stage { position: relative; width: 100%; min-height: 60vh; overflow: hidden; background: #1b1f20; }
+.crop-image { position: absolute; }
+.crop-frame { position: absolute; box-sizing: border-box; border: 2rpx dashed rgba(255,255,255,.85); }
+.corner { position: absolute; box-sizing: border-box; width: 72rpx; height: 72rpx; border: 6rpx solid #ffd76a; }
+.corner.tl { top: -6rpx; left: -6rpx; border-right: none; border-bottom: none; }
+.corner.tr { top: -6rpx; right: -6rpx; border-left: none; border-bottom: none; }
+.corner.bl { bottom: -6rpx; left: -6rpx; border-right: none; border-top: none; }
+.corner.br { bottom: -6rpx; right: -6rpx; border-left: none; border-top: none; }
+.crop-tip { padding: 22rpx 32rpx 8rpx; background: #f6f1e8; color: #7a7268; font-size: 23rpx; line-height: 1.5; }
+.crop-actions { display: flex; align-items: center; gap: 16rpx; padding: 12rpx 32rpx 40rpx; background: #f6f1e8; }
+.crop-actions button { flex: 1; min-height: 88rpx; margin: 0; font-size: 28rpx; line-height: 1; }
+.crop-reset, .crop-retake { color: #6c5b46; background: #ece2d1; }
+.crop-confirm { color: #fff; background: #b3271c; font-weight: 600; }
+.capture-error { position: fixed; bottom: 24rpx; left: 32rpx; right: 32rpx; z-index: 6; padding: 18rpx 24rpx; border-radius: 14rpx; background: rgba(150,32,24,.94); color: #fff; font-size: 24rpx; line-height: 1.5; }
+.crop-canvas { position: fixed; left: -6000rpx; top: 0; width: 1200px; height: 1200px; }

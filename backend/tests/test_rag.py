@@ -19,7 +19,7 @@ from backend.app.rag import _case_data, apply_hits, retrieve, serialize_case, te
 from backend.app.rag_database import RagDatabase
 from backend.app.rag_models import RagBase, RagCase
 from backend.app.recognition import recognize
-from backend.app.schemas import ProviderResult
+from backend.app.schemas import ProviderResult, RecognitionCandidate
 from backend.tests.test_business_api import ROOT, context  # noqa: F401
 from backend.tests.test_data_foundation import upload
 from backend.tests.test_recognition import FixtureProvider, fixture_character, image_bytes
@@ -378,6 +378,46 @@ def test_limit_counts_only_returned_hits_and_keeps_first_character_rank(rag):
     assert applied and len(candidates) == 5
     assert candidates[0].character_id == "TEST_0"
     assert text_terms("房屋 roof") == ["房", "屋", "roof"]
+
+
+def test_reviewed_memory_never_outranks_provider_candidates(rag):
+    """D-065 regression: memory must not silently replace what the model saw.
+
+    A weak lexical hit used to be sorted to the front unconditionally, which is
+    how an unrelated photo came back as another visitor's corrected word.
+    """
+    characters = [fixture_character(f"TEST_{i}") for i in range(5)]
+    dictionary = CharacterDictionary(characters)
+    provider = [
+        RecognitionCandidate(
+            character_id="TEST_0",
+            cn_name="A",
+            culture_summary="",
+            source_ref="",
+            provider_score=0.9,
+        )
+    ]
+
+    # A strong hit for a different entry is appended, never promoted above the model.
+    candidates, applied = apply_hits(
+        provider, [{"character_id": "TEST_3", "score": 1.0}], dictionary
+    )
+    assert applied
+    assert [item.character_id for item in candidates] == ["TEST_0", "TEST_3"]
+
+    # A weak lexical hit is not allowed to introduce an entry at all.
+    candidates, applied = apply_hits(
+        provider, [{"character_id": "TEST_3", "score": 0.2}], dictionary
+    )
+    assert not applied
+    assert [item.character_id for item in candidates] == ["TEST_0"]
+
+    # Memory that only repeats the provider result is not reported as applied.
+    candidates, applied = apply_hits(
+        provider, [{"character_id": "TEST_0", "score": 1.0}], dictionary
+    )
+    assert not applied
+    assert [item.character_id for item in candidates] == ["TEST_0"]
 
 
 def test_http_recognition_persists_memory_hits_and_allows_user_confirmation(rag):
