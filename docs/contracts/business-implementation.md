@@ -6,6 +6,15 @@ QUEST-01/02, OPS-01/02/03, ANALYTICS-01 and the business portion of PRIVACY-01.
 
 ## Integration
 
+### Client-facing error copy (D-053)
+
+The HTTP error contract remains `{request_id, code, message}`. Web and mini-program
+clients display maintained business-code messages rather than arbitrary server
+`message`/`detail` values. Unknown failures receive actionable generic copy;
+validation failures remain failures, not successful writes. Support request IDs
+are displayed only when they match `[a-zA-Z0-9_-]{1,80}`. Client copy does not
+change server permissions, workflow state, API fields or response status codes.
+
 `backend.app.business.install_business(app, settings)` installs the authentication,
 catalogue, operations, merchant, visitor and audited export routes under `/api/v1`.
 It returns the `Database` instance and exposes the same object as
@@ -100,6 +109,13 @@ WeChat map and navigation APIs. Draft merchants can have no location; the servic
 does not invent coordinates. Operations publication records reviewer and timestamp
 and appends an audit action. Merchant content edits return to draft. Deletion of
 referenced business content disables it, preserving transactional history.
+
+D-052 / OPS-01: the operations UI presents a single review-and-publish action
+using the existing `published` update for both admins and operators. Published
+rows no longer expose a review downgrade. The legacy `reviewed` state remains
+compatible and private; no existing record is automatically published. Backend
+publication validation, reviewer metadata, audit and revision snapshots remain
+unchanged, as do merchant publication restrictions. This is not two-level approval.
 
 Public queries return published records, hide content of disabled merchants, and
 exclude expired or future coupons, activities and quests from active lists. Quest

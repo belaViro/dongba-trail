@@ -21,4 +21,7 @@ miniprogram/project.private.config.json
 # Local source datasets and deployment snapshots are not repository artifacts
 /数据集/
 /tmp-web-prev/
+/*.rar
+/*.zip
+/*.xlsx
 miniprogram/project.private.config.json.bak

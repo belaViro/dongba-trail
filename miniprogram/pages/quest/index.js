@@ -3,9 +3,8 @@ const recognition = require('../../utils/recognition')
 const helpers = require('../../utils/helpers')
 const platform = require('../../utils/platform')
 const session = require('../../utils/session')
-const conditionNames = { recognition: '识字', qr: '扫码', geofence: '到店', coupon: '核销', manual: '人工确认' }
 Page({
-  data: { loading: true, error: '', item: null, nodes: [], progress: null, completed: 0, percent: 0, busy: '', reward: null, closed: false },
+  data: { loading: true, error: '', item: null, nodes: [], progress: null, completed: 0, percent: 0, busy: '', reward: null, closed: false, heroFailed: false },
   onLoad(options) { this.questId = options.id },
   onShow() { this.load() },
   onPullDownRefresh() { this.load().finally(() => wx.stopPullDownRefresh()) },
@@ -22,7 +21,9 @@ Page({
       }
       const closed = unavailable || (item.start_at && Date.now() < new Date(item.start_at).getTime()) || (item.end_at && Date.now() >= new Date(item.end_at).getTime())
       const completedIds = progress && progress.completed_node_ids || []
-      const nodes = (item.nodes || []).slice().sort((a,b) => a.sequence - b.sequence).map(value => Object.assign({}, value, { condition_name: conditionNames[value.condition] || '任务', completed: completedIds.includes(value.id) }))
+      const ordered = (item.nodes || []).slice().sort((a,b) => a.sequence - b.sequence)
+      const next = ordered.find(value => !completedIds.includes(value.id))
+      const nodes = ordered.map(value => Object.assign({}, value, { is_next: !!next && value.id === next.id, completed: completedIds.includes(value.id) }))
       const completed = nodes.filter(value => value.completed).length
       this.setData({ item, nodes, progress, completed, closed: !!closed, percent: nodes.length ? Math.round(completed / nodes.length * 100) : 0 })
       if (!unavailable) api.track('quest_view', { entity_type: 'quests', entity_id: this.questId })
@@ -73,6 +74,7 @@ Page({
     } catch (error) { if (!/cancel/.test(error.errMsg || '')) api.showError(error.message ? error : new Error('操作未完成，请检查授权或稍后重试')) }
     finally { this.setData({ busy: '' }) }
   },
+  onHeroError() { this.setData({ heroFailed: true }) },
   merchant(event) { if (event.currentTarget.dataset.id) wx.navigateTo({ url: '/pages/merchant/index?id=' + encodeURIComponent(event.currentTarget.dataset.id) }) },
   async navigateNode(event) {
     const node = this.data.nodes.find(value => value.id === event.currentTarget.dataset.id)

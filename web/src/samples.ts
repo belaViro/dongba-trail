@@ -190,5 +190,5 @@ export function sampleRecordLink(resource: 'recognitions' | 'feedback', recognit
 export function recordSampleLink(resource: string, row: Row) {
   const recognitionId =
     resource === 'recognitions' ? row.request_id : resource === 'feedback' ? row.recognition_id : null
-  return recognitionId ? { path: '/admin/samples', query: { recognition_id: String(recognitionId) } } : null
+  return recognitionId ? { path: '/admin/feedback', query: { q: String(recognitionId) } } : null
 }

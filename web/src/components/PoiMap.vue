@@ -85,7 +85,7 @@ async function loadMap() {
   }
   if (disposed) return
   if (!container.value || !key) {
-    mapError.value = '地图 Web Key 尚未配置，暂无法加载国内底图。'
+    mapError.value = '地图暂不可用，请稍后重试或联系管理员。'
     return
   }
   const initialize = () => {
@@ -112,7 +112,7 @@ async function loadMap() {
         if (!disposed && !ready) mapError.value = '地图底图加载超时，请检查高德 Key、安全密钥及网络。'
       }, 12000)
     } catch {
-      mapError.value = '国内地图初始化失败，请检查 Web Key 与安全配置。'
+      mapError.value = '地图加载失败，请稍后重试。'
     }
   }
   if (window.AMap) {
@@ -135,11 +135,11 @@ async function loadMap() {
   script.async = true
   script.onerror = () => {
     delete globals[callback]
-    if (!disposed) mapError.value = '国内地图脚本加载失败，请检查网络或域名授权。'
+    if (!disposed) mapError.value = '地图加载失败，请检查网络后重试。'
   }
   document.head.append(script)
   timeout = setTimeout(() => {
-    if (!disposed && !map) mapError.value = '国内地图未能加载，请检查 Web Key、安全密钥及域名授权。'
+    if (!disposed && !map) mapError.value = '地图暂不可用，请稍后重试。'
   }, 12000)
 }
 onMounted(loadMap)
@@ -157,11 +157,11 @@ onBeforeUnmount(() => {
   <div class="poi-map">
     <div ref="container" class="poi-map-canvas" aria-label="丽江文化地图点位交互地图" role="region" />
     <div v-if="mapError" class="poi-map-message" role="status">{{ mapError }}</div>
-    <div v-else-if="unavailable" class="poi-map-message" role="status">点位接口暂不可用，请稍后重试。</div>
+    <div v-else-if="unavailable" class="poi-map-message" role="status">地点信息暂不可用，请稍后重试。</div>
     <div v-else-if="!points.some(validPoiCoordinates)" class="poi-map-message" role="status">
       暂无已发布的文化地图坐标点位
     </div>
-    <div class="poi-map-caption">仅展示后端已发布文化地图点位 · 演示点位不代表实地核验</div>
+    <div class="poi-map-caption">文化地图 · 演示点位不代表实地核验</div>
   </div>
 </template>
 

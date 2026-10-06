@@ -130,6 +130,25 @@
         "title": "ActivityInputPatch",
         "type": "object"
       },
+      "Body_attach_correction_image_api_v1_recognize__recognition_id__image_post": {
+        "properties": {
+          "image": {
+            "format": "binary",
+            "title": "Image",
+            "type": "string"
+          },
+          "sample_consent": {
+            "default": false,
+            "title": "Sample Consent",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "image"
+        ],
+        "title": "Body_attach_correction_image_api_v1_recognize__recognition_id__image_post",
+        "type": "object"
+      },
       "Body_recognize_image_api_v1_recognize_post": {
         "properties": {
           "image": {
@@ -713,6 +732,22 @@
         "title": "Credentials",
         "type": "object"
       },
+      "DeprecateInput": {
+        "additionalProperties": false,
+        "properties": {
+          "reason": {
+            "maxLength": 2000,
+            "minLength": 1,
+            "title": "Reason",
+            "type": "string"
+          }
+        },
+        "required": [
+          "reason"
+        ],
+        "title": "DeprecateInput",
+        "type": "object"
+      },
       "ErrorResponse": {
         "additionalProperties": false,
         "properties": {
@@ -869,6 +904,42 @@
         "title": "ExportResult",
         "type": "object"
       },
+      "FeedbackReview": {
+        "additionalProperties": false,
+        "properties": {
+          "character_id": {
+            "anyOf": [
+              {
+                "maxLength": 64,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Character Id"
+          },
+          "review_note": {
+            "default": "",
+            "maxLength": 2000,
+            "title": "Review Note",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "approved",
+              "rejected"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "title": "FeedbackReview",
+        "type": "object"
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -900,6 +971,31 @@
           "version"
         ],
         "title": "HealthResponse",
+        "type": "object"
+      },
+      "ImageModelsInput": {
+        "properties": {
+          "api_key": {
+            "default": "",
+            "maxLength": 4096,
+            "title": "Api Key",
+            "type": "string"
+          },
+          "clear_api_key": {
+            "default": false,
+            "title": "Clear Api Key",
+            "type": "boolean"
+          },
+          "endpoint": {
+            "maxLength": 500,
+            "title": "Endpoint",
+            "type": "string"
+          }
+        },
+        "required": [
+          "endpoint"
+        ],
+        "title": "ImageModelsInput",
         "type": "object"
       },
       "ManualComplete": {
@@ -1782,6 +1878,12 @@
       "PosterInput": {
         "additionalProperties": false,
         "properties": {
+          "caption": {
+            "default": "在丽江，收藏时光里的美好。",
+            "maxLength": 50,
+            "title": "Caption",
+            "type": "string"
+          },
           "character_ids": {
             "items": {
               "type": "string"
@@ -1795,7 +1897,9 @@
             "default": "paper",
             "enum": [
               "mountain",
-              "paper"
+              "paper",
+              "old-town",
+              "minimal"
             ],
             "title": "Template",
             "type": "string"
@@ -1805,6 +1909,50 @@
           "character_ids"
         ],
         "title": "PosterInput",
+        "type": "object"
+      },
+      "PosterJobInput": {
+        "additionalProperties": false,
+        "properties": {
+          "caption": {
+            "default": "在丽江，收藏时光里的美好。",
+            "maxLength": 50,
+            "title": "Caption",
+            "type": "string"
+          },
+          "character_ids": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 3,
+            "minItems": 1,
+            "title": "Character Ids",
+            "type": "array"
+          },
+          "request_id": {
+            "maxLength": 100,
+            "minLength": 12,
+            "pattern": "^[a-zA-Z0-9_-]+$",
+            "title": "Request Id",
+            "type": "string"
+          },
+          "template": {
+            "default": "paper",
+            "enum": [
+              "mountain",
+              "paper",
+              "old-town",
+              "minimal"
+            ],
+            "title": "Template",
+            "type": "string"
+          }
+        },
+        "required": [
+          "character_ids",
+          "request_id"
+        ],
+        "title": "PosterJobInput",
         "type": "object"
       },
       "ProductInput": {
@@ -2081,6 +2229,161 @@
         "title": "QuestInputPatch",
         "type": "object"
       },
+      "RagInput": {
+        "additionalProperties": false,
+        "properties": {
+          "aliases": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 100,
+            "title": "Aliases",
+            "type": "array"
+          },
+          "answer": {
+            "anyOf": [
+              {
+                "maxLength": 2000,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Answer"
+          },
+          "character_id": {
+            "anyOf": [
+              {
+                "maxLength": 64,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Character Id"
+          },
+          "character_name": {
+            "anyOf": [
+              {
+                "maxLength": 100,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Character Name"
+          },
+          "corrected_text": {
+            "anyOf": [
+              {
+                "maxLength": 2000,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Corrected Text"
+          },
+          "correction_note": {
+            "default": "",
+            "maxLength": 2000,
+            "title": "Correction Note",
+            "type": "string"
+          },
+          "image_uri": {
+            "default": "",
+            "maxLength": 1000,
+            "title": "Image Uri",
+            "type": "string"
+          },
+          "keywords": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 100,
+            "title": "Keywords",
+            "type": "array"
+          },
+          "model_version": {
+            "default": "",
+            "maxLength": 100,
+            "title": "Model Version",
+            "type": "string"
+          },
+          "original_text": {
+            "anyOf": [
+              {
+                "maxLength": 2000,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Original Text"
+          },
+          "recognition_id": {
+            "anyOf": [
+              {
+                "maxLength": 64,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recognition Id"
+          },
+          "review_note": {
+            "default": "",
+            "maxLength": 2000,
+            "title": "Review Note",
+            "type": "string"
+          },
+          "sample_id": {
+            "anyOf": [
+              {
+                "maxLength": 64,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sample Id"
+          },
+          "scene": {
+            "default": "",
+            "maxLength": 100,
+            "title": "Scene",
+            "type": "string"
+          },
+          "source_ref": {
+            "default": "",
+            "maxLength": 1000,
+            "title": "Source Ref",
+            "type": "string"
+          },
+          "text": {
+            "anyOf": [
+              {
+                "maxLength": 2000,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Text"
+          }
+        },
+        "title": "RagInput",
+        "type": "object"
+      },
       "ReadinessResponse": {
         "additionalProperties": false,
         "properties": {
@@ -2190,9 +2493,27 @@
             "title": "Model Version",
             "type": "string"
           },
+          "observed_text": {
+            "default": "",
+            "title": "Observed Text",
+            "type": "string"
+          },
           "provider": {
             "title": "Provider",
             "type": "string"
+          },
+          "rag_applied": {
+            "default": false,
+            "title": "Rag Applied",
+            "type": "boolean"
+          },
+          "rag_hits": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Rag Hits",
+            "type": "array"
           },
           "request_id": {
             "title": "Request Id",
@@ -2241,6 +2562,31 @@
           "status"
         ],
         "title": "Review",
+        "type": "object"
+      },
+      "ReviewInput": {
+        "additionalProperties": false,
+        "properties": {
+          "review_note": {
+            "default": "",
+            "maxLength": 2000,
+            "title": "Review Note",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "approved",
+              "rejected",
+              "pending"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "title": "ReviewInput",
         "type": "object"
       },
       "SampleExport": {
@@ -2415,6 +2761,29 @@
         "title": "SampleMetadataPatch",
         "type": "object"
       },
+      "SearchInput": {
+        "additionalProperties": false,
+        "properties": {
+          "limit": {
+            "default": 5,
+            "maximum": 50.0,
+            "minimum": 1.0,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "text": {
+            "maxLength": 2000,
+            "minLength": 1,
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "title": "SearchInput",
+        "type": "object"
+      },
       "Setup": {
         "additionalProperties": false,
         "properties": {
@@ -2448,10 +2817,73 @@
       },
       "SystemConfigUpdate": {
         "properties": {
+          "clear_image_provider_api_key": {
+            "default": false,
+            "title": "Clear Image Provider Api Key",
+            "type": "boolean"
+          },
           "clear_provider_api_key": {
             "default": false,
             "title": "Clear Provider Api Key",
             "type": "boolean"
+          },
+          "image_provider_api_key": {
+            "default": "",
+            "maxLength": 4096,
+            "title": "Image Provider Api Key",
+            "type": "string"
+          },
+          "image_provider_endpoint": {
+            "default": "",
+            "maxLength": 500,
+            "title": "Image Provider Endpoint",
+            "type": "string"
+          },
+          "image_provider_model": {
+            "default": "",
+            "maxLength": 160,
+            "title": "Image Provider Model",
+            "type": "string"
+          },
+          "image_provider_name": {
+            "default": "unconfigured",
+            "enum": [
+              "unconfigured",
+              "openai-compatible"
+            ],
+            "title": "Image Provider Name",
+            "type": "string"
+          },
+          "image_provider_quality": {
+            "default": "auto",
+            "enum": [
+              "auto",
+              "low",
+              "medium",
+              "high",
+              "standard",
+              "hd"
+            ],
+            "title": "Image Provider Quality",
+            "type": "string"
+          },
+          "image_provider_size": {
+            "default": "1024x1536",
+            "enum": [
+              "1024x1536",
+              "1024x1024",
+              "1536x1024",
+              "auto"
+            ],
+            "title": "Image Provider Size",
+            "type": "string"
+          },
+          "image_provider_timeout_seconds": {
+            "default": 180,
+            "maximum": 240.0,
+            "minimum": 10.0,
+            "title": "Image Provider Timeout Seconds",
+            "type": "number"
           },
           "map_center_latitude": {
             "default": 26.875,
@@ -3867,6 +4299,44 @@
       }
     },
     "/api/v1/admin/feedback/{feedback_id}": {
+      "get": {
+        "operationId": "feedback_detail_api_v1_admin_feedback__feedback_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "feedback_id",
+            "required": true,
+            "schema": {
+              "title": "Feedback Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Feedback Detail",
+        "tags": [
+          "Business"
+        ]
+      },
       "patch": {
         "operationId": "review_feedback_api_v1_admin_feedback__feedback_id__patch",
         "parameters": [
@@ -3884,7 +4354,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Review"
+                "$ref": "#/components/schemas/FeedbackReview"
               }
             }
           },
@@ -5210,6 +5680,445 @@
         ]
       }
     },
+    "/api/v1/admin/rag/cases": {
+      "get": {
+        "operationId": "list_cases_api_v1_admin_rag_cases_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "default": "",
+              "title": "Q",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "default": "",
+              "title": "Status",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "character_id",
+            "required": false,
+            "schema": {
+              "default": "",
+              "title": "Character Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "scene",
+            "required": false,
+            "schema": {
+              "default": "",
+              "title": "Scene",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Cases",
+        "tags": [
+          "RAG case library"
+        ]
+      },
+      "post": {
+        "deprecated": true,
+        "operationId": "create_case_api_v1_admin_rag_cases_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RagInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Case",
+        "tags": [
+          "RAG case library"
+        ]
+      }
+    },
+    "/api/v1/admin/rag/cases/{case_id}": {
+      "patch": {
+        "operationId": "update_case_api_v1_admin_rag_cases__case_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "case_id",
+            "required": true,
+            "schema": {
+              "title": "Case Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RagInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Case",
+        "tags": [
+          "RAG case library"
+        ]
+      }
+    },
+    "/api/v1/admin/rag/cases/{case_id}/deprecate": {
+      "post": {
+        "operationId": "deprecate_case_api_v1_admin_rag_cases__case_id__deprecate_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "case_id",
+            "required": true,
+            "schema": {
+              "title": "Case Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeprecateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Deprecate Case",
+        "tags": [
+          "RAG case library"
+        ]
+      }
+    },
+    "/api/v1/admin/rag/cases/{case_id}/image": {
+      "get": {
+        "operationId": "case_image_api_v1_admin_rag_cases__case_id__image_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "case_id",
+            "required": true,
+            "schema": {
+              "title": "Case Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Case Image",
+        "tags": [
+          "RAG case library"
+        ]
+      }
+    },
+    "/api/v1/admin/rag/cases/{case_id}/reindex": {
+      "post": {
+        "operationId": "reindex_api_v1_admin_rag_cases__case_id__reindex_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "case_id",
+            "required": true,
+            "schema": {
+              "title": "Case Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Reindex",
+        "tags": [
+          "RAG case library"
+        ]
+      }
+    },
+    "/api/v1/admin/rag/cases/{case_id}/review": {
+      "post": {
+        "operationId": "review_case_api_v1_admin_rag_cases__case_id__review_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "case_id",
+            "required": true,
+            "schema": {
+              "title": "Case Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Review Case",
+        "tags": [
+          "RAG case library"
+        ]
+      }
+    },
+    "/api/v1/admin/rag/rebuild": {
+      "post": {
+        "operationId": "rebuild_api_v1_admin_rag_rebuild_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Rebuild",
+        "tags": [
+          "RAG case library"
+        ]
+      }
+    },
+    "/api/v1/admin/rag/search": {
+      "post": {
+        "operationId": "search_api_v1_admin_rag_search_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Search",
+        "tags": [
+          "RAG case library"
+        ]
+      }
+    },
+    "/api/v1/admin/rag/stats": {
+      "get": {
+        "operationId": "stats_api_v1_admin_rag_stats_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Stats",
+        "tags": [
+          "RAG case library"
+        ]
+      }
+    },
     "/api/v1/admin/recognitions": {
       "get": {
         "operationId": "admin_list_recognitions_api_v1_admin_recognitions_get",
@@ -5761,6 +6670,45 @@
           }
         },
         "summary": "Save System Config",
+        "tags": [
+          "System configuration"
+        ]
+      }
+    },
+    "/api/v1/admin/system-config/image-models": {
+      "post": {
+        "operationId": "image_models_api_v1_admin_system_config_image_models_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImageModelsInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Image Models",
         "tags": [
           "System configuration"
         ]
@@ -8865,6 +9813,57 @@
         ]
       }
     },
+    "/api/v1/recognize/{recognition_id}/image": {
+      "post": {
+        "description": "Retain the owner's correction evidence only after explicit image consent.",
+        "operationId": "attach_correction_image_api_v1_recognize__recognition_id__image_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "recognition_id",
+            "required": true,
+            "schema": {
+              "title": "Recognition Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_attach_correction_image_api_v1_recognize__recognition_id__image_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Attach Correction Image",
+        "tags": [
+          "Image samples"
+        ]
+      }
+    },
     "/api/v1/share/poster": {
       "post": {
         "operationId": "poster_api_v1_share_poster_post",
@@ -8901,6 +9900,85 @@
         "summary": "Poster",
         "tags": [
           "Media and sharing"
+        ]
+      }
+    },
+    "/api/v1/share/poster/jobs": {
+      "post": {
+        "operationId": "create_job_api_v1_share_poster_jobs_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PosterJobInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Job",
+        "tags": [
+          "Media"
+        ]
+      }
+    },
+    "/api/v1/share/poster/jobs/{identifier}": {
+      "get": {
+        "operationId": "read_job_api_v1_share_poster_jobs__identifier__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "identifier",
+            "required": true,
+            "schema": {
+              "title": "Identifier",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Read Job",
+        "tags": [
+          "Media"
         ]
       }
     },

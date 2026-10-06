@@ -87,6 +87,8 @@ export const statusLabels: Record<string, string> = {
   active: '正常',
   pending: '待审核',
   approved: '已通过',
+  indexed: '已索引',
+  deprecated: '已停用',
   rejected: '已驳回',
   confirmed: '已确认',
   used: '已核销',

@@ -60,8 +60,16 @@ const tags = [
   'el-radio-group',
   'el-radio-button',
   'el-icon',
+  'el-dropdown',
+  'el-dropdown-menu',
+  'el-dropdown-item',
+  'el-tooltip',
 ]
-export function mount(component: Component, props: Record<string, unknown> = {}) {
+export function mount(
+  component: Component,
+  props: Record<string, unknown> = {},
+  options: { tableRows?: Record<string, unknown>[] } = {},
+) {
   const root = node('root')
   const app = renderer.createApp(component, props)
   for (const tag of tags) {
@@ -69,12 +77,16 @@ export function mount(component: Component, props: Record<string, unknown> = {})
       tag,
       defineComponent({
         inheritAttrs: false,
-        setup(_, { attrs, slots }) {
+        props: tag === 'el-upload' ? ['httpRequest'] : [],
+        setup(props, { attrs, slots }) {
           return () =>
-            h(tag, attrs, [
-              // Table-column scopes are exercised separately via props; do not invent rows here.
-              ...(tag === 'el-table-column' ? [] : slots.default?.() || []),
+            h(tag, { ...attrs, ...props }, [
+              // Scoped rows must be supplied explicitly by the test, never invented by the host.
+              ...(tag === 'el-table-column'
+                ? (options.tableRows || []).flatMap((row) => slots.default?.({ row }) || [])
+                : slots.default?.() || []),
               ...(slots.footer?.() || []),
+              ...(slots.dropdown?.() || []),
             ])
         },
       }),
@@ -103,7 +115,7 @@ export function text(root: HostNode): string {
   return root.type === '#comment' ? '' : root.text + root.children.map(text).join('')
 }
 export function button(root: HostNode, label: string): HostNode {
-  const match = all(root, (element) => element.type === 'el-button' && text(element) === label)[0]
+  const match = all(root, (element) => element.type === 'el-button' && text(element).trim() === label)[0]
   if (!match) throw new Error(`Missing button: ${label}`)
   return match
 }

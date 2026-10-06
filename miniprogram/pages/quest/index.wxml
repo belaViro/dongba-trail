@@ -1,32 +1,46 @@
-<view class="page">
-  <view-state loading="{{loading}}" error="{{error}}" bind:retry="load" />
+<view class="quest-detail-page">
+  <view wx:if="{{loading || error}}" class="detail-state"><view-state loading="{{loading}}" error="{{error}}" bind:retry="load" /></view>
   <block wx:if="{{item && !loading}}">
-    <view class="route-eyebrow">{{item.area || '丽江'}} · 文化寻迹</view><view class="page-title">{{item.name}}</view>
-    <view class="body section">{{item.description}}</view>
-    <view wx:if="{{closed}}" class="notice">路线当前未开放，你已获得的印记和奖励记录会继续保留。</view>
-    <view class="progress-band section">
-      <view class="row between"><text class="heading">{{completed}} / {{nodes.length}}</text><text class="muted">枚东巴印记</text></view>
-      <progress percent="{{percent}}" activeColor="#a73529" backgroundColor="#e9ddcb" stroke-width="5" border-radius="5" />
-      <view wx:if="{{progress && progress.status === 'completed'}}" class="complete">已完成本次寻迹</view>
-    </view>
-    <view wx:if="{{reward}}" class="notice" bindtap="wallet">已获得 {{reward.title}}，前往我的优惠券查看 ›</view>
-    <view wx:if="{{item.reward_coupon_id && !reward && !progress.reward_pending}}" class="notice">完成全部节点后可获得路线奖励</view>
-    <button wx:if="{{!progress}}" class="primary section" loading="{{busy === 'join'}}" disabled="{{!!busy || closed}}" bindtap="join">{{closed ? '路线暂未开放' : '加入寻迹'}}</button>
-    <view wx:if="{{progress.reward_pending}}" class="notice">路线已完成，奖励正在补充中。<button class="link small" bindtap="retryReward" disabled="{{!!busy}}" loading="{{busy === 'reward'}}">重试领取奖励</button></view>
-    <view class="section">
-      <view class="section-head"><text class="heading">沿途印记</text><text class="caption">{{nodes.length}} 个节点</text></view>
-      <view class="node {{item.completed ? 'done' : ''}}" wx:for="{{nodes}}" wx:key="id">
-        <view class="number">{{item.completed ? '✓' : index + 1}}</view>
-        <view class="grow">
-          <view class="row between"><view class="item-title">{{item.name}}</view><text class="tag">{{item.condition_name}}</text></view>
-          <button wx:if="{{item.merchant_id}}" class="link small" data-id="{{item.merchant_id}}" bindtap="merchant">查看任务地点 ›</button>
-          <button wx:if="{{item.poi_id}}" class="link small" data-id="{{item.id}}" bindtap="navigateNode">导航至任务地点 ›</button>
-          <button class="{{item.completed ? 'secondary' : 'primary'}} small node-button" data-id="{{item.id}}" bindtap="checkin" disabled="{{item.completed || !!busy || closed}}" loading="{{busy === item.id}}">{{item.completed ? '已获得' : item.condition === 'manual' ? '查看确认方式' : item.condition === 'recognition' ? '拍照识字' : item.condition === 'qr' ? '扫码打卡' : item.condition === 'coupon' ? '验证核销' : '到达打卡'}}</button>
-        </view>
+    <view class="route-hero">
+      <image wx:if="{{!heroFailed}}" class="route-hero-image" src="/assets/home/landscape.jpg" mode="aspectFill" aria-hidden="true" binderror="onHeroError" />
+      <view class="route-hero-shade"></view>
+      <view class="route-hero-content">
+        <view class="route-area"><image src="/assets/home/pin-white.png" aria-hidden="true" />{{item.area || '丽江'}}</view>
+        <view class="route-title">{{item.name}}</view>
       </view>
-      <view wx:if="{{!nodes.length}}" class="empty-inline">路线节点正在准备中</view>
     </view>
-    <feature-note label="待实现" detail="当前提供按节点集章与整条路线奖励；参考图中的分阶段奖励尚无后台配置及发放逻辑。" />
-    <button wx:if="{{completed}}" class="secondary section" bindtap="share">生成我的东巴印记</button>
+    <view class="route-sheet">
+      <view class="route-overview">
+        <view wx:if="{{item.description}}" class="route-intro">{{item.description}}</view>
+        <view class="progress-band">
+          <view class="progress-heading"><text class="progress-label {{progress && progress.status === 'completed' ? 'complete' : ''}}">{{progress && progress.status === 'completed' ? '已完成本次寻迹' : '寻迹进度'}}</text><view class="progress-count"><text class="progress-current">{{completed}}</text><text class="progress-total"> / {{nodes.length}}</text><text class="progress-unit">枚印记</text></view></view>
+          <progress percent="{{percent}}" activeColor="#a4352a" backgroundColor="#e9eeeb" stroke-width="4" border-radius="4" />
+        </view>
+        <button wx:if="{{!progress}}" class="join-button" loading="{{busy === 'join'}}" disabled="{{!!busy || closed}}" bindtap="join">{{closed ? '路线暂未开放' : '加入寻迹'}}</button>
+      </view>
+      <view wx:if="{{closed}}" class="route-notice notice">路线当前未开放，你已获得的印记和奖励记录会继续保留。</view>
+      <button wx:if="{{reward}}" class="reward-card notice" size="mini" bindtap="wallet" aria-label="已获得{{reward.title}}，查看我的优惠券">
+        <view class="reward-copy"><text class="reward-caption">寻迹奖励已到账</text><text class="reward-title">{{reward.title}}</text></view><text class="reward-action">查看券</text>
+      </button>
+      <view wx:if="{{progress.reward_pending}}" class="reward-pending notice"><view class="reward-copy"><text class="reward-caption">奖励正在补充中</text><text class="reward-title">印记已保留，稍后可领取</text></view><button class="retry-button" size="mini" bindtap="retryReward" disabled="{{!!busy}}" loading="{{busy === 'reward'}}">重试领取奖励</button></view>
+      <view class="route-stops">
+        <view class="stops-heading">沿途印记</view>
+        <view class="route-timeline">
+          <view class="node {{item.completed ? 'done' : ''}} {{item.is_next && progress && !closed ? 'is-next' : ''}}" wx:for="{{nodes}}" wx:key="id">
+            <view class="node-rail"><view class="number">{{item.completed ? '✓' : index + 1}}</view><view wx:if="{{index < nodes.length - 1}}" class="node-connector"></view></view>
+            <view class="node-body">
+              <view class="item-title">{{item.name}}</view>
+              <view class="node-actions">
+                <button wx:if="{{item.poi_id}}" class="location-button" size="mini" data-id="{{item.id}}" bindtap="navigateNode"><image class="location-icon" src="/assets/home/locate.png" aria-hidden="true" /><text>导航</text></button>
+                <button wx:elif="{{item.merchant_id}}" class="location-button" size="mini" data-id="{{item.merchant_id}}" bindtap="merchant"><image class="location-icon" src="/assets/home/pin.png" aria-hidden="true" /><text>查看地点</text></button>
+                <button class="node-button {{item.completed ? 'is-done' : ''}}" size="mini" data-id="{{item.id}}" bindtap="checkin" disabled="{{item.completed || !!busy || closed}}" loading="{{busy === item.id}}">{{item.completed ? '已获得' : item.condition === 'manual' ? '查看确认方式' : item.condition === 'recognition' ? '拍照识字' : item.condition === 'qr' ? '扫码打卡' : item.condition === 'coupon' ? '验证核销' : '到达打卡'}}</button>
+              </view>
+            </view>
+          </view>
+        </view>
+        <view wx:if="{{!nodes.length}}" class="empty-inline">路线节点正在准备中</view>
+      </view>
+      <button wx:if="{{completed}}" class="share-button" bindtap="share">生成我的东巴印记</button>
+    </view>
   </block>
 </view>

@@ -239,12 +239,12 @@ describe('recognition / feedback cross-links', () => {
   })
   it('uses request_id for recognition rows and recognition_id for feedback rows', () => {
     expect(recordSampleLink('recognitions', { request_id: 'req' })).toEqual({
-      path: '/admin/samples',
-      query: { recognition_id: 'req' },
+      path: '/admin/feedback',
+      query: { q: 'req' },
     })
     expect(recordSampleLink('feedback', { id: 'feedback-not-request', recognition_id: 'req' })).toEqual({
-      path: '/admin/samples',
-      query: { recognition_id: 'req' },
+      path: '/admin/feedback',
+      query: { q: 'req' },
     })
     expect(recordSampleLink('feedback', {})).toBeNull()
     expect(recordSampleLink('audit', { request_id: 'req' })).toBeNull()

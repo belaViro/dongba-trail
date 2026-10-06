@@ -11,7 +11,7 @@ const RedeemView = () => import('./views/RedeemView.vue')
 const SettingsView = () => import('./views/SettingsView.vue')
 const SystemConfigView = () => import('./views/SystemConfigView.vue')
 const TagsView = () => import('./views/TagsView.vue')
-const SamplesView = () => import('./views/SamplesView.vue')
+const FeedbackView = () => import('./views/FeedbackView.vue')
 
 const routes = [
   { path: '/', redirect: () => homePath() },
@@ -25,7 +25,15 @@ const routes = [
   { path: '/merchant/tag-claims', component: TagsView },
   { path: '/admin/settings', component: SettingsView },
   { path: '/admin/system-config', component: SystemConfigView },
-  { path: '/admin/samples', component: SamplesView },
+  { path: '/admin/feedback', component: FeedbackView },
+  {
+    path: '/admin/samples',
+    redirect: (to: { query: Record<string, any> }) => ({
+      path: '/admin/feedback',
+      query: { q: to.query.recognition_id || to.query.q || '' },
+    }),
+  },
+  { path: '/admin/rag-cases', redirect: '/admin/feedback' },
   ...Object.keys(resources).map((resource) => ({
     path: `/admin/${resource}`,
     component: ResourceView,
@@ -36,7 +44,7 @@ const routes = [
     component: ResourceView,
     props: { resource },
   })),
-  ...['feedback', 'tag-claims', 'recognitions', 'audit', 'provider'].map((resource) => ({
+  ...['tag-claims', 'recognitions', 'audit', 'provider'].map((resource) => ({
     path: `/admin/${resource}`,
     component: RecordsView,
     props: { resource },

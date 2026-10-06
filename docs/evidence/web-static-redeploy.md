@@ -12,3 +12,19 @@
 
 - 严格 HTTPS 校验 `/`、`/login`、`/assets/DashboardView-D3u28jqt.css`、`/assets/DashboardView-C_6FjS2k.js`、`/api/v1/map/pois?limit=1`、`/health` 均 200；点位 API 返回总数 4。公网无业务登录态浏览器打开登录页返回 200，标题正常、无 JS 异常和横向溢出，截图见 `runtime/web-dist-20260926-171608-public-login.png`。
 - 地图底图目前仍直接使用 `tile.openstreetmap.org`，**此次部署没有解决中国大陆底图加载失败及卡片布局诉求**。公网验收只证实点位接口可达，并未验证用户当地外部瓦片可用性、登录后的地图渲染或实地点位真实性。改用国内合规地图需确认供应商、使用许可及可用的 Web Key；不得把离线瓦片夹具 5/5 冒充真实底图验收。
+
+
+## 2026-09-26 重新部署（当前版本）
+
+用户再次提供服务器登录方式后，按“先校验、再备份、后切换”的流程重新上传当前提交 `858e99d`：
+
+- 源码包 `runtime/deploy/dongba-trail-858e99d.tar.gz` SHA-256：`b4d7f16585d15872af515d0e4a2b034c6d073bcd307aab5a0b5acf9d3a885903`。
+- Web 包 `runtime/deploy/web-dist-858e99d.tar.gz` SHA-256：`d3f62ec230a78b0e64fa381c463d2b928492f444febcf9b5063bf7aa230f0817`。
+- 服务器旧项目完整备份（排除虚拟环境、Git、媒体、MySQL 和 DB1404 运行时大目录）：`/home/admin/dongba-trail.backup-20260926-204739.tar.gz`，SHA-256：`ded62b8db12c7bbd31afd3f8481dba438bbf2744fd0fc88465c98373833c0f23`。
+- 旧 Web 静态目录备份：`/home/admin/dongba-trail/web/dist.backup-20260926-204739`。服务器 `.env`、`data/`、`runtime/` 和数据库未被压缩包覆盖。
+- `alembic upgrade head` 后当前迁移为 `0003_data_foundation (head)`；API 使用项目虚拟环境重启为 `scripts/serve.py --port 8010`，公网 `/health` 返回 `{"status":"ok","version":"0.9.0"}`，`/ready` 返回 `status=ready`、80 个已发布字典词条。
+- `nginx -t` 通过并 reload。公网首页 SHA-256 与服务器静态首页一致，均为 `3150814fc188c0411eaad43ac4ac3fba62ae69c2d67f240404aa61d375dffef1`；`/api/v1/public/map-config`、`/api/v1/map/pois?limit=2`、CSS 和丽江图片资源均通过严格 HTTPS 检查。
+- 公网地图配置当前返回高德 Web Key、中心 `100.235, 26.875` 和缩放 `12`；Web Key 属于浏览器公开配置，后续应在高德控制台限制授权域名。地图 SDK/底图的真实管理员登录态验收仍需目标浏览器执行，POI 接口本身返回4个已发布点位。
+- 服务器 `Settings().system_config_encryption_key` 检查结果为未配置。故系统配置页的非敏感项可修改，但保存模型 API Key 会按设计拒绝，需运维先设置持久的 `DONGBA_SYSTEM_CONFIG_ENCRYPTION_KEY`；本次没有读取或记录任何密钥值。
+
+本次部署同时包含后端运行时系统配置代码和数据库迁移，不只是静态页面切换；若要回退，先恢复上述 Web `dist` 目录，再按备份内容恢复源码并重新启动 API，数据库回退须单独评估，不执行自动降级。

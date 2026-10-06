@@ -303,9 +303,7 @@ onMounted(load)
           </div>
         </div>
         <el-empty v-else description="暂无趋势数据" :image-size="82" />
-        <p class="dashboard-note">
-          趋势来自后端按日聚合记录；现有接口没有可靠环比，因此不展示参考图中的虚构涨跌幅。
-        </p>
+        <p class="dashboard-note">按日统计所选时段内的业务记录。</p>
       </section>
 
       <section class="dashboard-card action-panel">
@@ -325,9 +323,7 @@ onMounted(load)
           <strong>{{ item.count ?? '—' }}</strong>
           <el-icon><ArrowRight /></el-icon>
         </router-link>
-        <p v-if="!merchant" class="dashboard-note">
-          统计使用当前审核状态，不把待外部资料或模型能力计入完成项。
-        </p>
+        <p v-if="!merchant" class="dashboard-note">按当前审核状态统计待处理事项。</p>
       </section>
 
       <section v-if="!merchant" class="dashboard-card map-panel">
@@ -381,7 +377,7 @@ onMounted(load)
           </div>
         </div>
         <el-empty v-else description="暂无来源数据" :image-size="70" />
-        <p class="dashboard-note">当前来源口径混合曝光、访问与导航事件，待后端完成分渠道归因后再拆分。</p>
+        <p class="dashboard-note">包含曝光、访问与导航次数，不等同于独立访客数。</p>
       </section>
 
       <section v-if="!merchant" class="dashboard-card provider-panel">
@@ -414,7 +410,7 @@ onMounted(load)
             <strong>{{ provider?.p95_latency_ms == null ? '—' : `${provider.p95_latency_ms}ms` }}</strong>
           </div>
         </div>
-        <p class="dashboard-note">没有真实评测集，因此不展示参考图中的 Top-1 / Top-5 准确率。</p>
+        <p class="dashboard-note">请求成功率反映服务响应情况，不代表识别准确率。</p>
       </section>
 
       <section class="dashboard-card feature-panel">

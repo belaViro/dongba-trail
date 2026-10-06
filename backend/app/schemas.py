@@ -50,6 +50,9 @@ class ProviderCandidate(StrictModel):
 class ProviderResult(StrictModel):
     model_version: str = Field(min_length=1, max_length=100)
     candidates: list[ProviderCandidate] = Field(max_length=5)
+    observed_text: str = Field(default="", max_length=2000)
+    keywords: list[str] = Field(default_factory=list, max_length=50)
+    scene: str = Field(default="", max_length=100)
 
 
 class RecognitionCandidate(CharacterPublic):
@@ -63,6 +66,9 @@ class RecognitionResponse(StrictModel):
     model_version: str
     latency_ms: int
     candidates: list[RecognitionCandidate]
+    observed_text: str = ""
+    rag_hits: list[dict] = Field(default_factory=list)
+    rag_applied: bool = False
 
 
 class ErrorResponse(StrictModel):

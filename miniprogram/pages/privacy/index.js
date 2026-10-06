@@ -19,6 +19,5 @@ Page({
     const app = getApp()
     if (this.data.authorize && app.globalData.privacyResolve) { app.globalData.privacyResolve({ event: 'disagree' }); app.globalData.privacyResolve = null }
   },
-  openWechat() { if (wx.openPrivacyContract) wx.openPrivacyContract({ fail: () => api.showError(new Error('微信隐私指引尚未配置')) }) }
+  openWechat() { if (wx.openPrivacyContract) wx.openPrivacyContract({ fail: () => api.showError(new Error('暂时无法打开微信隐私指引，请稍后重试')) }) }
 })
-

@@ -32,6 +32,19 @@ test.beforeEach(() => {
   session.clear()
   global.getApp = () => app
 })
+test('poster media URLs use the configured origin for relative and cached loopback assets', () => {
+  const media = '/api/v1/media/' + 'a'.repeat(32) + '.png'
+  const origin = require('../config').apiBase.replace(/\/api\/v1\/?$/, '')
+  for (const base of ['', 'http://127.0.0.1:8010', 'http://localhost:8010', 'https://[::1]:8010']) {
+    assert.equal(api.mediaUrl(base + media), origin + media)
+  }
+  for (const unchanged of [
+    'https://cdn.example.invalid' + media, 'http://127.0.0.1:8010/unrelated.png',
+    'http://127.0.0.1:8010' + media + '?token=fixture', 'http://localhost' + media + '#fragment',
+    'http://fixture@localhost' + media, 'wxfile://tmp.png', '/assets/example.png'
+  ]) assert.equal(api.mediaUrl(unchanged), unchanged)
+  assert.equal(sent.length, 0)
+})
 test('protected actions cannot send unauthenticated requests or fake a login', async () => {
   await assert.rejects(api.request('/me/coupons', { auth: true }), error => error.code === 'AUTH_REQUIRED')
   await assert.rejects(api.upload('/tmp/real-photo.png', 'camera'), error => error.code === 'AUTH_REQUIRED')
@@ -67,6 +80,45 @@ test('none-of-the-above feedback sends no invented character ID', async () => {
   assert.equal(sent[0].data.character_id, undefined)
   assert.ok(sent[0].data.comment.length)
   assert.equal(result.data.submitted, true)
+})
+test('correction image needs opt-in and uploads before the feedback is submitted', async () => {
+  session.save({ access_token: 'test-only-token', user: { id: 'U' } })
+  await assert.rejects(api.uploadFeedbackImage('R', '/photo.png', false), error => error.code === 'SAMPLE_CONSENT_REQUIRED')
+  assert.equal(sent.length, 0)
+  const result = page('result')
+  result.data.result = { request_id: 'R-real-request' }
+  result.data.image = '/isolated-photo.png'
+  assert.equal(result.data.attachImage, false)
+  result.attachmentConsent({ detail: { value: ['attach'] } })
+  await result.submit({ currentTarget: { dataset: { unknown: true } } })
+  assert.equal(sent.length, 2)
+  assert.ok(sent[0].url.endsWith('/recognize/R-real-request/image'))
+  assert.equal(sent[0].filePath, '/isolated-photo.png')
+  assert.equal(sent[0].formData.sample_consent, 'true')
+  assert.equal(sent[0].header.Authorization, 'Bearer test-only-token')
+  assert.ok(sent[1].url.endsWith('/recognize/R-real-request/confirm'))
+  assert.equal(result.data.submitted, true)
+})
+test('failed image upload does not silently submit imageless feedback', async () => {
+  session.save({ access_token: 'test-only-token', user: { id: 'U' } })
+  response = { statusCode: 503, data: { message: '附图暂时无法保存', request_id: 'image-failure' } }
+  const result = page('result')
+  Object.assign(result.data, { result: { request_id: 'R' }, image: '/photo.png', attachImage: true })
+  await result.submit({ currentTarget: { dataset: { unknown: true } } })
+  assert.equal(sent.length, 1)
+  assert.ok(sent[0].url.endsWith('/recognize/R/image'))
+  assert.equal(result.data.submitted, false)
+  assert.equal(result.data.busy, false)
+  assert.equal(result.data.requestId, 'image-failure')
+})
+test('expired local image is not reported as an attached correction', async () => {
+  session.save({ access_token: 'test-only-token', user: { id: 'U' } })
+  const result = page('result')
+  Object.assign(result.data, { result: { request_id: 'R' }, image: '', attachImage: true })
+  await result.submit({ currentTarget: { dataset: { unknown: true } } })
+  assert.equal(sent.length, 0)
+  assert.equal(result.data.submitted, false)
+  assert.match(result.data.error, /照片已失效/)
 })
 test('generic camera entry clears stale quest recognition context', async () => {
   app.globalData.activeQuest = { quest_id: 'Q-old', node_id: 'N-old' }
@@ -143,12 +195,12 @@ test('failed recognition history opens a retake dialog instead of candidate conf
   assert.ok(modal.content.includes('暂未开通'))
   assert.equal(app.globalData.recognition, null)
 })
-test('retake from historical result navigates to home', () => {
+test('retake from historical result switches to the home tab', () => {
   const result = page('result')
   let destination
-  const original = wx.redirectTo
-  wx.redirectTo = value => { destination = value.url }
-  try { result.retake() } finally { wx.redirectTo = original }
+  const original = wx.switchTab
+  wx.switchTab = value => { destination = value.url }
+  try { result.retake() } finally { wx.switchTab = original }
   assert.equal(destination, '/pages/home/index')
 })
 test('private favorites clear cached data when the user is no longer authenticated', async () => {

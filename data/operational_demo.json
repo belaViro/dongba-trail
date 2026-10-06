@@ -1,5 +1,5 @@
 {
-  "dataset": "OPS_DEMO_20260925_V1",
+  "dataset": "OPS_DEMO_20260928_V2",
   "notice": "平台运营演示商户（虚构资料），用于功能体验；正式上线前需由实际商户确认。",
   "merchants": [
     {
@@ -65,6 +65,62 @@
       "operation_weight": 0.82,
       "username": "merchant.snowgift",
       "display_name": "雪山礼物店长"
+    },
+    {
+      "id": "OPS_MERCHANT_BOOK",
+      "name": "古城象形书屋（演示）",
+      "description": "虚构书屋，展示字典浏览、纸品选购与阅读活动的功能流程；不是实际营业门店。",
+      "address": "丽江古城书屋体验区（虚构示范地址，不供实际导航）",
+      "latitude": 26.87458,
+      "longitude": 100.23632,
+      "phone": "",
+      "opening_hours": "演示时段 10:00-20:00",
+      "tags": ["演示商户", "阅读", "纸品"],
+      "character_ids": ["DB1404_1241", "DB1404_0269"],
+      "username": "merchant.demobook",
+      "display_name": "演示书屋店长"
+    },
+    {
+      "id": "OPS_MERCHANT_POTTERY",
+      "name": "巷里陶绘工坊（演示）",
+      "description": "虚构手作空间，用于陶片上色、作品展示与到店集章体验，不代表真实工艺传承或商户合作。",
+      "address": "丽江古城陶绘体验区（虚构示范地址，不供实际导航）",
+      "latitude": 26.8733,
+      "longitude": 100.2345,
+      "phone": "",
+      "opening_hours": "演示时段 09:30-19:00",
+      "tags": ["演示商户", "陶绘", "亲子手作"],
+      "character_ids": ["DB1404_1266", "DB1404_0268"],
+      "username": "merchant.demopottery",
+      "display_name": "演示陶绘店长"
+    },
+    {
+      "id": "OPS_MERCHANT_WEAVE",
+      "name": "束河织色小院（演示）",
+      "description": "虚构织物体验空间，用于配色手作、材料包与集章活动演示，不代表真实非遗项目。",
+      "address": "束河织色体验区（虚构示范地址，不供实际导航）",
+      "latitude": 26.9198,
+      "longitude": 100.2061,
+      "phone": "",
+      "opening_hours": "演示时段 10:00-19:30",
+      "tags": ["演示商户", "织物", "手作"],
+      "character_ids": ["DB1404_1351", "DB1404_1266"],
+      "username": "merchant.demoweave",
+      "display_name": "演示织色店长"
+    },
+    {
+      "id": "OPS_MERCHANT_POSTCARD",
+      "name": "雪山纸语明信片屋（演示）",
+      "description": "虚构文创店，用于明信片拼贴、祝福纸品与路线奖励体验，不提供真实邮政服务。",
+      "address": "束河纸语体验区（虚构示范地址，不供实际导航）",
+      "latitude": 26.922,
+      "longitude": 100.2068,
+      "phone": "",
+      "opening_hours": "演示时段 09:30-20:30",
+      "tags": ["演示商户", "明信片", "文创纸品"],
+      "character_ids": ["DB1404_0030", "DB1404_0449", "DB1404_1241"],
+      "username": "merchant.demopostcard",
+      "display_name": "演示纸语店长"
     }
   ],
   "products": [
@@ -75,7 +131,15 @@
     ["OPS_PRODUCT_SILVER_PENDANT", 2, "东巴纹银坠体验", "完成选纹、錾刻和打磨的基础体验。", 228.0, ["DB1404_1359", "DB1404_1266"]],
     ["OPS_PRODUCT_SILVER_MARK", 2, "银片錾刻书签", "以东巴纹样完成一枚银片书签。", 168.0, ["DB1404_1359", "DB1404_0114"]],
     ["OPS_PRODUCT_HADA_BOX", 3, "哈达祝福礼盒", "含哈达、祝福卡和礼仪说明。", 99.0, ["DB1404_1351"]],
-    ["OPS_PRODUCT_SNOW_POSTCARD", 3, "雪山主题明信片组", "以雪山、江水和彩虹为主题的六张纸品。", 36.0, ["DB1404_0030", "DB1404_0425", "DB1404_0449"]]
+    ["OPS_PRODUCT_SNOW_POSTCARD", 3, "雪山主题明信片组", "以雪山、江水和彩虹为主题的六张纸品。", 36.0, ["DB1404_0030", "DB1404_0425", "DB1404_0449"]],
+    ["OPS_PRODUCT_BOOK_MARK", 4, "纸艺书签材料包（演示）", "虚构商品与价格，仅展示纸品选购流程，不支持真实下单。", 28, ["DB1404_1241", "DB1404_0269"]],
+    ["OPS_PRODUCT_BOOK_NOTE", 4, "旅途手账套装（演示）", "虚构商品，包含演示笔记本与拼贴纸。", 58, ["DB1404_1241"]],
+    ["OPS_PRODUCT_POTTERY_TILE", 5, "陶片上色体验（演示）", "虚构体验商品，展示选色、上色和作品留念流程。", 68, ["DB1404_1266"]],
+    ["OPS_PRODUCT_POTTERY_KIT", 5, "亲子陶绘材料包（演示）", "虚构商品及价格，不代表真实课程或可用库存。", 98, ["DB1404_0268"]],
+    ["OPS_PRODUCT_WEAVE_MARK", 6, "配色织物书签（演示）", "虚构手作商品，不声称具有认证传承背景。", 39, ["DB1404_1266"]],
+    ["OPS_PRODUCT_WEAVE_KIT", 6, "织色入门材料包（演示）", "虚构商品，用于材料展示及关联门店体验。", 79, ["DB1404_1351"]],
+    ["OPS_PRODUCT_POSTCARD_SET", 7, "旅途明信片套装（演示）", "虚构纸品商品，不含真实邮寄服务。", 32, ["DB1404_0030", "DB1404_0449"]],
+    ["OPS_PRODUCT_POSTCARD_COLLAGE", 7, "纸语拼贴体验包（演示）", "虚构商品及价格，用于体验路线完成后的推荐流程。", 48, ["DB1404_1241"]]
   ],
   "coupons": [
     ["OPS_COUPON_PAPER_20", 0, "纸绘体验立减20元", "到店购买满68元可使用，每位用户限领1张，不与其他优惠同享。", 120],
@@ -85,13 +149,51 @@
     ["OPS_COUPON_SILVER_30", 2, "银饰手作满200减30元", "银饰手作消费满200元立减30元，每位用户限领1张。", 60],
     ["OPS_COUPON_SILVER_90", 2, "錾刻体验九折券", "银片錾刻体验享九折，每位用户限领1张。", 90],
     ["OPS_COUPON_HADA_20", 3, "哈达礼盒满99减20元", "哈达礼盒消费满99元立减20元，每位用户限领1张。", 80],
-    ["OPS_COUPON_POSTCARD", 3, "明信片第二件半价券", "雪山主题明信片组第二件半价，每位用户限领1张。", 120]
+    ["OPS_COUPON_POSTCARD", 3, "明信片第二件半价券", "雪山主题明信片组第二件半价，每位用户限领1张。", 120],
+    ["OPS_COUPON_BOOK_10", 4, "书屋纸品满28减10元（演示）", "仅用于功能演示，无实际抵扣价值；模拟满28元减10元，每人限领1张。", 160],
+    ["OPS_COUPON_POTTERY_15", 5, "陶绘体验满68减15元（演示）", "仅用于功能演示，无实际抵扣价值；模拟满68元减15元，每人限领1张。", 120],
+    ["OPS_COUPON_WEAVE_10", 6, "织色手作满39减10元（演示）", "仅用于功能演示，无实际抵扣价值；模拟满39元减10元，每人限领1张。", 140],
+    ["OPS_COUPON_POSTCARD_8", 7, "纸语明信片满32减8元（演示）", "仅用于功能演示，无实际抵扣价值；模拟满32元减8元，每人限领1张。", 200]
   ],
   "activities": [
     ["OPS_ACTIVITY_PAPER", 0, "东巴象形文字临摹体验", "认识常见象形字，在手工纸上完成临摹、上色和装裱。", 16],
     ["OPS_ACTIVITY_TEA", 1, "纳西茶席与烤茶讲解", "从茶具、火候和待客礼仪了解纳西烤茶的日常场景。", 12],
     ["OPS_ACTIVITY_SILVER", 2, "银饰纹样手作公开课", "了解基础工具与安全规范，完成一枚入门级纹样作品。", 10],
-    ["OPS_ACTIVITY_HADA", 3, "哈达礼仪与雪山文化分享", "通过实物和图文了解哈达使用场景与雪山主题文创设计。", 20]
+    ["OPS_ACTIVITY_HADA", 3, "哈达礼仪与雪山文化分享", "通过实物和图文了解哈达使用场景与雪山主题文创设计。", 20],
+    ["OPS_ACTIVITY_BOOK_READING", 4, "象形字阅读小会（演示）", "虚构活动，以平台已发布字典为阅读入口；文化释义以原字典来源为准，不是实际开班通知。", 18],
+    ["OPS_ACTIVITY_BOOK_COLLAGE", 4, "旅途手账拼贴日（演示）", "虚构纸品拼贴活动，仅用于活动列表与门店关联体验。", 12],
+    ["OPS_ACTIVITY_POTTERY_COLOR", 5, "亲子陶片配色场（演示）", "虚构亲子手作活动，不代表真实预约名额或营业安排。", 16],
+    ["OPS_ACTIVITY_POTTERY_STAMP", 5, "古城手作集章日（演示）", "虚构集章活动，与古城手作路线联动，仅演示扫码和奖励流程。", 30],
+    ["OPS_ACTIVITY_WEAVE_COLOR", 6, "织色配色体验场（演示）", "虚构配色体验活动，不宣称真实非遗资质，素材说明以运营核准内容为准。", 14],
+    ["OPS_ACTIVITY_WEAVE_MARK", 6, "一枚织物书签工坊（演示）", "虚构手作活动，展示门店活动与相关商品；非实际课程招募。", 12],
+    ["OPS_ACTIVITY_POSTCARD_WISH", 7, "写给旅途的明信片（演示）", "虚构纸品留念活动，不提供真实寄送服务。", 24],
+    ["OPS_ACTIVITY_POSTCARD_ROUTE", 7, "束河慢行集章会（演示）", "虚构路线联动活动，展示到点、扫码和完成奖励；坐标未实地核验。", 40]
+  ],
+  "cultural_pois": [
+    {"id": "OPS_CULTURE_PAPER", "name": "纸与象形字展签（演示）", "description": "虚构文化展示点，用于浏览已发布字典和关联书屋；不代表真实展陈，坐标未实地核验。", "latitude": 26.8744, "longitude": 100.2361, "poi_type": "culture", "merchant_id": null, "character_ids": ["DB1404_1241", "DB1404_0269"]},
+    {"id": "OPS_CULTURE_HANDCRAFT", "name": "手作纹样陈列点（演示）", "description": "虚构文化点位，仅演示手作路线到点打卡，不提供经审核的民俗解释；坐标未实地核验。", "latitude": 26.8735, "longitude": 100.2347, "poi_type": "culture", "merchant_id": null, "character_ids": ["DB1404_1266", "DB1404_1359"]},
+    {"id": "OPS_CULTURE_WATER", "name": "古城水巷观察点（演示）", "description": "虚构文化地图停留点，用于点位浏览及相关字典导航；并非经核验的景区或文物点。", "latitude": 26.8717, "longitude": 100.2376, "poi_type": "culture", "merchant_id": null, "character_ids": ["DB1404_0425", "DB1404_0203"]},
+    {"id": "OPS_CULTURE_SNOW", "name": "雪山主题图文展点（演示）", "description": "虚构主题展点，使用平台既有字典关联；不代表真实展馆或观景位置，坐标未实地核验。", "latitude": 26.9208, "longitude": 100.2059, "poi_type": "culture", "merchant_id": null, "character_ids": ["DB1404_0030", "DB1404_0449"]},
+    {"id": "OPS_CULTURE_WEAVE", "name": "织物纹样展示点（演示）", "description": "虚构织物主题地图点位，不代表真实展览或非遗认证地点；仅供功能演示。", "latitude": 26.9201, "longitude": 100.2063, "poi_type": "culture", "merchant_id": null, "character_ids": ["DB1404_1351", "DB1404_1266"]},
+    {"id": "OPS_CULTURE_WISH", "name": "祝福纸品留念点（演示）", "description": "虚构旅途留念点，展示纸品关联和点位详情，不提供实际邮寄服务；坐标未实地核验。", "latitude": 26.9218, "longitude": 100.2066, "poi_type": "culture", "merchant_id": null, "character_ids": ["DB1404_1241", "DB1404_1351"]}
+  ],
+  "quests": [
+    ["OPS_QUEST_OLD_TOWN_01", "古城东巴文化寻迹（演示）", "从东巴纸坊出发，经纳西茶院完成到店与识字任务。路线、商户和地址均为功能演示数据，请勿作为真实经营或导航信息。", "丽江古城", "OPS_COUPON_PAPER_20"],
+    ["OPS_QUEST_HANDCRAFT_02", "古城纸艺与手作之旅（演示）", "从象形书屋出发，依次完成扫码、展签识字、纹样点位打卡和陶绘集章，共4站；完成可获陶绘演示券。全部场所、活动、坐标与优惠均为虚构演示，不供实际出游或消费。", "丽江古城·手作体验区（演示）", "OPS_COUPON_POTTERY_15"],
+    ["OPS_QUEST_SHUHE_03", "束河织色与纸语慢行（演示）", "从织色小院出发，经雪山主题展点与纸品留念点，到明信片屋集章，共4站；完成可获纸语演示券。全部场所、活动、坐标与优惠均为虚构演示，不供实际出游或消费。", "束河·纸语体验区（演示）", "OPS_COUPON_POSTCARD_8"]
+  ],
+  "quest_nodes": [
+    ["OPS_QUEST_NODE_PAPER_QR", "OPS_QUEST_OLD_TOWN_01", "纸坊扫码集章", 1, "qr", null, "OPS_MERCHANT_PAPER", "OPS_POI_01", 100],
+    ["OPS_QUEST_NODE_TEA_GEOFENCE", "OPS_QUEST_OLD_TOWN_01", "茶院到店打卡", 2, "geofence", null, "OPS_MERCHANT_TEA", "OPS_POI_02", 150],
+    ["OPS_QUEST_NODE_PAPER_RECOGNITION", "OPS_QUEST_OLD_TOWN_01", "识别东巴字“纸”", 3, "recognition", "DB1404_1241", "OPS_MERCHANT_PAPER", "OPS_POI_01", 100],
+    ["OPS_NODE_BOOK_QR", "OPS_QUEST_HANDCRAFT_02", "书屋启程扫码（演示）", 1, "qr", null, "OPS_MERCHANT_BOOK", "OPS_POI_05", 100],
+    ["OPS_NODE_PAPER_EXHIBIT", "OPS_QUEST_HANDCRAFT_02", "展签识字：纸（演示）", 2, "recognition", "DB1404_1241", null, "OPS_CULTURE_PAPER", 100],
+    ["OPS_NODE_HANDCRAFT_GEO", "OPS_QUEST_HANDCRAFT_02", "纹样展示点打卡（演示）", 3, "geofence", null, null, "OPS_CULTURE_HANDCRAFT", 150],
+    ["OPS_NODE_POTTERY_QR", "OPS_QUEST_HANDCRAFT_02", "陶绘工坊收官集章（演示）", 4, "qr", null, "OPS_MERCHANT_POTTERY", "OPS_POI_06", 100],
+    ["OPS_NODE_WEAVE_QR", "OPS_QUEST_SHUHE_03", "织色小院启程扫码（演示）", 1, "qr", null, "OPS_MERCHANT_WEAVE", "OPS_POI_07", 100],
+    ["OPS_NODE_SNOW_GEO", "OPS_QUEST_SHUHE_03", "雪山主题展点打卡（演示）", 2, "geofence", null, null, "OPS_CULTURE_SNOW", 150],
+    ["OPS_NODE_WISH_RECOGNITION", "OPS_QUEST_SHUHE_03", "纸品留念点识字（演示）", 3, "recognition", "DB1404_1241", null, "OPS_CULTURE_WISH", 100],
+    ["OPS_NODE_POSTCARD_QR", "OPS_QUEST_SHUHE_03", "纸语明信片集章（演示）", 4, "qr", null, "OPS_MERCHANT_POSTCARD", "OPS_POI_08", 100]
   ],
   "recognition_characters": ["DB1404_1241", "DB1404_0237", "DB1404_1359", "DB1404_1351", "DB1404_0269", "DB1404_0449", "DB1404_1266", "DB1404_0046"]
 }

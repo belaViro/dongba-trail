@@ -1,17 +1,69 @@
-<view class="page result-page">
-  <view class="result-title-row"><view><text class="eyebrow">识别结果</text><text class="page-title">选择最接近的东巴字</text></view><text class="result-mark">迹</text></view>
-  <image wx:if="{{image}}" class="result-image" src="{{image}}" mode="aspectFill" />
-  <view wx:if="{{submitted}}" class="section"><view class="heading">已提交人工复核</view><view class="muted section">感谢你的反馈，我们会核对这次识别结果。</view><button class="primary section" bindtap="retake">继续识别</button></view>
+<view class="result-page">
+  <image class="result-scenery" src="/assets/home/landscape.jpg" mode="aspectFill" />
+  <view class="result-masthead"><text class="result-brand">东巴文化</text><view class="result-motto"><text>看见一个符号</text><text>读懂一段丽江</text></view></view>
+  <view wx:if="{{submitted}}" class="result-card review-success"><view class="success-seal">✓</view><view class="result-heading">已提交人工复核</view><view class="result-muted">感谢你的反馈。不确定的内容不会被直接作为答案。</view><button size="mini" class="result-primary success-return" bindtap="retake">返回首页继续识别</button></view>
   <block wx:elif="{{result}}">
-    <view class="result-notice"><text class="notice-icon">!</text><view class="grow"><view class="notice-title">{{candidates.length ? '我们不太确定，请选择最接近的结果' : '暂未找到可靠结果'}}</view><view class="muted">{{candidates.length ? '当前图片可能存在角度、光线或书写差异，请确认后继续。' : '试着靠近目标、保持清晰后重新拍摄。'}}</view></view></view>
-    <view class="muted">{{candidates.length ? '识别结果需要你确认' : '试着靠近目标、保持清晰后重新拍摄'}}</view>
-    <view wx:for="{{candidates}}" wx:key="id" class="candidate {{selected === item.id ? 'selected' : ''}}" data-id="{{item.id}}" bindtap="choose"><view class="candidate-glyph"><glyph-image src="{{item.image_url}}" name="{{item.cn_name}}" /></view><view class="grow"><view class="item-title">{{item.cn_name}}</view><view class="muted">{{item.culture_summary}}</view></view><view class="score"><text>{{item.score_text}}</text><text wx:if="{{item.score_text}}" class="caption">参考分数</text><radio color="#176b58" checked="{{selected === item.id}}" /></view></view>
-    <view class="section"><textarea class="input textarea" maxlength="500" placeholder="补充说明（选填）" value="{{comment}}" bindinput="comment" /></view>
-    <view wx:if="{{error}}" class="notice error-note">{{error}}</view>
-    <button wx:if="{{candidates.length}}" class="primary section" disabled="{{!selected || busy}}" loading="{{busy}}" bindtap="submit">确认并查看文化故事</button>
-    <button class="secondary section" disabled="{{busy}}" data-unknown="true" bindtap="submit">都不是，提交人工复核</button>
-    <button class="link section" bindtap="retake">重新拍摄</button>
-    <view class="integration-note">识别候选来自后台识别服务；文化解释和字形内容来自已发布词条。</view>
+    <view wx:if="{{preview}}" class="result-card result-hero">
+      <view class="hero-main">
+        <button size="mini" class="hero-photo" data-src="{{image || preview.image_url}}" bindtap="previewImage" aria-label="查看对照图片">
+          <image wx:if="{{image}}" class="shot-image" src="{{image}}" mode="aspectFit" binderror="photoError" />
+          <view wx:else class="shot-glyph"><glyph-image src="{{preview.image_url}}" name="{{preview.cn_name}}" /></view>
+          <text class="shot-caption">{{image ? '本次拍摄 · 点击放大' : '字典字形 · 非原照片'}}</text>
+        </button>
+        <view class="hero-copy">
+          <view class="hero-rank-row"><text class="hero-rank">Top-{{preview.rank}}</text><text class="confirmation-state">{{selected === preview.id ? '已选择 · 待确认' : '候选预览'}}</text></view>
+          <view class="hero-name-row"><text class="hero-name">{{preview.cn_name}}</text><button wx:if="{{preview.audio_url}}" size="mini" class="hero-audio" bindtap="audio" aria-label="{{playing ? '暂停词条音频' : '播放词条音频'}}"><text class="audio-disc">{{playing ? 'Ⅱ' : '♪'}}</text></button></view>
+          <view class="hero-score"><text>参考分数</text><text class="hero-score-value">{{preview.score_text || '未提供'}}</text></view>
+          <view class="hero-tags"><text wx:for="{{preview.display_tags}}" wx:key="*this" class="result-tag">{{item}}</text></view>
+          <button wx:if="{{preview.available}}" size="mini" class="hero-save {{saved ? 'is-saved' : ''}}" bindtap="favorite" disabled="{{favoriteBusy || favoriteLoading}}" loading="{{favoriteBusy}}"><text>{{saved ? '♥' : '♡'}}</text><text>{{favoriteLoading ? '读取中' : favoriteError ? '重试收藏' : saved ? '已收藏' : '收藏词条'}}</text></button>
+        </view>
+      </view>
+      <view wx:if="{{preview.available && preview.culture_summary}}" class="hero-summary">{{preview.culture_summary}}</view>
+      <view wx:if="{{favoriteError}}" class="result-muted">{{favoriteError}}</view>
+      <view class="confidence-note">分数由识别服务提供，不代表准确率；收藏词条不会确认识别。</view>
+    </view>
+    <view wx:else class="result-card unknown-card"><view class="result-heading">暂未找到可靠结果</view><image wx:if="{{image}}" class="unknown-photo" src="{{image}}" mode="aspectFit" binderror="photoError" /><view class="result-muted">可重新拍摄，或提交人工复核，不强行给出答案。</view></view>
+
+    <view wx:if="{{candidates.length}}" class="confirm-notice"><text class="notice-dot"></text><text>{{selected ? '已选候选仍需确认，文化内容仅供对照。' : '请点选最接近的候选，再确认本次识别。'}}</text></view>
+    <view wx:if="{{previewLoading}}" class="result-muted preview-status">正在读取已发布词条…</view>
+    <view wx:if="{{previewError}}" class="result-card preview-error"><text>{{previewError}}</text><button size="mini" class="result-text-button" bindtap="retryPreview">重新加载</button></view>
+
+    <view wx:if="{{preview}}" class="comparison-row">
+      <view class="result-card variants-panel">
+        <view class="result-section-head"><text class="result-heading">同字异形</text><text wx:if="{{preview.variants.length}}" class="section-meta">{{preview.variants.length}} 种</text></view>
+        <scroll-view wx:if="{{preview.variants.length}}" scroll-x class="glyph-scroll" show-scrollbar="{{false}}"><view class="variant-strip"><button wx:for="{{preview.variants}}" wx:key="index" size="mini" class="variant-tile" data-src="{{item.image_url}}" bindtap="previewImage" aria-label="查看第{{index + 1}}种已发布写法"><view class="variant-glyph"><glyph-image src="{{item.image_url}}" name="{{preview.cn_name}}" /></view><text>写法 {{index + 1}}</text></button></view></scroll-view>
+        <view wx:else class="inline-empty">{{previewLoading ? '正在读取字形…' : '暂无已发布异形'}}</view>
+      </view>
+      <view class="result-card candidates-panel">
+        <view class="result-section-head"><text class="result-heading">候选 Top {{candidates.length}}</text><text class="section-meta">滑动选择</text></view>
+        <scroll-view scroll-x class="glyph-scroll candidate-scroll" show-scrollbar="{{false}}"><view class="candidate-strip"><button wx:for="{{candidates}}" wx:key="id" size="mini" class="candidate {{selected === item.id ? 'is-selected' : ''}} {{preview.id === item.id ? 'is-preview' : ''}}" data-id="{{item.id}}" bindtap="choose" disabled="{{busy}}" aria-label="{{item.cn_name + (selected === item.id ? '，已选择' : '，点击选择')}}"><view class="candidate-glyph"><glyph-image src="{{item.image_url}}" name="{{item.cn_name}}" /></view><text class="candidate-name">{{item.cn_name}}</text><text class="candidate-state">{{selected === item.id ? '✓ 已选择' : '点击选择'}}</text></button></view></scroll-view>
+      </view>
+    </view>
+
+    <view wx:if="{{preview.available}}" class="result-card culture-card">
+      <view class="result-section-head"><text class="result-heading">东巴文化里的“{{preview.cn_name}}”</text></view>
+      <view class="culture-body"><view class="culture-copy">{{preview.culture_detail || preview.culture_summary || '这条词条的文化介绍暂待补充。'}}</view><button wx:if="{{preview.audio_url}}" size="mini" class="culture-audio" bindtap="audio"><text class="culture-audio-symbol">{{playing ? 'Ⅱ' : '♪'}}</text><text>{{playing ? '暂停讲解' : '听词条讲解'}}</text><text class="audio-source">已发布音频</text></button></view>
+      <view wx:if="{{preview.display_tags.length}}" class="culture-tags"><text wx:for="{{preview.display_tags}}" wx:key="*this" class="result-tag">{{item}}</text></view>
+      <view wx:if="{{!preview.audio_url}}" class="media-unavailable">暂无已发布音频；不提供模拟讲解。</view>
+      <view wx:if="{{preview.source_ref}}" class="culture-source">内容来源：{{preview.source_ref}}</view>
+    </view>
+
+    <view wx:if="{{preview.available}}" class="result-card merchant-panel">
+      <view class="result-section-head merchant-heading"><view class="merchant-heading-copy"><text class="result-heading">在丽江遇见“{{preview.cn_name}}”</text><view class="result-muted">与这个字关联的已发布商户</view></view><button size="mini" class="result-more" bindtap="nearby">查看更多 <text>›</text></button></view>
+      <scroll-view wx:if="{{merchants.length}}" scroll-x class="merchant-scroll" show-scrollbar="{{false}}"><view class="merchant-strip"><button wx:for="{{merchants}}" wx:key="id" size="mini" class="merchant-tile" data-id="{{item.id}}" bindtap="merchant" aria-label="查看{{item.name}}"><image wx:if="{{item.image_url}}" class="merchant-photo" src="{{item.image_url}}" mode="aspectFill" data-id="{{item.id}}" binderror="merchantImageError" /><view wx:else class="merchant-photo merchant-photo-empty"><image class="shop-icon" src="/assets/home/shop.png" mode="aspectFit" /><text>商户暂无图片</text></view><view class="merchant-copy"><view class="merchant-name">{{item.name}}</view><view class="merchant-tags"><text wx:for="{{item.display_tags}}" wx:for-item="tag" wx:key="*this" class="result-tag">{{tag}}</text></view><view class="merchant-address">{{item.address || '地址请进入详情查看'}}</view><view class="merchant-link">查看商户 <text>›</text></view></view></button></view></scroll-view>
+      <view wx:else class="inline-empty">{{merchantsLoading ? '正在查找关联商户…' : merchantsError || '暂无已发布的关联商户'}}</view>
+      <view class="merchant-note">商户优惠请进入详情查看；未定位不展示距离。</view>
+    </view>
+
+    <view id="feedback-panel" wx:if="{{feedbackOpen}}" class="result-card feedback-panel">
+      <view class="result-section-head"><text class="result-heading">识别不对？反馈纠错</text><text class="section-meta">说明选填</text></view>
+      <textarea class="feedback-input" maxlength="500" placeholder="例如：在什么地方看到这个字？" value="{{comment}}" bindinput="comment" disabled="{{busy}}" />
+      <view class="input-count">{{comment.length}} / 500</view>
+      <view wx:if="{{image}}" class="attachment-block"><checkbox-group bindchange="attachmentConsent"><label class="attachment-label"><checkbox value="attach" checked="{{attachImage}}" disabled="{{busy}}" /><text>同意保存本次照片作为反馈附图，供后台核验</text></label></checkbox-group><view class="result-muted">附图仅本人和运营人员可查看，可在个人中心删除；到期自动清理。不勾选只提交文字，后台无法查看本次照片。</view></view>
+      <button size="mini" class="review-action" disabled="{{busy}}" loading="{{busy}}" data-unknown="true" bindtap="submit">{{candidates.length ? '都不是，提交人工复核' : '提交人工复核'}}</button>
+    </view>
+    <view wx:if="{{error}}" class="result-card result-error" role="alert">{{error}}</view>
+    <view class="result-action-bar"><button size="mini" class="feedback-toggle" bindtap="toggleFeedback" disabled="{{busy}}"><text class="action-symbol">✎</text><text>{{feedbackOpen ? '收起纠错' : '反馈纠错'}}</text></button><button size="mini" class="retake-action" bindtap="retake" disabled="{{busy}}">重新拍摄</button><button wx:if="{{candidates.length}}" size="mini" class="confirm-action" disabled="{{!selected || busy}}" loading="{{busy}}" bindtap="submit">{{selected ? '确认，了解这个字' : '请先选择候选'}}</button><button wx:else size="mini" class="confirm-action" disabled="{{busy}}" data-unknown="true" bindtap="submit">提交复核</button></view>
   </block>
-  <view wx:else class="section"><view class="notice">{{error}}</view><button class="primary" bindtap="retake">重新识别</button></view>
+  <view wx:else class="result-card result-unavailable"><view class="result-heading">暂时无法展示结果</view><view class="result-error">{{error || '识别结果已失效，请重新拍摄。'}}</view><button size="mini" class="result-primary" bindtap="retake">返回首页重新识别</button></view>
 </view>

@@ -6,6 +6,7 @@ from time import perf_counter
 
 from PIL import Image, ImageFilter, ImageStat, UnidentifiedImageError
 from pydantic import ValidationError
+from starlette.concurrency import run_in_threadpool
 
 from backend.app.config import Settings
 from backend.app.dictionary import CharacterDictionary
@@ -68,6 +69,8 @@ async def recognize(
     provider: RecognitionProvider,
     dictionary: CharacterDictionary,
     settings: Settings,
+    rag_database=None,
+    business_database=None,
 ) -> RecognitionResponse:
     if not provider.configured:
         raise ApiError(503, "PROVIDER_NOT_CONFIGURED", "Recognition provider is not configured")
@@ -111,6 +114,36 @@ async def recognize(
             )
         )
 
+    rag_hits: list[dict] = []
+    rag_applied = False
+    if rag_database is not None:
+        try:
+            from backend.app.rag import apply_hits, retrieve
+
+            rag_query = " ".join(
+                value for value in (result.observed_text, *result.keywords, result.scene) if value
+            )
+            rag_hits = await run_in_threadpool(
+                retrieve, rag_database, rag_query, limit=5, business_database=business_database
+            )
+            rag_hits = [hit for hit in rag_hits if dictionary.get(hit["character_id"])]
+            candidates, rag_applied = apply_hits(candidates, rag_hits, dictionary)
+            # Do not expose other visitors' samples, text or internal reviewer metadata.
+            rag_hits = [
+                {key: hit[key] for key in ("id", "character_id", "score", "matched_terms")}
+                for hit in rag_hits
+            ]
+        except Exception as exc:
+            # RAG is an advisory memory layer.  An unavailable or malformed
+            # memory store must never make the primary recognition fail.
+            logger.warning(
+                "rag_retrieval_failed request_id=%s error_type=%s",
+                request_id,
+                type(exc).__name__,
+            )
+            rag_hits = []
+            rag_applied = False
+
     return RecognitionResponse(
         request_id=request_id,
         status="NEED_USER_CONFIRM" if candidates else "UNKNOWN",
@@ -118,4 +151,7 @@ async def recognize(
         model_version=result.model_version,
         latency_ms=round((perf_counter() - started_at) * 1000),
         candidates=candidates,
+        observed_text=result.observed_text,
+        rag_hits=rag_hits,
+        rag_applied=rag_applied,
     )

@@ -3,6 +3,14 @@
   "packOptions": {
     "ignore": [
       {
+        "value": "assets/lijiang-home-background.png",
+        "type": "file"
+      },
+      {
+        "value": "assets/10d73639569e2b258e21a060dd560611.png",
+        "type": "file"
+      },
+      {
         "value": "tests",
         "type": "folder"
       },

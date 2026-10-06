@@ -294,7 +294,7 @@ onUnmounted(() => {
           <el-button link type="primary" @click="openDetail(row)">详情</el-button>
           <el-button v-if="reviewable" link type="primary" @click="openReview(row)">审核</el-button>
           <el-button v-if="recordSampleLink(resource, row)" link type="primary" @click="showSamples(row)">
-            图片样本
+            纠错与附图
           </el-button>
         </template>
       </el-table-column>
@@ -314,14 +314,11 @@ onUnmounted(() => {
   </template>
   <el-drawer v-model="detailOpen" title="记录详情" size="min(720px, 100vw)">
     <div v-if="detail && recordSampleLink(resource, detail)" class="detail-status">
-      <el-button type="primary" plain @click="showSamples(detail)">联查图片样本</el-button>
+      <el-button type="primary" plain @click="showSamples(detail)">查看纠错与附图</el-button>
       <el-button
-        v-if="resource === 'recognitions'"
-        @click="router.push(sampleRecordLink('feedback', detail.request_id))"
+        v-if="resource === 'feedback'"
+        @click="router.push(sampleRecordLink('recognitions', detail.recognition_id))"
       >
-        查看文字反馈
-      </el-button>
-      <el-button v-else @click="router.push(sampleRecordLink('recognitions', detail.recognition_id))">
         查看识别记录
       </el-button>
     </div>
@@ -335,20 +332,13 @@ onUnmounted(() => {
     </el-descriptions>
   </el-drawer>
   <el-dialog v-model="review.visible" title="审核记录" width="min(500px, 94vw)" :close-on-click-modal="false">
-    <el-alert
-      v-if="resource === 'feedback'"
-      title="此处仅审核文字反馈，不会将关联图片样本自动标记为审核通过。"
-      type="info"
-      :closable="false"
-      class="form-alert"
-    />
     <el-button
       v-if="review.row && recordSampleLink(resource, review.row)"
       link
       type="primary"
       @click="showSamples(review.row)"
     >
-      先查看关联图片样本
+      查看纠错与附图
     </el-button>
     <el-alert v-if="review.error" :title="review.error" type="error" :closable="false" class="form-alert" />
     <el-form label-position="top">

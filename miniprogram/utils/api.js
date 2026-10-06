@@ -22,17 +22,24 @@ Object.assign(errors, {
   CLAIM_LIMIT: '已达到优惠券领取上限', SOLD_OUT: '优惠券已领完', NOT_ACTIVE: '当前活动尚未开始或已结束',
   COUPON_UNAVAILABLE: '优惠券暂不可使用', QR_INVALID: '二维码与当前任务不匹配',
   RECOGNITION_REQUIRED: '请先识别并确认本节点对应的东巴字', REDEMPTION_REQUIRED: '请先在指定商户完成优惠券核销',
-  JOIN_REQUIRED: '请先加入寻迹路线', QUEST_NO_NODES: '路线节点尚未配置完成', MANUAL_REQUIRED: '此节点需要现场运营人员确认',
+  JOIN_REQUIRED: '请先加入寻迹路线', QUEST_NO_NODES: '路线暂不可用，请稍后重试', MANUAL_REQUIRED: '此节点需要现场运营人员确认',
   CANDIDATE_INVALID: '候选项已失效，请重新识别', FEEDBACK_REVIEWED: '该反馈已完成审核，不能再修改',
-  CHARACTER_NOT_COLLECTED: '请选择已确认或收藏的东巴字', CHARACTER_IMAGE_UNAVAILABLE: '所选东巴字暂缺已审核字形图片',
+  CHARACTER_NOT_COLLECTED: '请选择已确认或收藏的东巴字', CHARACTER_IMAGE_UNAVAILABLE: '所选东巴字暂缺可用字形图片',
   POSTER_FONT_UNAVAILABLE: '海报服务暂时不可用', WECHAT_SHARE_UNAVAILABLE: '小程序分享码暂时生成失败，请稍后重试',
+  IMAGE_PROVIDER_UNCONFIGURED: 'AI 海报暂未开放，请稍后再来',
+  IMAGE_PROVIDER_AUTH_FAILED: 'AI 海报服务暂不可用，请稍后重试',
+  IMAGE_PROVIDER_BUSY: '创作人数较多，请稍后重试',
+  IMAGE_PROVIDER_TIMEOUT: '本次创作超时，请稍后重新生成',
+  IMAGE_PROVIDER_UNAVAILABLE: 'AI 创作暂未完成，请稍后重试',
+  IMAGE_PROVIDER_INVALID_RESPONSE: '本次未生成可用图片，请重试',
+  POSTER_REQUEST_CONFLICT: '创作内容已变更，请重新生成',
   LOCATION_REQUIRED: '请授权当前位置后重试', PLACE_NOT_CONFIGURED: '任务地点尚未提供已确认坐标', INVALID_REQUEST: '提交内容不完整，请检查后重试',
-  SAMPLE_NOT_FOUND: '图片样本不存在或已删除'
+  SAMPLE_NOT_FOUND: '图片样本不存在或已删除', SAMPLE_CONSENT_REQUIRED: '请先同意保存本次照片作为纠错附图'
 })
 function errorFrom(status, body) {
   const code = body && body.code || 'REQUEST_FAILED'
-  const error = new Error(errors[code] || (body && /[\u4e00-\u9fa5]/.test(body.message || '') ? body.message : '请求未完成，请稍后重试'))
-  error.code = code; error.requestId = body && body.request_id; error.status = status
+  const error = new Error(Object.prototype.hasOwnProperty.call(errors, code) ? errors[code] : status === 422 ? '提交内容不符合要求，请检查后重试' : '请求未完成，请稍后重试')
+  error.code = code; error.requestId = body && typeof body.request_id === 'string' && /^[a-zA-Z0-9_-]{1,80}$/.test(body.request_id) ? body.request_id : undefined; error.status = status
   if (status === 401) session.clear()
   return error
 }
@@ -60,11 +67,18 @@ function upload(filePath, scene, options) {
     formData.sample_consent = 'true'
     formData.sample_scene = opts.sampleScene || 'other'
   }
+  return uploadImage('/recognize', filePath, formData)
+}
+function uploadFeedbackImage(recognitionId, filePath, consent) {
+  if (consent !== true) return Promise.reject(errorFrom(422, { code: 'SAMPLE_CONSENT_REQUIRED' }))
+  return uploadImage('/recognize/' + encodeURIComponent(recognitionId) + '/image', filePath, { sample_consent: 'true' })
+}
+function uploadImage(path, filePath, formData) {
   return new Promise((resolve, reject) => {
     const auth = session.get()
     if (!auth) { reject(errorFrom(401, { code: 'AUTH_REQUIRED' })); return }
     wx.uploadFile({
-      url: config.apiBase + '/recognize', filePath, name: 'image',
+      url: config.apiBase + path, filePath, name: 'image',
       formData, timeout: config.recognitionTimeout,
       header: { Authorization: 'Bearer ' + auth.access_token },
       success(response) {
@@ -75,7 +89,7 @@ function upload(filePath, scene, options) {
       },
       fail(error) {
         const detail = error && error.errMsg ? error.errMsg : ''
-        const failure = new Error(detail ? '图片上传失败：' + detail : '图片上传失败，请检查网络后重试')
+        const failure = new Error('图片上传失败，请检查网络后重试')
         failure.code = 'NETWORK_ERROR'
         failure.errMsg = detail
         reject(failure)
@@ -101,6 +115,10 @@ function downloadPrivate(path, options) {
 }
 function mediaUrl(value) {
   if (!value) return ''
+  // SHARE-01: old completed jobs may cache an internal URL. Retry the same PNG
+  // through the configured API origin; never submit a new paid generation.
+  const legacy = /^https?:\/\/(?:127\.0\.0\.1|localhost|\[::1\])(?::\d+)?(\/api\/v1\/media\/[a-f0-9]{32}\.png)$/.exec(value)
+  if (legacy) value = legacy[1]
   if (/^https?:\/\//.test(value) || value.startsWith('wxfile:') || value.startsWith('/assets/')) return value
   return config.apiBase.replace(/\/api\/v1\/?$/, '') + '/' + value.replace(/^\//, '')
 }
@@ -123,4 +141,4 @@ function track(event, values) {
   return request('/events', { method: 'POST', auth: true, data: Object.assign({ event, event_id: eventId }, values || {}) }).catch(() => {})
 }
 function showError(error) { wx.showToast({ title: error.message || '操作失败', icon: 'none', duration: 3500 }) }
-module.exports = { request, upload, downloadPrivate, collection, all, mediaUrl, track, showError, errorFrom }
+module.exports = { request, upload, uploadFeedbackImage, downloadPrivate, collection, all, mediaUrl, track, showError, errorFrom }

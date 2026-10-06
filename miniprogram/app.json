@@ -28,26 +28,34 @@
     "enablePullDownRefresh": true
   },
   "tabBar": {
-    "color": "#69756f",
-    "selectedColor": "#bd3025",
-    "backgroundColor": "#fffdf8",
+    "color": "#737371",
+    "selectedColor": "#bc2d19",
+    "backgroundColor": "#ffffff",
     "borderStyle": "white",
     "list": [
       {
         "pagePath": "pages/home/index",
-        "text": "首页"
+        "text": "首页",
+        "iconPath": "assets/tabs/home.png",
+        "selectedIconPath": "assets/tabs/home-active.png"
       },
       {
         "pagePath": "pages/quests/index",
-        "text": "寻迹"
+        "text": "寻迹",
+        "iconPath": "assets/tabs/stamp.png",
+        "selectedIconPath": "assets/tabs/stamp-active.png"
       },
       {
         "pagePath": "pages/map/index",
-        "text": "地图"
+        "text": "地图",
+        "iconPath": "assets/tabs/map.png",
+        "selectedIconPath": "assets/tabs/map-active.png"
       },
       {
         "pagePath": "pages/profile/index",
-        "text": "我的"
+        "text": "我的",
+        "iconPath": "assets/tabs/user.png",
+        "selectedIconPath": "assets/tabs/user-active.png"
       }
     ]
   },

@@ -11,7 +11,6 @@ Page({
     try {
       const item = await api.request('/characters/' + encodeURIComponent(this.characterId))
       item.id = helpers.identifier(item); item.image_url = api.mediaUrl(item.image_url); item.audio_url = api.mediaUrl(item.audio_url)
-      item.variants = (item.variants || []).map(value => Object.assign({}, value, { image_url: api.mediaUrl(value.image_url) }))
       this.setData({ item })
       api.track('character_detail', { entity_type: 'characters', entity_id: item.id, recognition_id: this.recognitionId || null })
       const [merchants, products, related] = await Promise.all([
@@ -19,7 +18,7 @@ Page({
         api.collection('/products', { character_id: item.id, limit: 6 }),
         api.all('/characters')
       ])
-      this.setData({ merchants: merchants.map(value => Object.assign({}, value, { image_url: api.mediaUrl(value.image_url), distance: helpers.distance(value.distance_m) })), products: products.map(value => Object.assign({}, value, { image_url: api.mediaUrl(value.image_url) })), related: related.filter(value => helpers.identifier(value) !== item.id && ((item.category_l1 && value.category_l1 === item.category_l1) || (value.tags || []).some(tag => (item.tags || []).includes(tag)))).slice(0,4).map(helpers.normalizeCharacter) })
+      this.setData({ merchants: merchants.map(value => Object.assign({}, value, { image_url: api.mediaUrl(value.image_url), distance: helpers.distance(value.distance_m) })), products: products.map(value => Object.assign({}, value, { image_url: api.mediaUrl(value.image_url) })), related: related.filter(value => helpers.identifier(value) !== item.id && ((item.category_l1 && value.category_l1 === item.category_l1) || (value.tags || []).some(tag => (item.tags || []).includes(tag)))).slice(0,4).map(value => Object.assign({}, helpers.normalizeCharacter(value), { image_url: api.mediaUrl(value.image_url) })) })
       merchants.forEach(value => api.track('merchant_impression', { entity_type: 'merchants', entity_id: value.id, recognition_id: this.recognitionId || null }))
       if (session.get()) {
         const favorites = await api.collection('/me/favorites', {}, true)
@@ -44,10 +43,6 @@ Page({
     }
     if (this.data.playing) this.audioContext.pause(); else this.audioContext.play()
     this.setData({ playing: !this.data.playing })
-  },
-  preview(event) {
-    const source = event.currentTarget.dataset.src
-    if (source) wx.previewImage({ urls: [source], current: source })
   },
   related(event) { wx.navigateTo({ url: '/pages/character/index?id=' + encodeURIComponent(event.currentTarget.dataset.id) }) },
   merchant(event) { wx.navigateTo({ url: '/pages/merchant/index?id=' + encodeURIComponent(event.currentTarget.dataset.id) + '&recognition_id=' + encodeURIComponent(this.recognitionId || '') }) },

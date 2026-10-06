@@ -156,6 +156,12 @@ class Review(Input):
     review_note: str = Field(default="", max_length=2000)
 
 
+class FeedbackReview(Input):
+    status: Literal["approved", "rejected"]
+    review_note: str = Field(default="", max_length=2000)
+    character_id: str | None = Field(default=None, max_length=64)
+
+
 class Checkin(Input):
     node_id: str
     recognition_id: str | None = None

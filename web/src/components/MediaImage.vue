@@ -22,7 +22,11 @@ watch(
     failed.value = false
     imageSrc.value = ''
     if (!src) return
-    if (!src.startsWith('/api/v1/media/') && !src.startsWith('/api/v1/admin/samples/')) {
+    if (
+      !['/api/v1/media/', '/api/v1/admin/samples/', '/api/v1/admin/rag/cases/'].some((prefix) =>
+        src.startsWith(prefix),
+      )
+    ) {
       imageSrc.value = src
       return
     }

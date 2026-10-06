@@ -13,6 +13,8 @@ export interface User {
 
 const TOKEN_KEY = 'dongba_access_token'
 const messages: Record<string, string> = {
+  FEEDBACK_CHARACTER_REQUIRED: '请先选择核验后的正确词条，再采纳纠错',
+  RAG_FEEDBACK_WORKFLOW_REQUIRED: '请前往纠错审核处理这条反馈',
   RATE_LIMITED: '请求较频繁，请稍后重试',
   LOCATION_REQUIRED: '发布商户前请填写经过核对的门店坐标',
   LOCATION_INCOMPLETE: '经度和纬度需要同时填写',
@@ -25,6 +27,7 @@ const messages: Record<string, string> = {
   INVALID_CREDENTIALS: '账号或密码不正确',
   LOGIN_RATE_LIMITED: '登录尝试过多，请15分钟后重试',
   FORBIDDEN: '当前账号没有此操作权限',
+  CROSS_MERCHANT: '无权核销其他门店优惠券',
   SETUP_DISABLED: '初始化未开放或授权码无效',
   SETUP_COMPLETE: '管理员已创建，请重新登录',
   DATABASE_NOT_MIGRATED: '服务尚未完成初始化',
@@ -62,10 +65,25 @@ const messages: Record<string, string> = {
   MEDIA_NOT_FOUND: '图片不存在或无权访问',
   FILE_TOO_LARGE: '图片文件过大',
   INVALID_IMAGE: '图片格式无效',
-  INVALID_SAMPLE: '样本元数据格式不符合要求，请检查表单',
+  INVALID_SAMPLE: '样本信息不符合要求，请检查表单',
   SAMPLE_REVIEW_INCOMPLETE: '审核通过需要关联已审核或已发布词条，并填写资料来源',
   SAMPLE_IMAGE_UNAVAILABLE: '样本图片不可用，请检查记录或缩小导出范围',
   INVALID_SAMPLE_BBOX: '标注框不能超出图片边界',
+  INVALID_RAG_CASE: '纠错信息不符合要求，请检查后重试',
+  RAG_CASE_NOT_FOUND: '识别参考不存在或已不可用',
+  RAG_DATABASE_UNAVAILABLE: '识别参考暂不可用，请稍后重试或联系管理员',
+  RAG_IMAGE_UNAVAILABLE: '案例图片不存在或已不可用',
+  RAG_REVIEW_NOTE_REQUIRED: '请填写处理原因',
+  RAG_INDEX_UNAVAILABLE: '识别参考暂不可用，请稍后重试',
+  RAG_REBUILD_RUNNING: '识别参考正在更新，请稍后再试',
+  IMAGE_PROVIDER_UNCONFIGURED: '请先配置并启用海报生图服务',
+  IMAGE_PROVIDER_KEY_REQUIRED: '接口地址已更改，请输入对应的 API Key 后读取模型',
+  IMAGE_PROVIDER_AUTH_FAILED: '生图服务鉴权失败，请检查密钥与权限',
+  IMAGE_PROVIDER_BUSY: '生图服务繁忙或额度受限，请稍后重试',
+  IMAGE_PROVIDER_TIMEOUT: '生图服务响应超时，请稍后重试',
+  IMAGE_PROVIDER_UNAVAILABLE: '暂时无法连接生图服务，请检查配置',
+  IMAGE_PROVIDER_INVALID_RESPONSE: '生图服务未返回有效结果，请检查接口与模型',
+  CONFIG_ENCRYPTION_UNAVAILABLE: '服务端尚未配置可用的密钥加密环境，请联系管理员',
 }
 export const tokenStore = {
   get: () => sessionStorage.getItem(TOKEN_KEY),
@@ -109,16 +127,16 @@ async function request(path: string, options: RequestInit = {}): Promise<Respons
       tokenStore.clear()
       window.dispatchEvent(new Event('session-expired'))
     }
-    const detail =
-      typeof body?.detail === 'string'
-        ? body.detail
-        : Array.isArray(body?.detail)
-          ? body.detail.map((v: Row) => v.msg).join('；')
-          : ''
     throw new ApiError(
-      messages[body?.code] || body?.message || detail || `请求失败（${response.status}）`,
+      Object.prototype.hasOwnProperty.call(messages, body?.code)
+        ? messages[body.code]
+        : response.status === 422
+          ? '提交内容不符合要求，请检查后重试'
+          : '请求未完成，请稍后重试',
       response.status,
-      body?.request_id,
+      typeof body?.request_id === 'string' && /^[a-zA-Z0-9_-]{1,80}$/.test(body.request_id)
+        ? body.request_id
+        : undefined,
     )
   }
   return response
@@ -126,7 +144,12 @@ async function request(path: string, options: RequestInit = {}): Promise<Respons
 
 export async function api<T = Row>(path: string, options: RequestInit = {}): Promise<T> {
   const response = await request(path, options)
-  return (response.status === 204 ? null : await response.json()) as T
+  if (response.status === 204) return null as T
+  try {
+    return (await response.json()) as T
+  } catch {
+    throw new ApiError('暂时无法读取内容，请稍后重试', response.status)
+  }
 }
 
 export async function apiBlob(path: string, options: RequestInit = {}) {

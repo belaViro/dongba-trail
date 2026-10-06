@@ -1,15 +1,47 @@
 <view class="map-page">
-  <view class="map-intro"><text class="eyebrow">CULTURAL MAP</text><view class="map-title">跟着东巴字，走进丽江</view><view class="muted">一处地点，一段值得停留的故事</view></view>
-  <view class="map-toolbar"><view class="tabs"><button data-type="all" class="{{filter === 'all' ? 'active' : ''}}" bindtap="filter">全部</button><button data-type="culture" class="{{filter === 'culture' ? 'active' : ''}}" bindtap="filter">文化点</button><button data-type="merchant" class="{{filter === 'merchant' ? 'active' : ''}}" bindtap="filter">商户</button><button data-type="quest" class="{{filter === 'quest' ? 'active' : ''}}" bindtap="filter">任务点</button></view></view>
-  <map wx:if="{{center}}" id="culture-map" class="map" longitude="{{center.longitude}}" latitude="{{center.latitude}}" markers="{{markers}}" scale="15" show-location="{{!!location}}" bindmarkertap="marker" bindcallouttap="marker" />
-  <view wx:else class="map-empty"><text>暂无可显示的文化地点</text></view>
-  <view class="map-data-note">微信地图底图 · 点位坐标来自后台发布内容</view>
-  <view class="page places-panel">
-    <view class="row between"><view><text class="eyebrow">PLACES TO EXPLORE</text><view class="heading">文化地点</view></view><button class="small secondary" bindtap="locate">定位</button></view>
-    <view wx:if="{{locationError}}" class="notice">{{locationError}}</view><view-state loading="{{loading}}" error="{{error}}" bind:retry="load" />
-    <view wx:if="{{selected}}" class="selected-place section"><text class="place-label">当前地点</text><view class="item-title">{{selected.name}}</view><view class="muted">{{selected.address || selected.description}}</view><view class="actions"><button wx:if="{{selected.merchant_id}}" class="secondary" bindtap="detail">查看商户</button><button class="primary" bindtap="navigate">去这里</button></view></view>
-    <view wx:for="{{visiblePoints}}" wx:key="id" class="list-row" data-id="{{item.id}}" bindtap="select"><view class="place-number">{{index + 1}}</view><view class="grow"><view class="item-title">{{item.name}}</view><view class="caption">{{item.description}}</view></view><button class="small secondary" data-id="{{item.id}}" catchtap="navigate">导航</button></view>
-    <view wx:if="{{!loading && !error && !visiblePoints.length}}" class="empty-inline">这个分类下还没有发布地点，试试其他分类。</view>
-    <feature-note label="待接入" detail="地图路线连线与地图内优惠卡片尚未实现联动；现有点位、商户详情和导航已接入，优惠券可在商户详情领取。" />
+  <view class="map-intro">
+    <image class="map-landscape" src="/assets/lijiang-panorama.png" mode="aspectFill" />
+    <view class="map-intro-content">
+      <view class="map-subtitle">跟着东巴文字，探索丽江的文化与生活</view>
+      <view class="map-tabs">
+        <button size="mini" data-type="all" class="map-tab {{filter === 'all' ? 'is-active' : ''}}" bindtap="filter"><text class="map-tab-label">全部</text></button>
+        <button size="mini" data-type="culture" class="map-tab {{filter === 'culture' ? 'is-active' : ''}}" bindtap="filter"><text class="map-tab-label">文化点</text></button>
+        <button size="mini" data-type="merchant" class="map-tab {{filter === 'merchant' ? 'is-active' : ''}}" bindtap="filter"><text class="map-tab-label">商户</text></button>
+        <button size="mini" data-type="quest" class="map-tab {{filter === 'quest' ? 'is-active' : ''}}" bindtap="filter"><text class="map-tab-label">任务点</text></button>
+      </view>
+    </view>
+  </view>
+  <view class="map-stage">
+    <map wx:if="{{center}}" id="culture-map" class="map" longitude="{{center.longitude}}" latitude="{{center.latitude}}" markers="{{markers}}" scale="{{scale}}" min-scale="11" max-scale="19" show-location="{{!!location}}" show-compass enable-satellite="{{satellite}}" bindregionchange="regionChange" bindmarkertap="marker" bindcallouttap="marker">
+      <cover-view class="map-tools-left">
+        <cover-view class="map-tool map-layer {{satellite ? 'tool-active' : ''}}" bindtap="toggleLayer" aria-role="button" aria-label="切换标准地图与卫星图层"><cover-view class="tool-symbol">▱</cover-view><cover-view class="tool-label">{{satellite ? '标准图' : '卫星图'}}</cover-view></cover-view>
+        <cover-view class="map-tool map-locate" bindtap="locate" aria-role="button" aria-label="定位到我的位置"><cover-view class="tool-symbol">⌖</cover-view><cover-view class="tool-label">{{locating ? '定位中' : '我的位置'}}</cover-view></cover-view>
+      </cover-view>
+      <cover-view class="map-tools-right">
+        <cover-view class="map-zoom {{scale >= 19 ? 'tool-disabled' : ''}}" data-step="1" bindtap="zoom" aria-role="button" aria-label="放大地图">＋</cover-view>
+        <cover-view class="map-zoom {{scale <= 11 ? 'tool-disabled' : ''}}" data-step="-1" bindtap="zoom" aria-role="button" aria-label="缩小地图">−</cover-view>
+      </cover-view>
+      <cover-view class="map-source">微信原生地图 · 后台已发布地点</cover-view>
+    </map>
+    <view wx:else class="map-empty"><view class="map-empty-symbol">⌖</view><view class="map-empty-title">{{loading ? '正在展开丽江地图' : error ? '地图地点暂时无法加载' : '这里的文化地点等待发布'}}</view><text>{{loading ? '正在读取已发布地点…' : error ? '请在下方重试，或先定位查看地图' : '不使用示意点位代替真实地点'}}</text><button size="mini" class="empty-locate" bindtap="locate" loading="{{locating}}">定位查看地图</button></view>
+  </view>
+  <view class="places-panel">
+    <view class="panel-handle"></view>
+    <view class="places-heading"><view class="panel-title"><text class="title-accent"></text><text>{{location ? '附近的文化地点' : '发现文化地点'}}</text></view><text class="places-count">{{visiblePoints.length}} 处地点</text></view>
+    <view class="sort-row"><view class="sort-tabs"><button size="mini" class="sort-tab {{sort === 'default' ? 'is-active' : ''}}" data-sort="default" bindtap="sortPoints">默认排序</button><button size="mini" class="sort-tab {{sort === 'distance' ? 'is-active' : ''}}" data-sort="distance" bindtap="sortPoints">距离最近</button></view><text class="distance-note">{{location ? '距离为直线估算' : '定位后显示距离'}}</text></view>
+    <view wx:if="{{locationError}}" class="notice">{{locationError}}；仍可浏览地点并使用导航。</view>
+    <view wx:if="{{questError}}" class="notice">{{questError}}</view>
+    <view-state loading="{{loading}}" error="{{error}}" bind:retry="load" />
+    <block wx:if="{{!loading && !error}}">
+      <view wx:for="{{visiblePoints}}" wx:key="id" class="place-card {{selected.id === item.id ? 'is-selected' : ''}}">
+        <view class="place-main" data-id="{{item.id}}" bindtap="select" aria-role="button" aria-label="在地图上查看{{item.name}}">
+          <view class="place-photo"><image wx:if="{{item.image_url}}" class="place-thumb" src="{{item.image_url}}" mode="aspectFill" lazy-load data-id="{{item.id}}" binderror="imageError" /><view wx:else class="place-photo-empty"><text class="photo-symbol">⌖</text><text>{{item.type_label}}</text></view><text wx:if="{{selected.id === item.id}}" class="photo-selected">地图已选</text></view>
+          <view class="place-copy"><view class="place-name">{{item.name}}</view><view class="place-address"><text class="address-pin">●</text><text wx:if="{{item.distance}}" class="place-distance">{{item.distance}}<text class="address-divider">｜</text></text><text>{{item.address || item.description || '点击查看地图位置'}}</text></view><view class="place-tags"><text class="place-tag">{{item.type_label}}</text><text wx:if="{{item.is_quest && item.type_label !== '任务点'}}" class="place-tag quest-tag">寻迹任务</text><text wx:for="{{item.display_tags}}" wx:for-item="tag" wx:key="*this" class="place-tag">{{tag}}</text></view></view>
+        </view>
+        <view class="place-footer"><button wx:if="{{item.merchant_id}}" size="mini" class="place-detail" data-id="{{item.id}}" bindtap="detail">商户详情 <text class="detail-chevron">›</text></button><text wx:else class="place-hint">{{item.is_quest ? '寻迹路线上的文化地点' : '留一站，读懂丽江'}}</text><button size="mini" class="place-navigate" data-id="{{item.id}}" bindtap="navigate"><view class="navigate-pill"><text class="navigate-arrow">➤</text><text>去这里</text></view></button></view>
+      </view>
+    </block>
+    <view wx:if="{{!loading && !error && !visiblePoints.length}}" class="empty-inline">{{filter === 'quest' && questError ? '任务地点暂时不可用，请稍后重试。' : '这个分类下还没有发布地点，试试其他分类。'}}</view>
+    <feature-note label="逛游提示" detail="点击地点可查看位置并导航；商户优惠请进入详情查看。" />
   </view>
 </view>

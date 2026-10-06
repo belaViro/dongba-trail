@@ -56,9 +56,9 @@ describe('HTTP contract', () => {
   it('clears an expired session and notifies the router', async () => {
     vi.stubGlobal(
       'fetch',
-      vi.fn().mockResolvedValue(new Response(JSON.stringify({ message: '会话已过期' }), { status: 401 })),
+      vi.fn().mockResolvedValue(new Response(JSON.stringify({ code: 'SESSION_EXPIRED' }), { status: 401 })),
     )
-    await expect(api('/admin/users')).rejects.toThrow('会话已过期')
+    await expect(api('/admin/users')).rejects.toThrow('登录已过期')
     expect(data.has('dongba_access_token')).toBe(false)
     expect(window.dispatchEvent).toHaveBeenCalledOnce()
   })

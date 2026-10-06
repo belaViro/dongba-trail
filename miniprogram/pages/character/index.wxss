@@ -1,1 +1,82 @@
-.character-header{position:relative;text-align:center;padding:44rpx 0 48rpx;border-bottom:1rpx solid #e3d9ca;overflow:hidden;background:linear-gradient(145deg,#f8f0e2,#e7f0ed)}.character-backdrop{position:absolute;inset:0;background:radial-gradient(circle at 80% 15%,rgba(100,170,210,.25),transparent 38%),linear-gradient(180deg,rgba(255,255,255,.2),rgba(255,255,255,.78));}.hero-glyph,.character-header>.category,.character-header>.word,.character-header>.summary{position:relative;z-index:1}.hero-glyph{width:280rpx;height:250rpx;margin:0 auto 28rpx;background:#efe1c9;border-radius:22rpx;box-shadow:0 12rpx 25rpx rgba(75,50,26,.16);padding:16rpx}.category{color:#9c513d;font-size:24rpx}.word{font-size:64rpx;font-weight:700;margin:8rpx 0 18rpx;color:#182f3f}.summary{font-size:29rpx;color:#567061;line-height:1.9;padding:0 20rpx}.variants{white-space:nowrap;margin-top:24rpx}.variant{display:inline-flex;flex-direction:column;width:185rpx;height:240rpx;margin-right:22rpx;white-space:normal;vertical-align:top;padding:16rpx;background:#fffdf8;border-radius:16rpx}.variant glyph-image{height:170rpx;flex-shrink:0}.variant text{margin-top:12rpx;display:block}.audio{display:flex;align-items:center;gap:24rpx;justify-content:space-between;background:#f7e9d8;color:#76371e}.audio>text:first-child{font-size:36rpx}.audio .caption{font-weight:400}.integration-note{padding:18rpx 22rpx;background:#f4e9dc;color:#8b634a;border-radius:14rpx;font-size:23rpx;line-height:1.6}
+/* CONTENT-01 / DESIGN-01 / D-064: scenic entry, approved content, no variants card. */
+page { background: #f7f4ef; }
+.character-page { padding: 0 0 calc(180rpx + env(safe-area-inset-bottom)); color: #302f2b; }
+.character-header { position: relative; overflow: hidden; padding: 34rpx 34rpx 42rpx; background: #f7f4ef; }
+.character-backdrop { position: absolute; top: 0; left: 0; width: 100%; height: 430rpx; opacity: .66; }
+.character-header::after { content: ""; position: absolute; top: 0; right: 0; left: 0; height: 432rpx; pointer-events: none; background: linear-gradient(180deg, rgba(247,244,239,.04), rgba(247,244,239,.52) 50%, #f7f4ef 100%), linear-gradient(90deg, rgba(247,244,239,.8), rgba(247,244,239,.03)); }
+.character-brand,.character-identity,.summary { position: relative; z-index: 1; }
+.character-brand { display: flex; align-items: center; justify-content: space-between; gap: 18rpx; margin-bottom: 32rpx; }
+.brand-name { display: block; color: #263c40; font-family: "Songti SC", "STSong", serif; font-size: 36rpx; font-weight: 700; letter-spacing: 2rpx; }
+.brand-caption { display: block; margin-top: 5rpx; color: #68736b; font-size: 21rpx; letter-spacing: 2rpx; }
+.character-seal { display: flex; flex-direction: column; flex-shrink: 0; padding: 7rpx 8rpx; border: 1rpx solid #b94630; border-radius: 6rpx; color: #a63023; background: rgba(255,250,238,.6); font-family: serif; font-size: 20rpx; line-height: 1.12; }
+.character-identity { display: flex; align-items: center; gap: 32rpx; min-width: 0; }
+.hero-glyph { position: relative; display: block; flex: 0 0 252rpx; width: 252rpx; height: 274rpx; margin: 0; padding: 28rpx 22rpx; border: 1rpx solid #d9c3a1; border-radius: 12rpx 18rpx 14rpx 10rpx; background: radial-gradient(ellipse at 28% 20%, #fffaf0 0%, #f5e7cf 75%, #e6d2b1 100%); box-shadow: 0 12rpx 24rpx rgba(80,58,35,.13), inset 0 0 0 7rpx rgba(255,255,255,.25); transform: rotate(-3deg); }
+.hero-glyph glyph-image { display: block; height: 100%; width: 100%; transform: rotate(3deg); }
+.glyph-corner { position: absolute; left: 13rpx; top: 14rpx; width: 14rpx; height: 23rpx; border: 2rpx solid #b86044; border-radius: 3rpx; opacity: .7; }
+.identity-copy { flex: 1; width: 0; min-width: 0; padding: 14rpx 0; }
+.identity-eyebrow { font-size: 21rpx; color: #86715b; letter-spacing: 2rpx; }
+.word { margin: 10rpx 0 14rpx; font-family: "Songti SC", "STSong", serif; font-size: 82rpx; line-height: 1.2; color: #272c28; font-weight: 700; overflow-wrap: anywhere; }
+.category { display: flex; flex-wrap: wrap; gap: 10rpx; }
+.category .tag { margin: 0; padding: 5rpx 14rpx; border-radius: 10rpx; background: rgba(227,203,164,.38); color: #735334; font-size: 22rpx; overflow-wrap: anywhere; }
+.summary { display: flex; align-items: flex-start; gap: 16rpx; margin-top: 30rpx; padding: 0 4rpx; color: #5f584d; line-height: 1.85; font-family: "Songti SC", "STSong", serif; font-size: 29rpx; overflow-wrap: anywhere; }
+.summary-mark { flex-shrink: 0; color: #b78b5f; font-size: 60rpx; line-height: 1.1; }
+.character-content { position: relative; z-index: 2; padding: 0 24rpx; }
+.character-content .section { margin-top: 22rpx; }
+.character-content .paper-card { padding: 28rpx; border: 1rpx solid #eee8de; border-radius: 24rpx; background: #fffdfa; box-shadow: 0 7rpx 24rpx rgba(86,62,36,.025); }
+.character-content .culture-section { margin-top: 0; }
+.character-page .heading { font-size: 32rpx; line-height: 1.5; font-weight: 600; }
+.character-page .section-title::before { width: 6rpx; height: 26rpx; margin-right: 14rpx; border-radius: 5rpx; background: #ac3024; }
+.story-kicker { margin-bottom: 13rpx; color: #9c7956; font-size: 20rpx; letter-spacing: 3rpx; }
+.culture-story { margin-top: 22rpx; color: #605c55; font-size: 28rpx; line-height: 1.95; }
+.content-source { margin-top: 20rpx; padding-top: 17rpx; border-top: 1rpx solid #efe9e0; font-size: 21rpx; color: #918a7f; overflow-wrap: anywhere; }
+.character-page .audio { display: flex; gap: 18rpx; width: 100%; min-width: 0; margin: 24rpx 0 0; padding: 18rpx 20rpx; text-align: left; background: #f6efe4; color: #805437; border-radius: 17rpx; font-size: 26rpx; }
+.audio-icon { flex: 0 0 60rpx; width: 60rpx; height: 60rpx; line-height: 60rpx; text-align: center; background: #fffaf2; border: 1rpx solid #e7d6bc; border-radius: 50%; font-size: 30rpx; }
+.audio .caption { font-weight: 400; font-size: 20rpx; color: #9a8874; }
+.audio-wave { display: flex; align-items: center; gap: 5rpx; height: 38rpx; }
+.audio-wave text { width: 4rpx; height: 14rpx; background: #b88a60; border-radius: 3rpx; }
+.audio-wave text:nth-child(2) { height: 30rpx; }
+.audio-wave text:nth-child(3) { height: 22rpx; }
+.media-unavailable { margin-top: 16rpx; color: #9a9388; font-size: 21rpx; }
+.character-page .section-head { gap: 14rpx; margin-bottom: 18rpx; }
+.section-caption { flex-shrink: 0; font-size: 21rpx; color: #9b9183; font-weight: 400; }
+.related-words { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12rpx; }
+.character-page .related-word { display: flex; flex-direction: column; justify-content: flex-start; gap: 12rpx; width: 100%; min-width: 0; margin: 0; padding: 18rpx 8rpx 14rpx; border-radius: 13rpx; background: #f4eee4; font-weight: 400; }
+.related-glyph { width: 100%; height: 102rpx; }
+.related-glyph glyph-image { display: block; width: 100%; height: 100%; }
+.related-name { color: #4e4539; font-family: "Songti SC", "STSong", serif; font-size: 27rpx; line-height: 1.4; overflow-wrap: anywhere; }
+.association-section { min-width: 0; }
+.character-page .association-heading { gap: 16rpx; margin-bottom: 6rpx; }
+.association-heading .section-title { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.character-page .association-more[size="mini"] { box-sizing: border-box; display: flex; align-items: center; justify-content: flex-end; flex-shrink: 0; gap: 8rpx; width: 70px; height: 44px; min-height: 44px; margin: 0; padding: 0; border-radius: 0; background: transparent; font-size: 23rpx; line-height: 1.4; color: #9c7960; font-weight: 400; }
+.character-page .merchant-row[size="mini"] { box-sizing: border-box; display: flex; align-items: center; justify-content: flex-start; gap: 20rpx; width: 100%; max-width: 100%; min-width: 0; min-height: 44px; margin: 0; padding: 22rpx 0; border-bottom: 1rpx solid #eee6dc; background: transparent; text-align: left; color: #302f2b; font-size: 26rpx; line-height: 1.5; font-weight: 400; border-radius: 0; white-space: normal; }
+.character-page .merchant-row[size="mini"]::after,.character-page .association-more[size="mini"]::after { border: 0; }
+.character-page .merchant-row[size="mini"]:last-child { border-bottom: 0; padding-bottom: 0; }
+.merchant-row .thumb { display: block; flex: 0 0 128rpx; width: 128rpx; height: 128rpx; border-radius: 14rpx; }
+.merchant-row .no-image { display: flex; align-items: center; justify-content: center; font-size: 22rpx; text-align: center; color: #9a8770; background: #f2ebdf; }
+.association-copy { flex: 1; width: 0; min-width: 0; text-align: left; }
+.association-copy .item-title,.association-description { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
+.association-copy .item-title { font-size: 29rpx; line-height: 1.5; font-weight: 500; }
+.association-description { margin-top: 6rpx; font-size: 24rpx; line-height: 1.6; font-weight: 400; color: #938b7f; }
+.association-copy .price { margin-top: 8rpx; line-height: 1.4; color: #ab3022; overflow-wrap: anywhere; }
+.association-copy .tag { max-width: 100%; margin-top: 8rpx; color: #94795d; background: #f5eee3; overflow-wrap: anywhere; }
+.merchant-row .chevron { flex: 0 0 20rpx; width: 20rpx; font-size: 34rpx; line-height: 1; text-align: right; color: #baab96; }
+.empty-inline { padding: 24rpx 0 12rpx; font-size: 25rpx; color: #9a9184; }
+.quest-invitation { display: flex; gap: 20rpx; width: 100%; padding: 26rpx; background: #eee6d8; color: #795339; text-align: left; border-radius: 22rpx; }
+.quest-mark { display: flex; align-items: center; justify-content: center; flex: 0 0 62rpx; width: 62rpx; height: 62rpx; border: 1rpx solid #be9b74; border-radius: 14rpx; font-family: serif; font-size: 34rpx; font-weight: 400; }
+.quest-title { font-family: "Songti SC", "STSong", serif; font-size: 29rpx; font-weight: 600; }
+.quest-caption { display: block; margin-top: 5rpx; color: #a0876b; font-size: 22rpx; font-weight: 400; }
+.quest-invitation .chevron { font-size: 36rpx; color: #b39779; }
+.character-page .correction { justify-content: space-between; margin: 0 0 18rpx; padding: 0 12rpx; background: transparent; font-size: 24rpx; font-weight: 400; color: #946b50; }
+.character-page .character-actions { align-items: center; gap: 14rpx; padding: 16rpx 24rpx calc(16rpx + env(safe-area-inset-bottom)); border-top: 1rpx solid #eee8de; background: #fffdf9; box-shadow: 0 -8rpx 26rpx rgba(75,54,30,.035); }
+.character-actions button { min-height: 48px; }
+.character-actions .favorite-action { flex: 0 0 96rpx; min-width: 44px; flex-direction: column; gap: 5rpx; padding: 3rpx; border-radius: 0; background: transparent; font-size: 21rpx; font-weight: 400; color: #8a8277; }
+.favorite-icon { display: block; flex-shrink: 0; width: 44rpx; height: 44rpx; }
+.favorite-action.is-saved { color: #aa3224; }
+.character-actions .nearby-action { flex: 1; padding: 16rpx 8rpx; background: #f4ebde; color: #87603e; font-size: 26rpx; font-weight: 500; border-radius: 18rpx; }
+.character-actions .poster-action { flex: 1.65; gap: 16rpx; padding: 16rpx 10rpx; background: #ad3024; color: #fffaf2; font-size: 27rpx; font-weight: 500; border-radius: 18rpx; }
+.character-actions .poster-action text { font-size: 33rpx; font-weight: 400; }
+/* Explicit sizing also wins over the native v2 button defaults. */
+.character-page .hero-glyph { width: 252rpx; min-width: 0; margin: 0; }
+.character-page .quest-invitation,.character-page .correction { width: 100%; min-width: 0; margin-left: 0; margin-right: 0; }
+.character-actions .nearby-action,.character-actions .poster-action { width: 0; min-width: 0; margin: 0; }
+.character-actions .favorite-action { margin: 0; }

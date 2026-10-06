@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import APIRouter, Depends, Query, Request
 from pydantic import ValidationError
 from sqlalchemy import delete, select
@@ -28,6 +30,7 @@ from .models import (
     Favorite,
     Feedback,
     RecognitionRecord,
+    Sample,
     Setting,
     Stamp,
     TagClaim,
@@ -42,6 +45,7 @@ from .schemas import (
     Checkin,
     Confirm,
     EventInput,
+    FeedbackReview,
     ManualComplete,
     Review,
     TagRequest,
@@ -63,6 +67,22 @@ from .workflows import (
 
 router = APIRouter(prefix="/api/v1", tags=["Business"])
 MerchantProfilePatch = PATCH_SCHEMAS["merchants"]
+logger = logging.getLogger(__name__)
+
+
+def _index_feedback(request, payload, *, actor_id):
+    database = getattr(request.app.state, "rag_database", None)
+    if database is None:
+        raise ApiError(503, "RAG_DATABASE_UNAVAILABLE", "Feedback was not approved; retry later")
+    try:
+        from backend.app.rag import index_feedback_case
+
+        return index_feedback_case(database, payload, actor_id=actor_id)
+    except Exception as exc:
+        logger.warning("feedback_index_failed error_type=%s", type(exc).__name__)
+        raise ApiError(
+            503, "RAG_DATABASE_UNAVAILABLE", "Feedback was not approved; retry later"
+        ) from exc
 
 
 @router.get("/characters/{character_id}/nearby")
@@ -393,6 +413,41 @@ def manual_node(
         )
 
 
+def feedback_rag_state(request, items, *, include_case=False):
+    """Read current RAG state for a page in one query, independently of review status."""
+    for item in items:
+        item.update(rag_status="not_indexed", rag_case_id=None, rag_updated_at=None)
+        if include_case:
+            item["rag_case"] = None
+    if not items:
+        return
+    database = getattr(request.app.state, "rag_database", None)
+    try:
+        if database is None:
+            for item in items:
+                item["rag_status"] = "unavailable"
+            return
+        from backend.app.rag import serialize_case
+        from backend.app.rag_models import RagCase
+
+        ids = {item["recognition_id"] for item in items}
+        with database.session() as session:
+            cases = session.scalars(select(RagCase).where(RagCase.recognition_id.in_(ids)))
+            by_recognition = {case.recognition_id: case for case in cases}
+            for item in items:
+                case = by_recognition.get(item["recognition_id"])
+                if case:
+                    item.update(
+                        rag_status=case.status, rag_case_id=case.id, rag_updated_at=case.updated_at
+                    )
+                    if include_case:
+                        item["rag_case"] = serialize_case(case)
+    except Exception as exc:
+        logger.warning("feedback_rag_state_failed error_type=%s", type(exc).__name__)
+        for item in items:
+            item["rag_status"] = "unavailable"
+
+
 def special_list(request, model, q, status, offset, limit, *, merchant_id=None):
     with request.app.state.database.session() as session:
         query = select(model)
@@ -407,7 +462,10 @@ def special_list(request, model, q, status, offset, limit, *, merchant_id=None):
         ]
         if q:
             data = [row for row in data if q.casefold() in str(row).casefold()]
-        return {"items": data[offset : offset + limit], "total": len(data)}
+        result = {"items": data[offset : offset + limit], "total": len(data)}
+    if model is Feedback:
+        feedback_rag_state(request, result["items"])
+    return result
 
 
 def register_special(resource, model):
@@ -437,17 +495,75 @@ for special_resource, special_model in (
 
 @router.patch("/admin/feedback/{feedback_id}")
 def review_feedback(
-    feedback_id: str, payload: Review, request: Request, user: User = Depends(require_operations)
+    feedback_id: str,
+    payload: FeedbackReview,
+    request: Request,
+    user: User = Depends(require_operations),
 ):
     with request.app.state.database.write() as session:
+        row = session.scalar(select(Feedback).where(Feedback.id == feedback_id).with_for_update())
+        if row is None:
+            raise ApiError(404, "NOT_FOUND", "Feedback not found")
+        note = payload.review_note.strip()
+        character_id = payload.character_id or row.character_id
+        if row.status != "pending" and (
+            payload.status != row.status or character_id != row.character_id
+        ):
+            raise ApiError(409, "FEEDBACK_REVIEWED", "A completed decision cannot be changed")
+        rag_case = None
+        if payload.status == "approved":
+            if not character_id:
+                raise ApiError(422, "FEEDBACK_CHARACTER_REQUIRED", "Select the verified character")
+            record = session.get(RecognitionRecord, row.recognition_id)
+            character = entity(session, "characters", character_id, published=True)
+            sample = session.scalar(
+                select(Sample).where(Sample.recognition_id == row.recognition_id)
+            )
+            character_data = serialize(character)
+            rag_payload = {
+                "recognition_id": row.recognition_id,
+                "sample_id": sample.id if sample else "",
+                "original_text": record.observed_text if record else "",
+                "corrected_text": character_data.get("cn_name", ""),
+                "character_id": character.id,
+                "character_name": character_data.get("cn_name", ""),
+                "aliases": character_data.get("alias", []),
+                "keywords": character_data.get("keywords", []),
+                "scene": (record.scene if record else "") or (sample.scene if sample else ""),
+                "source_ref": (sample.source_ref if sample else "")
+                or character_data.get("source_ref", ""),
+                "correction_note": (row.review_note if row.status == "approved" else note)
+                or row.comment,
+                "image_uri": sample.image_uri if sample else "",
+                "model_version": record.model if record else "",
+            }
+            # Commit the RAG write first; failure rolls back the pending review.
+            # Retrieval separately checks the committed business decision.
+            rag_case = _index_feedback(request, rag_payload, actor_id=user.id)
+        if row.status == "pending":
+            row.status, row.review_note, row.reviewed_by = payload.status, note, user.id
+            if payload.status == "approved":
+                row.character_id = character_id
+            audit(session, user, "review", "feedback", row.id, payload.model_dump())
+        result = serialize(row)
+        result["rag_status"] = rag_case["status"] if rag_case else "not_indexed"
+        result["rag_case_id"] = rag_case["id"] if rag_case else None
+    return result
+
+
+@router.get("/admin/feedback/{feedback_id}")
+def feedback_detail(feedback_id: str, request: Request, user: User = Depends(require_operations)):
+    with request.app.state.database.session() as session:
         row = session.get(Feedback, feedback_id)
         if row is None:
             raise ApiError(404, "NOT_FOUND", "Feedback not found")
-        if payload.status == "rejected" and not payload.review_note:
-            raise ApiError(422, "REVIEW_NOTE_REQUIRED", "A rejection needs an explanation")
-        row.status, row.review_note, row.reviewed_by = payload.status, payload.review_note, user.id
-        audit(session, user, "review", "feedback", row.id, payload.model_dump())
-        return serialize(row)
+        result = serialize(row)
+        record = session.get(RecognitionRecord, row.recognition_id)
+        sample = session.scalar(select(Sample).where(Sample.recognition_id == row.recognition_id))
+        result["recognition"] = serialize(record) if record else None
+        result["sample"] = serialize(sample) if sample else None
+    feedback_rag_state(request, [result], include_case=True)
+    return result
 
 
 @router.patch("/admin/tag-claims/{claim_id}")

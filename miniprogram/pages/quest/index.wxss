@@ -1,3 +1,65 @@
-.route-eyebrow{font-size:23rpx;letter-spacing:3rpx;color:#a73529;margin-bottom:16rpx}.page-title{font-family:serif;color:#3d3026}
-.progress-band{padding:28rpx;background:#fffaf0;border:1rpx solid #ddcbb3;border-radius:20rpx;box-shadow:0 8rpx 24rpx rgba(67,53,37,.05)}.progress-band .heading{font-size:52rpx;color:#a73529;font-family:serif}.progress-band progress{margin:22rpx 0 8rpx}.complete{color:#a73529;font-size:26rpx;margin-top:18rpx}
-.node{position:relative;display:flex;align-items:flex-start;gap:24rpx;padding:28rpx 0 36rpx;border-bottom:1rpx dashed #dfd3c2}.number{width:68rpx;height:68rpx;flex-shrink:0;border-radius:50%;background:#efe5d6;display:flex;align-items:center;justify-content:center;color:#806546;font-size:27rpx;font-weight:700;border:3rpx double #cdb99b;box-shadow:0 0 0 6rpx #f9f4eb}.done .number{background:#a73529;border-color:#d69479;color:#fff}.node-button{margin-top:20rpx;width:100%}.node .row{flex-wrap:wrap;gap:6rpx}.node .tag{margin-top:4rpx}.done .item-title{color:#96503a}
+/* QUEST-01 / QUEST-02 / DESIGN-01, D-057: a route journal, not stacked forms.
+ * Snow white #f6f8f6, ink #263d35, muted #66766e, cinnabar #a4352a.
+ * Scenic hero is decorative; node order/progress remain server-backed. */
+.quest-detail-page { min-height: 100vh; background: #f6f8f6; color: #263d35; font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+.detail-state { padding: 32rpx; }
+.route-hero { position: relative; display: flex; align-items: flex-end; min-height: 420rpx; overflow: hidden; background: #334e48; }
+.route-hero-image, .route-hero-shade { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.route-hero-shade { background: linear-gradient(180deg, rgba(16,38,33,.02) 16%, rgba(16,38,33,.4) 53%, rgba(16,38,33,.88) 100%); }
+.route-hero-content { position: relative; width: 100%; padding: 120rpx 40rpx 66rpx; color: #fff; }
+.route-area { display: flex; align-items: center; gap: 8rpx; font-size: 26rpx; line-height: 1.5; margin-bottom: 14rpx; }
+.route-area image { width: 24rpx; height: 28rpx; flex-shrink: 0; }
+.route-title { font-size: 46rpx; font-weight: 650; line-height: 1.4; letter-spacing: 1rpx; overflow-wrap: anywhere; text-shadow: 0 2rpx 8rpx rgba(0,0,0,.15); }
+.route-sheet { position: relative; margin-top: -28rpx; padding: 0 40rpx calc(44rpx + env(safe-area-inset-bottom)); border-radius: 32rpx 32rpx 0 0; background: #fff; min-height: 52vh; }
+.route-overview { padding: 32rpx 0; border-bottom: 1rpx solid #e8eeea; }
+.route-intro { margin-bottom: 26rpx; color: #66766e; font-size: 28rpx; line-height: 1.8; overflow-wrap: anywhere; }
+.progress-heading { display: flex; align-items: center; justify-content: space-between; gap: 14rpx; margin-bottom: 14rpx; }
+.progress-label { color: #56665d; font-size: 26rpx; }
+.progress-label.complete { color: #3e6855; }
+.progress-count { display: flex; align-items: baseline; flex-shrink: 0; line-height: 1.25; }
+.progress-current { color: #a4352a; font-size: 42rpx; font-weight: 650; }
+.progress-total { white-space: pre; color: #66766e; font-size: 28rpx; }
+.progress-unit { margin-left: 12rpx; color: #66766e; font-size: 24rpx; }
+.quest-detail-page .join-button { width: 100%; min-height: 48px; margin-top: 28rpx; padding: 18rpx 24rpx; border-radius: 16rpx; background: #a4352a; color: #fff; font-size: 30rpx; font-weight: 600; box-shadow: none; }
+.quest-detail-page .notice { margin: 28rpx 0 0; border: 0; border-radius: 16rpx; background: #f1f5f2; color: #486052; box-shadow: none; }
+.route-notice { padding: 22rpx 24rpx; font-size: 26rpx; line-height: 1.7; }
+.quest-detail-page .reward-card[size='mini'], .reward-pending { display: flex; align-items: center; justify-content: space-between; gap: 20rpx; width: 100%; padding: 24rpx; text-align: left; font-size: 26rpx; font-weight: 400; line-height: 1.6; }
+.reward-copy { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6rpx; overflow-wrap: anywhere; }
+.reward-caption { font-size: 24rpx; color: #62766a; }
+.reward-title { color: #294838; font-size: 28rpx; font-weight: 500; }
+.reward-action { flex-shrink: 0; color: #385b46; font-size: 26rpx; font-weight: 600; }
+.quest-detail-page .retry-button[size='mini'] { flex-shrink: 0; width: auto; min-width: 44px; min-height: 44px; margin: 0; padding: 0 12rpx; background: transparent; color: #385b46; font-size: 26rpx; font-weight: 600; line-height: 1.5; }
+.route-stops { padding-top: 32rpx; }
+.stops-heading { margin-bottom: 32rpx; color: #263d35; font-size: 34rpx; line-height: 1.4; font-weight: 650; }
+.node { display: flex; align-items: stretch; gap: 24rpx; position: relative; }
+.node-rail { position: relative; display: flex; flex-direction: column; align-items: center; width: 54rpx; flex-shrink: 0; }
+.number { position: relative; z-index: 1; display: flex; align-items: center; justify-content: center; width: 52rpx; height: 52rpx; border: 2rpx solid #dfe8e1; border-radius: 50%; background: #fff; color: #6c7b71; font-size: 25rpx; font-weight: 600; line-height: 1; }
+.node-connector { width: 0; flex: 1; border-left: 2rpx dashed #dce5de; margin: 10rpx 0; min-height: 36rpx; }
+.node-body { flex: 1; min-width: 0; padding: 3rpx 0 28rpx; }
+.node + .node .node-body { padding-top: 3rpx; }
+.item-title { margin: 0; color: #263d35; font-size: 31rpx; line-height: 1.55; font-weight: 550; overflow-wrap: anywhere; }
+.node-actions { display: flex; align-items: center; flex-wrap: wrap; column-gap: 12rpx; row-gap: 8rpx; margin-top: 16rpx; padding-bottom: 24rpx; border-bottom: 1rpx solid #edf1ee; }
+.node:last-child .node-actions { border-bottom: 0; padding-bottom: 0; }
+.node:last-child .node-body { padding-bottom: 0; }
+.quest-detail-page .location-button[size='mini'] { display: inline-flex; align-items: center; justify-content: flex-start; flex-shrink: 0; gap: 8rpx; width: auto; min-width: 44px; min-height: 44px; margin: 0; padding: 8rpx 8rpx 8rpx 0; background: transparent; color: #66766e; font-size: 26rpx; font-weight: 400; line-height: 1.5; border-radius: 0; }
+.location-icon { width: 26rpx; height: 26rpx; flex-shrink: 0; opacity: .72; }
+.quest-detail-page .node-button[size='mini'] { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: auto; max-width: 100%; min-width: 160rpx; min-height: 44px; margin: 0 0 0 auto; padding: 12rpx 22rpx; border: 1rpx solid #dce5de; border-radius: 14rpx; background: #f3f6f3; color: #3b5547; font-size: 27rpx; font-weight: 550; line-height: 1.5; box-shadow: none; }
+.is-next .number { background: #a4352a; border-color: #a4352a; color: #fff; box-shadow: 0 0 0 7rpx #f8eeeb; }
+.quest-detail-page .is-next .node-button[size='mini'] { background: #a4352a; border-color: #a4352a; color: #fff; }
+.done .number { color: #457055; border-color: #e7efe9; background: #e7efe9; }
+.done .item-title { color: #66796c; }
+.quest-detail-page .node-button[size='mini'][disabled], .quest-detail-page .join-button[disabled], .quest-detail-page .retry-button[size='mini'][disabled] { color: #7c8880; background: #f0f3f0; border-color: #e5ebe6; }
+.quest-detail-page .node-button.is-done[size='mini'][disabled] { color: #53745f; background: transparent; border-color: transparent; }
+.quest-detail-page .share-button { width: 100%; min-height: 48px; margin-top: 30rpx; padding: 16rpx 20rpx; background: #f1f5f2; border-radius: 16rpx; color: #47644f; font-size: 28rpx; font-weight: 500; box-shadow: none; }
+.quest-detail-page .empty-inline { padding: 36rpx 0; color: #66766e; font-size: 28rpx; }
+.quest-detail-page button:focus-visible { outline: 2px solid #a4352a; outline-offset: 3px; }
+@media (max-width: 350px) {
+  .route-hero-content { padding-left: 32rpx; padding-right: 32rpx; }
+  .route-sheet { padding-left: 32rpx; padding-right: 32rpx; }
+  .route-title { font-size: 48rpx; }
+  .item-title { font-size: 34rpx; }
+  .route-intro { font-size: 30rpx; }
+  .quest-detail-page .node-button[size='mini'], .quest-detail-page .location-button[size='mini'] { font-size: 29rpx; }
+  .reward-pending { flex-wrap: wrap; }
+  .reward-pending .retry-button[size='mini'] { margin-left: auto; }
+}

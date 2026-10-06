@@ -60,10 +60,14 @@ def create_app(
                 with suppress(asyncio.CancelledError):
                     await maintenance
                 await run_in_threadpool(app.state.database.engine.dispose)
+            rag_database = getattr(app.state, "rag_database", None)
+            if rag_database is not None:
+                await run_in_threadpool(rag_database.dispose)
 
     application = FastAPI(title="Dongba Lijiang API", version=VERSION, lifespan=lifespan)
     application.state.recognition_provider = recognition_provider
     application.state.settings = configuration
+    application.state.rag_database = None
     if business_enabled:
         from backend.app.business import install_business
         from backend.app.media import install_media
@@ -219,7 +223,15 @@ def create_app(
         from backend.app.business.auth import current_user, require_operations
         from backend.app.business.content import audit
         from backend.app.business.models import RecognitionRecord
-        from backend.app.system_config import SystemConfigUpdate, public_config, stored, update
+        from backend.app.system_config import (
+            IMAGE_FIELDS,
+            ImageModelsInput,
+            SystemConfigUpdate,
+            image_effective,
+            public_config,
+            stored,
+            update,
+        )
 
         def require_admin(user=Depends(current_user)):
             if user.role != "admin":
@@ -255,6 +267,7 @@ def create_app(
                     "runtime",
                     {
                         "fields": [
+                            *[key for key in IMAGE_FIELDS if key in payload.model_fields_set],
                             "provider_name",
                             "provider_endpoint",
                             "provider_model",
@@ -269,9 +282,37 @@ def create_app(
                         else "cleared"
                         if payload.clear_provider_api_key
                         else "unchanged",
+                        "image_provider_key_action": "replaced"
+                        if payload.image_provider_api_key
+                        else "cleared"
+                        if payload.clear_image_provider_api_key
+                        else "unchanged",
                     },
                 )
                 return result
+
+        @application.post("/api/v1/admin/system-config/image-models", tags=["System configuration"])
+        async def image_models(payload: ImageModelsInput, user=Depends(require_admin)):
+            from backend.app.image_provider import available_models, normalize_endpoint
+
+            if payload.api_key and payload.clear_api_key:
+                raise ApiError(422, "INVALID_REQUEST", "Cannot set and clear the key together")
+            with application.state.database.session() as session:
+                active = image_effective(session, configuration)
+            key = payload.api_key or (
+                active.image_provider_api_key.get_secret_value()
+                if active.image_provider_api_key and not payload.clear_api_key
+                else ""
+            )
+            # Never send a stored credential to a newly entered, unsaved endpoint.
+            saved_endpoint = (
+                normalize_endpoint(active.image_provider_endpoint)
+                if active.image_provider_endpoint
+                else ""
+            )
+            if not payload.api_key and payload.endpoint != saved_endpoint:
+                raise ApiError(422, "IMAGE_PROVIDER_KEY_REQUIRED", "Enter a key for a new endpoint")
+            return {"items": await available_models(payload.endpoint, key)}
 
         @application.get("/api/v1/admin/provider", tags=["Model operations"])
         def provider_status(user=Depends(require_operations)):
@@ -349,6 +390,8 @@ def create_app(
                 provider=provider_now,
                 dictionary=records,
                 settings=active_settings,
+                rag_database=getattr(application.state, "rag_database", None),
+                business_database=getattr(application.state, "database", None),
             )
         except ApiError as exc:
             if user is not None:
@@ -360,6 +403,8 @@ def create_app(
                     provider=provider_now.name,
                     model=active_settings.provider_model,
                     candidates=[],
+                    observed_text="",
+                    rag_hits=[],
                     latency_ms=round((perf_counter() - started_at) * 1000),
                     scene=scene,
                     error_code=exc.code,
@@ -375,6 +420,8 @@ def create_app(
                 provider=result.provider,
                 model=result.model_version,
                 candidates=[candidate.model_dump() for candidate in result.candidates],
+                observed_text=result.observed_text,
+                rag_hits=result.rag_hits,
                 latency_ms=result.latency_ms,
                 scene=scene,
             )

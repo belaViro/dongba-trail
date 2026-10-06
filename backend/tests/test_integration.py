@@ -109,8 +109,26 @@ def test_recognition_auth_persistence_confirmation_and_deletion(system):
     assert client.get("/api/v1/me/history", headers=users[0]).json()["total"] == 0
 
 
-def test_draft_media_access_and_approved_poster(system):
+def test_draft_media_access_and_approved_poster(system, monkeypatch):
     client, admin, users, settings = system
+    from pydantic import SecretStr
+
+    from backend.app import poster_jobs
+
+    settings.image_provider_name = "openai-compatible"
+    settings.image_provider_endpoint = "https://images.example.invalid/v1/images/generations"
+    settings.image_provider_model = "fixture-art-model"
+    settings.image_provider_api_key = SecretStr("synthetic-image-key")
+
+    async def fixture_artwork(active, template, materials, records, caption, with_code):
+        assert active.image_provider_model == "fixture-art-model"
+        assert template == "paper"
+        assert len(materials) == 2 and materials[0][0] == "design-reference.png"
+        assert materials[1][0] == "glyph-1.png"
+        assert with_code is False
+        return Image.new("RGB", (900, 1400), "cornflowerblue")
+
+    monkeypatch.setattr(poster_jobs, "generate_poster_art", fixture_artwork)
     upload = client.post(
         "/api/v1/media",
         headers=admin,
@@ -136,7 +154,8 @@ def test_draft_media_access_and_approved_poster(system):
     assert image.status_code == 200
     with Image.open(BytesIO(image.content)) as decoded:
         assert decoded.size == (900, 1400)
-        assert len(decoded.getcolors(maxcolors=1_000_000)) > 20
+        # The complete synthetic provider image is preserved, not covered by a local template.
+        assert decoded.getcolors() == [(900 * 1400, (100, 149, 237))]
 
 
 def test_placeholder_provider_never_claims_ready_from_configuration_alone():

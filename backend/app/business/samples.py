@@ -7,7 +7,7 @@ from io import BytesIO
 from typing import Annotated, Literal
 from zipfile import ZIP_DEFLATED, ZipFile
 
-from fastapi import APIRouter, Depends, File, Query, Request, UploadFile
+from fastapi import APIRouter, Depends, File, Form, Query, Request, UploadFile
 from fastapi.responses import FileResponse, Response
 from PIL import Image, ImageOps
 from pydantic import Field, field_validator
@@ -19,7 +19,7 @@ from backend.app.recognition import validate_image
 
 from .auth import current_user, require_operations
 from .content import audit, entity, serialize
-from .models import RecognitionRecord, Sample, User, now
+from .models import Feedback, RecognitionRecord, Sample, User, now
 from .schemas import Input, patch_schema
 
 router = APIRouter(prefix="/api/v1", tags=["Image samples"])
@@ -126,7 +126,15 @@ def _save_image(settings, content, owner):
 
 
 def store_recognition_sample(
-    database, settings, *, recognition_id, user_id, content, scene, consent_version
+    database,
+    settings,
+    *,
+    recognition_id,
+    user_id,
+    content,
+    scene,
+    consent_version,
+    correction_attachment=False,
 ):
     if not consent_version:
         raise ApiError(422, "SAMPLE_CONSENT_REQUIRED", "Image retention requires explicit consent")
@@ -145,6 +153,17 @@ def store_recognition_sample(
             )
             if record is None:
                 raise ApiError(404, "RECOGNITION_NOT_FOUND", "Recognition does not exist")
+            feedback = (
+                session.scalar(
+                    select(Feedback)
+                    .where(Feedback.recognition_id == recognition_id)
+                    .with_for_update()
+                )
+                if correction_attachment
+                else None
+            )
+            if feedback is not None and feedback.status != "pending":
+                raise ApiError(409, "FEEDBACK_REVIEWED", "Reviewed feedback cannot be changed")
             existing = session.scalar(select(Sample).where(Sample.recognition_id == recognition_id))
             if existing:
                 return serialize(existing)
@@ -156,6 +175,11 @@ def store_recognition_sample(
                 image_uri=image_uri,
                 consent_version=consent_version,
             )
+            if correction_attachment:
+                row.label_source = "user_correction"
+                row.character_id = (
+                    feedback.character_id if feedback else record.confirmed_character_id
+                )
             session.add(row)
             session.flush()
             return serialize(row)
@@ -243,6 +267,33 @@ def my_samples(
             "items": [serialize(row) for row in rows[offset : offset + limit]],
             "total": len(rows),
         }
+
+
+@router.post("/recognize/{recognition_id}/image")
+async def attach_correction_image(
+    recognition_id: str,
+    request: Request,
+    image: Annotated[UploadFile, File()],
+    sample_consent: Annotated[bool, Form()] = False,
+    user: User = Depends(current_user),
+):
+    """Retain the owner's correction evidence only after explicit image consent."""
+    if not sample_consent:
+        raise ApiError(422, "SAMPLE_CONSENT_REQUIRED", "Image retention requires explicit consent")
+    settings = request.app.state.business_settings
+    content = await image.read(settings.max_image_bytes + 1)
+    await run_in_threadpool(validate_image, content, settings)
+    return await run_in_threadpool(
+        store_recognition_sample,
+        request.app.state.database,
+        settings,
+        recognition_id=recognition_id,
+        user_id=user.id,
+        content=content,
+        scene="other",
+        consent_version=settings.privacy_version,
+        correction_attachment=True,
+    )
 
 
 @router.post("/admin/samples/upload")

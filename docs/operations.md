@@ -92,6 +92,16 @@ npm run dev -- --host 127.0.0.1 --port 5318 --strictPort
 
 `/health` 用于服务存活检查。`/ready` 反映识别依赖是否就绪；模型占位或空字典导致503时，先核对对应配置和内容，不能据此认定所有后台业务异常。
 
+## 海报运行条件与排障
+
+- D-061：出现“海报已生成，图片下载失败”时先核对任务URL和原PNG，不重新调用付费生图。`serve.py`的本机入口会覆盖`public_base_url`，不得以它拼接交给手机的海报URL；海报结果统一返回`/api/v1/media/{name}`，客户端使用已配置API域名解析。历史回环地址只在输出/下载时兼容，保留原记录和原图，不需要修改数据库或用户密钥。
+- 服务端更新不能替代已发布微信包：本地`miniprogram/utils/api.js`兼容修复需重新编译或上传后生效。旧运行页面仍可能缓存旧地址，不应为下载问题点击重新生成；可从公网取回同一PNG。微信公众平台downloadFile合法域名及真机相册授权需另核验，HTTP下载成功不能冒充微信真机保存通过。
+
+- SHARE-01 / OPS-03：管理员保存生图配置只代表配置可读取，不能替代服务端实际生成验证。不得在排障输出、Git或客户端保存API Key、微信secret或访问令牌。
+- D-062：完整海报改为多图Images Edits。现有Base URL、`/images/generations`和`/images/edits`配置均规范化到同源编辑端点；提供方和所选模型必须实际支持多图，模型列表可读取不代表具备能力。随发布包携带`backend/assets/poster-reference.jpg`，通过`scripts/prepare_poster_reference.py runtime/docx-audit/image8.png`从用户参考图可重建；参考图已去除手机UI和示例码。缺参考或审核字形图片时先失败，不产生付费请求。完整AI成图不依赖本机中文字体；旧字体工具保留仅供其他/历史用途。
+- D-062：已知微信分享码不可用不阻断真实AI海报，仍返回`share_code_available=false`，但成图及页面不再提示“本张未含小程序码”或“AI辅助背景”。不绘假码、缺码占位或状态说明；若取到真码，则作为末尾素材发送并在成图右下方保留原码像素。微信页面/环境配置保持不变，真机可扫描性另验。
+- 检查参考/字形素材、编辑接口能力、服务器脱敏配置、任务错误及实际PNG后再判断恢复。夹具测试不等于真实生图或微信真机保存/分享验收；验证时不要自动重试付费接口，也不要修改用户历史记录。
+
 ## Docker方案
 
 `deploy/compose.yml` 定义MySQL 8.4、API和Web/Nginx；API启动脚本会执行迁移，数据库和媒体使用持久卷。按 `deploy/.env.example` 准备部署环境，证书放在 `deploy/certs/tls.crt` 与 `tls.key`。

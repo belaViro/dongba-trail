@@ -1,17 +1,50 @@
-<view class="page bottom-space">
+<view class="page bottom-space character-page">
   <view-state loading="{{loading}}" error="{{error}}" bind:retry="load" />
   <block wx:if="{{item && !loading}}">
-    <view class="character-header"><view class="character-backdrop"></view><view class="hero-glyph" data-src="{{item.image_url}}" bindtap="preview"><glyph-image src="{{item.image_url}}" name="{{item.cn_name}}" /></view><view class="category">{{item.category_l1}}<text wx:if="{{item.category_l2}}"> / {{item.category_l2}}</text></view><view class="word">{{item.cn_name}}</view><view class="summary">{{item.culture_summary}}</view></view>
-    <button wx:if="{{recognitionId}}" class="link small section" bindtap="correct">识别不对？</button>
-    <view class="section" wx:if="{{item.variants.length}}"><view class="section-head"><text class="heading">这个字怎么写</text><text class="caption">{{item.variants.length}} 种写法</text></view><scroll-view scroll-x class="variants"><view class="variant" wx:for="{{item.variants}}" wx:key="image_url" data-src="{{item.image_url}}" bindtap="preview"><glyph-image src="{{item.image_url}}" /><text class="caption">{{item.source_ref}}</text></view></scroll-view></view>
-    <view class="section"><view class="heading">东巴文化里的含义</view><view class="body section">{{item.culture_detail || item.culture_summary}}</view><view class="caption section">内容来源：{{item.source_ref}}</view></view>
-    <feature-note wx:if="{{!item.audio_url}}" label="待配置" detail="此词条尚未配置音频，后台已有音频地址字段。" />
-    <feature-note label="待实现" detail="文化视频尚无后台管理字段和播放接口；当前提供文字、字形与已配置音频。" />
-    <button wx:if="{{item.audio_url}}" class="audio section" bindtap="audio"><text>{{playing ? 'Ⅱ' : '▷'}}</text><text>听东巴先生讲</text><text class="caption">{{playing ? '正在播放' : '文化音频'}}</text></button>
-    <view class="section" wx:if="{{related.length}}"><view class="heading">相关东巴字</view><view class="tabs"><button wx:for="{{related}}" wx:key="id" data-id="{{item.id}}" bindtap="related">{{item.cn_name}}</button></view></view>
-    <view class="section"><view class="section-head"><text class="heading">在丽江遇见它</text><button class="link small" bindtap="nearby">全部 ›</button></view><view wx:for="{{merchants}}" wx:key="id" class="list-row" data-id="{{item.id}}" bindtap="merchant"><image wx:if="{{item.image_url}}" class="thumb" src="{{item.image_url}}" mode="aspectFill" /><view class="grow"><view class="item-title">{{item.name}}</view><view class="muted">{{item.address}}</view></view><text class="caption">{{item.distance}}</text></view><view wx:if="{{!merchants.length}}" class="empty-inline">暂未关联文化地点</view></view>
-    <view class="section" wx:if="{{products.length}}"><view class="heading">相关好物</view><view wx:for="{{products}}" wx:key="id" class="list-row" data-id="{{item.merchant_id}}" bindtap="merchant"><image wx:if="{{item.image_url}}" class="thumb" src="{{item.image_url}}" mode="aspectFill" /><view class="grow"><view class="item-title">{{item.name}}</view><view class="muted">{{item.description}}</view><view class="price">¥ {{item.price}}</view></view></view></view>
-    <button class="secondary section" bindtap="quests">加入寻迹</button>
-    <view class="bottom-bar"><button class="secondary" disabled="{{favoriteBusy}}" bindtap="favorite">{{saved ? '已收藏' : '收藏'}}</button><button class="primary" bindtap="share">生成东巴印记</button></view>
+    <view class="character-header">
+      <image class="character-backdrop" src="/assets/home/landscape.jpg" mode="aspectFill" />
+      <view class="character-brand"><view><text class="brand-name">东巴寻迹 · 丽江</text><text class="brand-caption">看见一个符号 · 读懂一段丽江</text></view><view class="character-seal"><text>东巴</text><text>文化</text></view></view>
+      <view class="character-identity">
+        <view class="hero-glyph" aria-label="{{item.cn_name}}字形"><glyph-image src="{{item.image_url}}" name="{{item.cn_name}}" /><text class="glyph-corner"></text></view>
+        <view class="identity-copy"><text class="identity-eyebrow">东巴字 · {{item.category_l1 || '文化词条'}}</text><view class="word">{{item.cn_name}}</view><view class="category"><text wx:if="{{item.category_l1}}" class="tag">{{item.category_l1}}</text><text wx:if="{{item.category_l2}}" class="tag">{{item.category_l2}}</text></view></view>
+      </view>
+      <view wx:if="{{item.culture_summary}}" class="summary"><text class="summary-mark">“</text><text>{{item.culture_summary}}</text></view>
+    </view>
+    <view class="character-content">
+      <button wx:if="{{recognitionId}}" class="link correction" bindtap="correct">识别不对？重新选择候选 <text>›</text></button>
+      <view class="section paper-card culture-section">
+        <view class="story-kicker">一字一意 · 东巴文化</view>
+        <view class="heading section-title">东巴文化里的“{{item.cn_name}}”</view>
+        <view class="body culture-story">{{item.culture_detail || item.culture_summary || '文化内容暂未补充。'}}</view>
+        <button wx:if="{{item.audio_url}}" class="audio" bindtap="audio" aria-label="{{playing ? '暂停词条音频' : '播放词条音频'}}"><text class="audio-icon">{{playing ? 'Ⅱ' : '▷'}}</text><view class="grow"><view>{{playing ? '正在听这个字的故事' : '听一听这个字'}}</view><text class="caption">{{playing ? '轻触暂停' : '词条配套音频'}}</text></view><view class="audio-wave"><text></text><text></text><text></text><text></text></view></button>
+        <view wx:else class="media-unavailable">暂无词条音频</view>
+        <view class="content-source">内容来源 · {{item.source_ref || '来源信息待补充'}}</view>
+      </view>
+      <view class="section paper-card related-section" wx:if="{{related.length}}">
+        <view class="section-head"><text class="heading section-title">相关东巴字</text><text class="section-caption">从一字，读懂更多</text></view>
+        <view class="related-words"><button wx:for="{{related}}" wx:key="id" class="related-word" data-id="{{item.id}}" bindtap="related" aria-label="了解东巴字：{{item.cn_name}}"><view class="related-glyph"><glyph-image src="{{item.image_url}}" name="{{item.cn_name}}" /></view><text class="related-name">{{item.cn_name}}</text></button></view>
+      </view>
+      <view class="section paper-card association-section merchant-section">
+        <view class="section-head association-heading"><text class="heading section-title">在丽江遇见它</text><button size="mini" class="association-more" bindtap="nearby">查看全部 <text>›</text></button></view>
+        <button wx:for="{{merchants}}" wx:key="id" size="mini" class="merchant-row" data-id="{{item.id}}" bindtap="merchant" aria-label="查看商户：{{item.name}}">
+          <image wx:if="{{item.image_url}}" class="thumb" src="{{item.image_url}}" mode="aspectFill" lazy-load /><view wx:else class="thumb no-image">文化地点</view>
+          <view class="association-copy"><view class="item-title">{{item.name}}</view><view class="muted association-description">{{item.address}}</view><text wx:if="{{item.distance}}" class="tag">{{item.distance}}</text></view><text class="chevron">›</text>
+        </button>
+        <view wx:if="{{!merchants.length}}" class="empty-inline">暂未关联文化地点</view>
+      </view>
+      <view class="section paper-card association-section product-section" wx:if="{{products.length}}">
+        <view class="section-head association-heading"><text class="heading section-title">把丽江风物带回家</text><text class="section-caption">相关好物</text></view>
+        <button wx:for="{{products}}" wx:key="id" size="mini" class="merchant-row" data-id="{{item.merchant_id}}" bindtap="merchant" aria-label="查看{{item.name}}所属商户">
+          <image wx:if="{{item.image_url}}" class="thumb" src="{{item.image_url}}" mode="aspectFill" lazy-load /><view wx:else class="thumb no-image">丽江好物</view>
+          <view class="association-copy"><view class="item-title">{{item.name}}</view><view class="muted association-description product-summary">{{item.description}}</view><view class="price">¥ {{item.price}}</view></view><text class="chevron">›</text>
+        </button>
+      </view>
+      <button class="quest-invitation section" bindtap="quests"><view class="quest-mark">迹</view><view class="grow"><view class="quest-title">带着这个字，走进丽江</view><text class="quest-caption">去寻迹，遇见字里的风景</text></view><text class="chevron">›</text></button>
+    </view>
+    <view class="bottom-bar character-actions">
+      <button class="favorite-action {{saved ? 'is-saved' : ''}}" disabled="{{favoriteBusy}}" loading="{{favoriteBusy}}" bindtap="favorite" aria-label="{{saved ? '取消收藏这个字' : '收藏这个字'}}"><image class="favorite-icon" src="{{saved ? '/assets/icons/favorite-filled.png' : '/assets/icons/favorite-outline.png'}}" mode="aspectFit" /><text>{{saved ? '已收藏' : '收藏'}}</text></button>
+      <button class="nearby-action" bindtap="nearby">附近商户</button>
+      <button class="primary poster-action" bindtap="share">制作旅行海报 <text>›</text></button>
+    </view>
   </block>
 </view>

@@ -18,6 +18,7 @@ from dotenv import dotenv_values, set_key
 ROOT = Path(__file__).resolve().parents[1]
 RUNTIME = ROOT / "runtime" / "mysql"
 STATE = RUNTIME / "local-secrets.json"
+DATABASES = ("dongba", "dongba_test", "dongba_ui", "dongba_rag", "dongba_rag_test")
 
 
 def mysql_path(path: Path) -> str:
@@ -125,7 +126,7 @@ def main():
                 )
                 state["bootstrapped"] = True
                 STATE.write_text(json.dumps(state, indent=2), encoding="utf-8")
-            for database in ("dongba", "dongba_test", "dongba_ui"):
+            for database in DATABASES:
                 cursor.execute(
                     f"CREATE DATABASE IF NOT EXISTS `{database}` "
                     "CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
@@ -134,7 +135,7 @@ def main():
                 "CREATE USER IF NOT EXISTS 'dongba'@'127.0.0.1' IDENTIFIED BY %s",
                 (state["password"],),
             )
-            for database in ("dongba", "dongba_test", "dongba_ui"):
+            for database in DATABASES:
                 cursor.execute(
                     "GRANT SELECT,INSERT,UPDATE,DELETE,CREATE,ALTER,DROP,INDEX,REFERENCES "
                     f"ON `{database}`.* TO 'dongba'@'127.0.0.1'"
@@ -147,13 +148,12 @@ def main():
         "DONGBA_DATABASE_URL": f"{base}/dongba?charset=utf8mb4",
         "DONGBA_TEST_DATABASE_URL": f"{base}/dongba_test?charset=utf8mb4",
         "DONGBA_UI_DATABASE_URL": f"{base}/dongba_ui?charset=utf8mb4",
+        "DONGBA_RAG_DATABASE_URL": f"{base}/dongba_rag?charset=utf8mb4",
+        "DONGBA_TEST_RAG_DATABASE_URL": f"{base}/dongba_rag_test?charset=utf8mb4",
     }.items():
         if not environment.get(key):
             set_key(environment_path, key, value)
-    print(
-        f"MySQL {version} ready on 127.0.0.1:{state['port']}; "
-        "databases: dongba, dongba_test, dongba_ui"
-    )
+    print(f"MySQL {version} ready on 127.0.0.1:{state['port']}; databases: {', '.join(DATABASES)}")
     print("Connection secrets are stored locally in ignored files; none are printed")
 
 

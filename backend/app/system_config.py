@@ -1,6 +1,7 @@
 """Runtime provider and public map configuration (OPS-03, GEO-01)."""
 
 import ipaddress
+from typing import Literal
 from urllib.parse import urlsplit
 
 from cryptography.fernet import Fernet, InvalidToken
@@ -14,9 +15,25 @@ from backend.app.provider_factory import create_provider
 from .business.models import Setting
 
 CONFIG_KEY = "runtime_system_config"
+IMAGE_FIELDS = (
+    "image_provider_name",
+    "image_provider_endpoint",
+    "image_provider_model",
+    "image_provider_timeout_seconds",
+    "image_provider_size",
+    "image_provider_quality",
+)
 
 
 class SystemConfigUpdate(BaseModel):
+    image_provider_name: Literal["unconfigured", "openai-compatible"] = "unconfigured"
+    image_provider_endpoint: str = Field(default="", max_length=500)
+    image_provider_model: str = Field(default="", max_length=160)
+    image_provider_timeout_seconds: float = Field(default=180, ge=10, le=240)
+    image_provider_size: Literal["1024x1536", "1024x1024", "1536x1024", "auto"] = "1024x1536"
+    image_provider_quality: Literal["auto", "low", "medium", "high", "standard", "hd"] = "auto"
+    image_provider_api_key: str = Field(default="", max_length=4096, repr=False)
+    clear_image_provider_api_key: bool = False
     provider_name: str = Field(max_length=40)
     provider_endpoint: str = Field(max_length=500)
     provider_model: str = Field(max_length=160)
@@ -27,6 +44,13 @@ class SystemConfigUpdate(BaseModel):
     map_center_longitude: float = Field(default=100.235, ge=73, le=135)
     map_center_latitude: float = Field(default=26.875, ge=3, le=54)
     map_default_zoom: int = Field(default=12, ge=3, le=18)
+
+    @field_validator("image_provider_endpoint")
+    @classmethod
+    def valid_image_endpoint(cls, value: str) -> str:
+        from backend.app.image_provider import normalize_endpoint
+
+        return normalize_endpoint(value) if value.strip() else ""
 
     @field_validator("provider_name")
     @classmethod
@@ -76,6 +100,19 @@ def stored(session: Session) -> dict:
     return record.value if record else {}
 
 
+class ImageModelsInput(BaseModel):
+    endpoint: str = Field(max_length=500)
+    api_key: str = Field(default="", max_length=4096, repr=False)
+    clear_api_key: bool = False
+
+    @field_validator("endpoint")
+    @classmethod
+    def endpoint_valid(cls, value: str) -> str:
+        from backend.app.image_provider import normalize_endpoint
+
+        return normalize_endpoint(value)
+
+
 def cipher(settings: Settings) -> Fernet:
     secret = settings.system_config_encryption_key
     if not secret or not secret.get_secret_value():
@@ -121,7 +158,12 @@ def effective(session: Session, settings: Settings) -> Settings:
 def public_config(session: Session, settings: Settings) -> dict:
     data = stored(session)
     active = effective(session, settings)
+    image = image_effective(session, settings)
     return {
+        **{key: getattr(image, key) for key in IMAGE_FIELDS},
+        "image_provider_api_key_configured": bool(
+            image.image_provider_api_key and image.image_provider_api_key.get_secret_value()
+        ),
         "provider_name": active.provider_name,
         "provider_endpoint": active.provider_endpoint,
         "provider_model": active.provider_model,
@@ -139,6 +181,20 @@ def public_config(session: Session, settings: Settings) -> dict:
 
 def update(session: Session, settings: Settings, payload: SystemConfigUpdate) -> dict:
     data = dict(stored(session))
+    if payload.image_provider_api_key and payload.clear_image_provider_api_key:
+        raise ApiError(422, "INVALID_REQUEST", "Cannot set and clear the image key together")
+    if payload.image_provider_api_key:
+        data["encrypted_image_api_key"] = (
+            cipher(settings).encrypt(payload.image_provider_api_key.encode()).decode()
+        )
+        data["clear_image_provider_api_key"] = False
+    elif payload.clear_image_provider_api_key:
+        data.pop("encrypted_image_api_key", None)
+        data["clear_image_provider_api_key"] = True
+    # Old admin clients must not reset the separately configured image service.
+    for key in IMAGE_FIELDS:
+        if key in payload.model_fields_set:
+            data[key] = getattr(payload, key)
     if payload.provider_api_key and payload.clear_provider_api_key:
         raise ApiError(422, "INVALID_REQUEST", "Cannot set and clear the provider key together")
     if payload.provider_api_key:
@@ -172,3 +228,18 @@ def update(session: Session, settings: Settings, payload: SystemConfigUpdate) ->
 def active_provider(session: Session, settings: Settings):
     active = effective(session, settings)
     return create_provider(active), active
+
+
+def image_effective(session: Session, settings: Settings) -> Settings:
+    data = stored(session)
+    override = {key: data[key] for key in IMAGE_FIELDS if key in data}
+    if data.get("encrypted_image_api_key"):
+        try:
+            override["image_provider_api_key"] = SecretStr(
+                cipher(settings).decrypt(data["encrypted_image_api_key"].encode()).decode()
+            )
+        except InvalidToken as exc:
+            raise ApiError(503, "CONFIG_ENCRYPTION_UNAVAILABLE", "Image key unavailable") from exc
+    elif data.get("clear_image_provider_api_key"):
+        override["image_provider_api_key"] = None
+    return settings.model_copy(update=override)

@@ -57,8 +57,7 @@ const menu = computed(() =>
           title: '内容中心',
           items: [
             { path: 'characters', title: '东巴字典', icon: Collection },
-            { path: 'samples', title: '图片样本', icon: Picture },
-            { path: 'feedback', title: '识别纠错', icon: Files },
+            { path: 'feedback', title: '纠错审核', icon: Files },
           ],
         },
         {

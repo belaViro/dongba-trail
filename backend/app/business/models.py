@@ -159,6 +159,8 @@ class RecognitionRecord(Base):
     provider: Mapped[str] = mapped_column(String(100))
     model: Mapped[str] = mapped_column(String(100))
     candidates: Mapped[list] = mapped_column(JSON, default=list)
+    observed_text: Mapped[str] = mapped_column(Text, default="")
+    rag_hits: Mapped[list] = mapped_column(JSON, default=list)
     latency_ms: Mapped[int] = mapped_column(Integer, default=0)
     scene: Mapped[str] = mapped_column(String(20), default="camera")
     error_code: Mapped[str | None] = mapped_column(String(100), nullable=True)

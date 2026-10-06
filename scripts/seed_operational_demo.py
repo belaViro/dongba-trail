@@ -4,6 +4,8 @@ The script is additive and idempotent. It calls the application's content and
 coupon workflows so dashboard totals, stock, claims, redemptions, audit rows and
 entity revisions stay consistent. It is a dry run unless ``--apply`` and an
 exact database-name confirmation are both supplied.
+Use ``--content-only`` to add catalog content without simulated accounts,
+recognitions, claims, redemptions or analytics events (QUEST-01/02, OPS-02).
 """
 
 import argparse
@@ -102,12 +104,53 @@ def load_catalog(instant: datetime) -> dict:
         }
         for index, merchant in enumerate(merchants)
     ]
+    pois.extend({**row, "status": "published"} for row in source.get("cultural_pois", []))
+    quests = [
+        {
+            "id": row_id,
+            "name": name,
+            "description": description,
+            "area": area,
+            "reward_coupon_id": reward_coupon_id,
+            "start_at": start_at,
+            "end_at": end_at,
+            "status": "published",
+        }
+        for row_id, name, description, area, reward_coupon_id in source["quests"]
+    ]
+    quest_nodes = [
+        {
+            "id": row_id,
+            "quest_id": quest_id,
+            "name": name,
+            "sequence": sequence,
+            "condition": condition,
+            "character_id": character_id,
+            "merchant_id": merchant_id,
+            "poi_id": poi_id,
+            "radius_m": radius_m,
+            "status": "published",
+        }
+        for (
+            row_id,
+            quest_id,
+            name,
+            sequence,
+            condition,
+            character_id,
+            merchant_id,
+            poi_id,
+            radius_m,
+        ) in source["quest_nodes"]
+    ]
     return {
         **source,
         "products": products,
         "coupons": coupons,
         "activities": activities,
         "pois": pois,
+        "quests": quests,
+        "quest_nodes": quest_nodes,
     }
 
 
@@ -179,9 +222,11 @@ def seed_entities(session, data, actor, created):
         payload["description"] = f"{data['notice']} {payload['description']}"
         payload["status"] = "published"
         ensure_entity(session, "merchants", payload, actor, created)
-    for resource in ("pois", "products", "activities", "coupons"):
+    for resource in ("pois", "products", "activities", "coupons", "quests"):
         for payload in data[resource]:
             ensure_entity(session, resource, payload, actor, created)
+    for payload in data["quest_nodes"]:
+        ensure_entity(session, "quest-nodes", payload, actor, created)
 
 
 def seed_users(session, data, actor, instant, created, credentials):
@@ -315,6 +360,46 @@ def seed_recognitions_and_events(session, data, visitors, instant, created):
                 created["events"] = created.get("events", 0) + 1
 
 
+def catalog_counts(data):
+    return {
+        resource: len(data[resource])
+        for resource in (
+            "merchants",
+            "products",
+            "pois",
+            "activities",
+            "coupons",
+            "quests",
+            "quest_nodes",
+        )
+    }
+
+
+def verify_content(session, data):
+    counts = {}
+    for resource, expected in catalog_counts(data).items():
+        ids = [row["id"] for row in data[resource]]
+        if len(set(ids)) != expected:
+            raise RuntimeError(f"Duplicate catalog IDs in {resource}")
+        actual = session.scalar(
+            select(func.count())
+            .select_from(Entity)
+            .where(
+                Entity.kind == resource.replace("_", "-"),
+                Entity.id.in_(ids),
+                Entity.status == "published",
+            )
+        )
+        if actual != expected:
+            raise RuntimeError(f"Catalog verification failed: {resource}={actual}/{expected}")
+        counts[resource] = actual
+    for node in data["quest_nodes"]:
+        saved = session.get(Entity, node["id"])
+        if saved.data["quest_id"] != node["quest_id"]:
+            raise RuntimeError(f"Quest node belongs to another route: {node['id']}")
+    return counts
+
+
 def verify(session, data, coupon_ids, claim_ids):
     usernames = [merchant["username"] for merchant in data["merchants"]]
     usernames += [f"visitor.lijiang.{number:03d}" for number in range(1, 25)]
@@ -327,7 +412,7 @@ def verify(session, data, coupon_ids, claim_ids):
         .select_from(Claim)
         .where(Claim.id.in_(claim_ids), Claim.status == "used")
     )
-    if users != 28 or claims != 36 or redemptions < 24:
+    if users != len(usernames) or claims != 36 or redemptions < 24:
         raise RuntimeError(
             f"Operational verification failed: users={users}, claims={claims}, "
             f"redemptions={redemptions}"
@@ -340,21 +425,17 @@ def verify(session, data, coupon_ids, claim_ids):
         if inventory is None or inventory.claimed_count != actual:
             raise RuntimeError(f"Coupon stock mismatch for {coupon_id}")
     return {
+        **verify_content(session, data),
         "demo_users": users,
-        "merchant_users": 4,
+        "merchant_users": len(data["merchants"]),
         "tourist_users": 24,
-        "merchants": 4,
-        "products": 8,
-        "pois": 4,
-        "activities": 4,
-        "coupons": 8,
         "claims": claims,
         "redemptions": redemptions,
         "recognitions": 16,
     }
 
 
-def seed(session, instant):
+def seed(session, instant, *, content_only=False):
     actor = active_admin(session)
     data = load_catalog(instant)
     created = {}
@@ -362,9 +443,11 @@ def seed(session, instant):
     character_ids = sorted(
         {
             character_id
-            for merchant in data["merchants"]
-            for character_id in merchant["character_ids"]
+            for resource in ("merchants", "products", "pois")
+            for row in data[resource]
+            for character_id in row.get("character_ids", [])
         }
+        | {node["character_id"] for node in data["quest_nodes"] if node["character_id"]}
     )
     missing = [
         character_id
@@ -380,6 +463,13 @@ def seed(session, instant):
     if missing:
         raise RuntimeError(f"Published DB1404 entries are missing: {', '.join(missing)}")
     seed_entities(session, data, actor, created)
+    if content_only:
+        session.flush()
+        return {
+            "dataset": data["dataset"],
+            "created": created,
+            "verified": verify_content(session, data),
+        }, credentials
     merchant_users, visitors = seed_users(session, data, actor, instant, created, credentials)
     coupon_ids, claim_ids = seed_claims(session, data, merchant_users, visitors, instant, created)
     seed_recognitions_and_events(session, data, visitors, instant, created)
@@ -408,6 +498,11 @@ def write_private_credentials(path, rows):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--apply", action="store_true")
+    parser.add_argument(
+        "--content-only",
+        action="store_true",
+        help="Add content only; do not simulate users, claims or analytics",
+    )
     parser.add_argument("--confirm-database", default="")
     parser.add_argument(
         "--report",
@@ -422,6 +517,7 @@ def main():
     args = parser.parse_args()
     settings = Settings()
     instant = datetime.now(UTC)
+    data = load_catalog(instant)
     target = database_name(settings.database_url)
     if not settings.database_url.startswith("mysql+pymysql://"):
         raise SystemExit("Operational data can only be seeded into MySQL")
@@ -431,28 +527,28 @@ def main():
     plan = {
         "mode": "apply" if args.apply else "dry-run",
         "database": target,
-        "dataset": load_catalog(instant)["dataset"],
+        "dataset": data["dataset"],
+        "content_only": args.content_only,
         "baseline": baseline,
-        "planned": {
-            "merchant_users": 4,
-            "tourist_users": 24,
-            "merchants": 4,
-            "products": 8,
-            "pois": 4,
-            "activities": 4,
-            "coupons": 8,
-            "claims": 36,
-            "planned_redemptions": 24,
-            "recognitions": 16,
-        },
+        "planned": catalog_counts(data),
     }
+    if not args.content_only:
+        plan["planned"].update(
+            {
+                "merchant_users": len(data["merchants"]),
+                "tourist_users": 24,
+                "claims": 36,
+                "planned_redemptions": 24,
+                "recognitions": 16,
+            }
+        )
     if not args.apply:
         print(json.dumps(plan, ensure_ascii=False, indent=2))
         return
     if args.confirm_database != target:
         raise SystemExit(f"Refusing to write: pass --confirm-database {target!r}")
     with database.write() as session:
-        result, credentials = seed(session, instant)
+        result, credentials = seed(session, instant, content_only=args.content_only)
     with database.session() as session:
         after = statistics(session)
         role_counts = dict(

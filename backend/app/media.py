@@ -13,12 +13,12 @@ import qrcode
 from fastapi import APIRouter, Depends, File, Request, UploadFile
 from fastapi.responses import FileResponse, Response
 from PIL import Image, ImageDraw, ImageFont, ImageOps
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 from sqlalchemy import select
 from starlette.concurrency import run_in_threadpool
 
 from backend.app.business.auth import current_user
-from backend.app.business.models import Claim, Entity, Event, User
+from backend.app.business.models import Claim, Entity, User
 from backend.app.errors import ApiError
 from backend.app.recognition import validate_image
 
@@ -42,7 +42,13 @@ def referenced_asset_names(settings, records) -> set[str]:
 class PosterInput(BaseModel):
     model_config = ConfigDict(extra="forbid")
     character_ids: list[str] = Field(min_length=1, max_length=3)
-    template: Literal["mountain", "paper"] = "paper"
+    template: Literal["mountain", "paper", "old-town", "minimal"] = "paper"
+    caption: str = Field(default="在丽江，收藏时光里的美好。", max_length=50)
+
+    @field_validator("caption")
+    @classmethod
+    def normalize_caption(cls, value: str) -> str:
+        return " ".join(value.split())
 
 
 def chinese_font(size: int):
@@ -50,10 +56,15 @@ def chinese_font(size: int):
         Path("C:/Windows/Fonts/msyh.ttc"),
         Path("/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc"),
         Path("/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc"),
+        # Alibaba Cloud Linux ships this CJK font instead of Debian's Noto paths.
+        Path("/usr/share/fonts/google-droid/DroidSansFallback.ttf"),
     )
     for path in paths:
         if path.is_file():
-            return ImageFont.truetype(str(path), size)
+            try:
+                return ImageFont.truetype(str(path), size)
+            except OSError:
+                continue
     raise ApiError(503, "POSTER_FONT_UNAVAILABLE", "A Chinese font must be installed")
 
 
@@ -90,31 +101,69 @@ def local_asset(settings, url: str) -> Path:
     return path
 
 
-def render_poster(settings, records: list[dict], template: str, code: bytes | None) -> Image.Image:
-    canvas = Image.new("RGB", (900, 1400), "#f7f8f5" if template == "paper" else "#eaf3f1")
+def render_poster(
+    settings,
+    records: list[dict],
+    template: str,
+    code: bytes | None,
+    background: Image.Image | None = None,
+    caption: str = "在丽江，收藏时光里的美好。",
+) -> Image.Image:
+    # The endpoint always supplies AI artwork; optional background supports pure renderer tests.
+    canvas = (
+        ImageOps.fit(background, (900, 1400)).convert("RGB")
+        if background is not None
+        else Image.new("RGB", (900, 1400), "#f6efe3")
+    )
+    veil = Image.new("RGBA", canvas.size)
+    overlay = ImageDraw.Draw(veil)
+    for y in range(1020):
+        alpha = 225 if y < 800 else max(0, int(225 * (1020 - y) / 220))
+        overlay.line((24, y, 876, y), fill=(255, 250, 237, alpha))
+    canvas = Image.alpha_composite(canvas.convert("RGBA"), veil).convert("RGB")
     draw = ImageDraw.Draw(canvas)
-    draw.rectangle((60, 62, 74, 112), fill="#923f48")
-    draw.text((94, 61), "东巴寻迹 · 丽江", fill="#284b47", font=chinese_font(32))
-    draw.text((60, 177), "我的东巴印记", fill="#173c36", font=chinese_font(68))
-    draw.line((60, 300, 840, 300), fill="#b7c9c0", width=2)
+    draw.text((450, 55), "东巴寻迹 · 丽江", fill="#785e49", font=chinese_font(25), anchor="mt")
+    draw.text((450, 120), "我的东巴印记", fill="#432b1c", font=chinese_font(76), anchor="mt")
+    draw.text(
+        (450, 230), "一字一故事 · 一程一印记", fill="#785e49", font=chinese_font(27), anchor="mt"
+    )
+    draw.line((75, 295, 825, 295), fill="#b99b7c", width=1)
     width = 780 // len(records)
     for index, record in enumerate(records):
         with Image.open(local_asset(settings, record["image_url"])) as original:
-            glyph = ImageOps.contain(original.convert("RGBA"), (width - 30, 320))
+            glyph = ImageOps.contain(original.convert("RGBA"), (min(width - 36, 250), 235))
         center = 60 + width * index + width // 2
-        canvas.paste(glyph, (center - glyph.width // 2, 390 + (320 - glyph.height) // 2), glyph)
+        canvas.paste(glyph, (center - glyph.width // 2, 345 + (235 - glyph.height) // 2), glyph)
         text = record["cn_name"]
         font = chinese_font(42)
         while draw.textbbox((0, 0), text, font=font)[2] > width - 20 and font.size > 14:
             font = chinese_font(font.size - 2)
-        draw.text((center, 760), text, fill="#173c36", font=font, anchor="mt")
-    draw.text((60, 930), "把旅途中的文化记忆带回家", fill="#556c66", font=chinese_font(32))
-    draw.line((60, 1050, 840, 1050), fill="#b7c9c0", width=2)
-    draw.text((60, 1160), "东巴寻迹", fill="#923f48", font=chinese_font(42))
+        draw.text((center, 610), text, fill="#432b1c", font=font, anchor="mt")
+    draw.line((100, 705, 800, 705), fill="#b99b7c", width=1)
+    font = chinese_font(31)
+    lines, current = [], ""
+    for char in caption:
+        if char in "\r\n":
+            if current:
+                lines.append(current)
+                current = ""
+            continue
+        if draw.textlength(current + char, font=font) > 710:
+            lines.append(current)
+            current = ""
+        current += char
+    if current:
+        lines.append(current)
+    for index, line in enumerate(lines[:4]):
+        draw.text((450, 751 + index * 47), line, fill="#432b1c", font=font, anchor="mt")
+    draw.rounded_rectangle((42, 1260, 550, 1364), radius=14, fill="#fff7e7")
+    draw.text((62, 1272), "在丽江 · 收藏时光里的美好", fill="#6a3925", font=chinese_font(26))
     if code:
         with Image.open(BytesIO(code)) as original:
-            stamp = ImageOps.contain(original.convert("RGB"), (220, 220))
-        canvas.paste(stamp, (620, 1110))
+            stamp = ImageOps.contain(original.convert("RGB"), (155, 155))
+        draw.rounded_rectangle((654, 1150, 843, 1350), radius=9, fill="white")
+        canvas.paste(stamp, (670, 1165))
+        draw.text((748, 1324), "一起寻迹丽江", fill="#432b1c", font=chinese_font(17), anchor="mt")
     return canvas
 
 
@@ -219,53 +268,11 @@ def install_media(app, settings):
 
     @router.post("/share/poster")
     async def poster(payload: PosterInput, request: Request, user: User = Depends(current_user)):
-        ids = list(dict.fromkeys(payload.character_ids))
-        allowed = await run_in_threadpool(
-            request.app.state.database.allowed_poster_character_ids, user.id
-        )
-        if not set(ids).issubset(allowed):
-            raise ApiError(
-                403, "CHARACTER_NOT_COLLECTED", "Choose recognized or favorited characters"
-            )
+        from backend.app.poster_jobs import generate_poster
 
-        def lookup():
-            with request.app.state.database.session() as session:
-                records = []
-                for identifier in ids:
-                    entity = session.get(Entity, identifier)
-                    if (
-                        entity is None
-                        or entity.kind != "characters"
-                        or entity.status != "published"
-                    ):
-                        raise ApiError(
-                            404, "CHARACTER_NOT_FOUND", "Published character was not found"
-                        )
-                    records.append(entity.data)
-                return records
-
-        records = await run_in_threadpool(lookup)
-        code = await wechat_share_code(settings, "poster")
-        image = await run_in_threadpool(render_poster, settings, records, payload.template, code)
-        name = await run_in_threadpool(save_asset, settings, image, user.id, "poster")
-
-        def record_generation():
-            with request.app.state.database.write() as session:
-                session.add(
-                    Event(
-                        event_id=name[:-4],
-                        user_id=user.id,
-                        event="poster_generate",
-                        entity_type="posters",
-                        entity_id=name[:-4],
-                    )
-                )
-
-        await run_in_threadpool(record_generation)
-        return {
-            "id": name[:-4],
-            "url": f"{settings.public_base_url.rstrip('/')}/api/v1/media/{name}",
-            "share_code_available": code is not None,
-        }
+        return await generate_poster(request.app.state.database, settings, user.id, payload)
 
     app.include_router(router)
+    from backend.app.poster_jobs import install_poster_jobs
+
+    install_poster_jobs(app, settings)

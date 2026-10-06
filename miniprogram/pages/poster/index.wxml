@@ -1,7 +1,45 @@
-<view class="page"><view class="page-title">我的东巴印记</view><view class="muted">留住属于你的丽江记忆</view><view-state loading="{{loading}}" error="{{!items.length ? error : ''}}" empty="{{!items.length}}" empty-text="先识别或收藏一个东巴字" bind:retry="load" /><block wx:if="{{items.length}}">
-<feature-note label="待接入" detail="丽江风景背景尚无后台配置与合成支持；下方为选字示意，字序、文案及样式以生成后的实际图片为准。" />
-<image wx:if="{{image}}" class="poster-image" src="{{image}}" mode="widthFix" bindtap="preview" /><view wx:else class="poster-preview {{template}}"><view class="poster-brand">东巴寻迹 · 丽江</view><view class="poster-heading">我的东巴印记</view><view class="selected-glyphs"><block wx:for="{{items}}" wx:key="id"><view wx:if="{{item.selected}}" class="preview-word"><glyph-image src="{{item.image_url}}" name="{{item.cn_name}}" /><text>{{item.cn_name}}</text></view></block><text wx:if="{{!selected.length}}" class="muted">选择旅途中遇见的东巴字</text></view><view class="poster-footer">一字一故事，一程一印记</view></view>
-<feature-note wx:if="{{image && !shareCode}}" label="待配置" detail="本次生成结果未包含小程序码；后台已有生成能力，需检查微信配置与生成服务。海报仍可保存。" /><view wx:if="{{error}}" class="notice error-note">{{error}}</view>
-<view class="section"><view class="section-head"><text class="heading">选择东巴字</text><text class="caption">{{selected.length}} / 3</text></view><view class="word-grid"><view wx:for="{{items}}" wx:key="id" class="word-item {{item.selected ? 'selected' : ''}}" data-id="{{item.id}}" bindtap="toggle"><view class="word-image"><glyph-image src="{{item.image_url}}" name="{{item.cn_name}}" /></view><text>{{item.cn_name}}</text><view wx:if="{{item.selected}}" class="tick">✓</view></view></view></view>
-<view class="section"><view class="heading">海报模板</view><view class="templates"><view class="template paper {{template === 'paper' ? 'active' : ''}}" data-template="paper" bindtap="template"><view class="swatch swatch-paper"></view><text>纸笺</text></view><view class="template mountain {{template === 'mountain' ? 'active' : ''}}" data-template="mountain" bindtap="template"><view class="swatch swatch-mountain"></view><text>远山</text></view></view></view>
-<button class="primary section" disabled="{{!selected.length || generating}}" loading="{{generating}}" bindtap="generate">{{image ? '重新生成' : '生成海报'}}</button><view wx:if="{{image}}" class="actions"><button class="secondary" loading="{{saving}}" disabled="{{saving}}" bindtap="save">保存海报</button><button class="secondary" open-type="share">分享好友</button></view></block></view>
+<view class="poster-page">
+  <view class="poster-hero">
+    <image class="poster-landscape" src="/assets/home/landscape.jpg" mode="aspectFill" aria-hidden="true" />
+    <view class="hero-wash"></view>
+    <view class="hero-copy"><text class="hero-eyebrow">MEMORIES OF LIJIANG</text><view class="hero-title">我的东巴印记</view><text class="hero-subtitle">把旅途中喜欢的字，收藏成一张记忆</text></view>
+    <view class="hero-signature"><view><view>把丽江的故事</view><view>留在这一页</view></view><text class="hero-seal">丽江</text></view>
+  </view>
+  <view class="poster-sheet">
+    <view-state loading="{{loading}}" error="{{loadError}}" empty="{{!items.length}}" empty-text="先识别或收藏一个东巴字，再来制作印记" bind:retry="load" />
+    <block wx:if="{{!loading && !loadError && items.length}}">
+      <view class="editor-section selection-section">
+        <view class="section-heading"><view class="step-title"><text class="step-number">1</text><text>选择东巴字</text><text class="selection-count">{{selected.length}} / 3</text></view><button size="mini" class="quiet-button" disabled="{{generating || saving || !selected.length}}" bindtap="resetSelection" aria-label="清空所选东巴字">清空</button></view>
+        <view wx:if="{{selectedItems.length}}" class="selected-glyphs">
+          <button size="mini" wx:for="{{selectedItems}}" wx:key="id" class="selected-glyph" data-id="{{item.id}}" bindtap="toggle" disabled="{{generating || saving}}" aria-label="{{'第' + item.order + '个字：' + item.cn_name + '，点击移除'}}"><text class="glyph-order">{{item.order}}</text><text class="glyph-remove">−</text><view class="selected-image"><glyph-image src="{{item.image_url}}" name="{{item.cn_name}}" /></view><text class="selected-name">{{item.cn_name}}</text></button>
+        </view>
+        <view wx:else class="selection-empty"><text class="empty-mark">印</text><text>选一至三个喜欢的字，留下这一程</text></view>
+        <view class="gallery-heading"><text>我的字藏</text><text class="gallery-note">按点选顺序排列</text></view>
+        <scroll-view class="gallery-scroll" scroll-y="{{true}}">
+          <view class="word-grid"><button size="mini" wx:for="{{items}}" wx:key="id" class="word-item {{item.selected ? 'is-selected' : ''}}" data-id="{{item.id}}" bindtap="toggle" disabled="{{generating || saving || !item.image_url}}" aria-label="{{item.cn_name + (item.selected ? '，第' + item.order + '个已选字' : !item.image_url ? '，暂缺字形' : '，点击选择')}}"><text wx:if="{{item.selected}}" class="gallery-order">{{item.order}}</text><view class="word-image"><glyph-image src="{{item.image_url}}" name="{{item.cn_name}}" /></view><text class="word-name">{{item.cn_name}}</text><text wx:if="{{!item.image_url}}" class="missing-glyph">暂缺字形</text></button></view>
+        </scroll-view>
+      </view>
+      <view class="editor-section style-section">
+        <view class="section-heading"><text class="minor-title">纸笺风格</text><text class="gallery-note">风格意向 · 非成品预览</text></view>
+        <view class="templates"><button size="mini" wx:for="{{styles}}" wx:key="id" class="template {{template === item.id ? 'is-active' : ''}}" data-template="{{item.id}}" bindtap="template" disabled="{{generating || saving}}" aria-label="{{item.name + (template === item.id ? '，已选择' : '，未选择')}}"><view class="swatch swatch-{{item.id}}"><text class="swatch-mark">{{item.mark}}</text><text wx:if="{{template === item.id}}" class="style-check">✓</text></view><text class="template-name">{{item.name}}</text><text class="template-detail">{{item.detail}}</text></button></view>
+      </view>
+      <view class="editor-section caption-section">
+        <view class="section-heading"><view class="step-title"><text class="step-number">2</text><text>写下此刻</text></view><button size="mini" class="swap-button" bindtap="swapCaption" disabled="{{generating || saving}}" aria-label="换一句旅行文案">↻ 换一句</button></view>
+        <view class="caption-box"><textarea class="caption-input" value="{{caption}}" maxlength="50" bindinput="captionInput" disabled="{{generating || saving}}" placeholder="写下一句属于你的旅途记忆" aria-label="海报文案，最多50字" /><text class="caption-counter">{{captionLength}} / 50</text></view>
+      </view>
+      <view class="editor-section preview-section">
+        <view class="section-heading"><view class="step-title"><text class="step-number">3</text><text>{{image ? '我的海报' : '预览印记'}}</text></view><text class="preview-label">{{image ? '已生成图片' : '本地草稿'}}</text></view>
+        <button wx:if="{{image}}" size="mini" class="preview-button" bindtap="preview" aria-label="点击放大已生成的海报"><image class="poster-image" src="{{image}}" mode="widthFix" /></button>
+        <view wx:else class="draft-preview draft-{{template}}"><text class="draft-brand">东巴寻迹 · 丽江</text><view class="draft-glyphs"><view wx:for="{{selectedItems}}" wx:key="id" class="draft-word"><view class="draft-image"><glyph-image src="{{item.image_url}}" name="{{item.cn_name}}" /></view><text>{{item.cn_name}}</text></view><text wx:if="{{!selected.length}}" class="draft-empty">等一个喜欢的字，落在纸上</text></view><text wx:if="{{caption}}" class="draft-caption">{{caption}}</text><text class="draft-label">选字与文案草稿 · 非生成作品</text></view>
+        <view wx:if="{{generating}}" class="generation-state" role="status"><view class="progress-dot"></view><text>{{status === 'queued' ? '已排队，静候印记落纸…' : status === 'downloading' ? '海报已生成，正在取回原图…' : status === 'submitting' ? '正在提交印记…' : '正在生成你的东巴印记…'}}</text></view>
+        <view wx:if="{{error}}" class="poster-error" role="alert">{{error}}</view>
+        <text wx:if="{{terminalFailure}}" class="regeneration-note">本次任务已结束。重新生成将发起新任务，可能产生费用。</text>
+      </view>
+      <view class="poster-actions">
+        <block wx:if="{{image}}"><button size="mini" class="save-button" bindtap="save" loading="{{saving}}" disabled="{{saving}}">保存海报</button><button size="mini" class="share-button" open-type="share" disabled="{{saving}}">分享好友</button></block>
+        <button size="mini" wx:else class="generate-button" bindtap="generate" disabled="{{!selected.length || generating || saving}}" loading="{{generating}}">{{generating ? '正在制作…' : terminalFailure ? '重新生成' : canRetry ? (status === 'paused' ? '继续查询原任务' : '重试原任务') : '生成我的东巴印记'}}</button>
+      </view>
+      <text class="page-signoff">在丽江 · 收藏时光里的美好</text>
+    </block>
+  </view>
+</view>

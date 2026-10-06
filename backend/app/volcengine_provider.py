@@ -57,9 +57,9 @@ class VolcengineArkProvider:
         if not self.configured:
             raise ProviderUnavailable("Volcengine Ark provider is not configured")
         prompt = (
-            "识别图片中的单个东巴字。只从下面的已审核候选中选择，不能创建新编号，"
+            "识别图片中的单个东巴字，并先抄录图片中实际看到的文字。只从下面的已审核候选中选择，不能创建新编号，"
             "不能编造文化解释。返回严格 JSON："
-            '{"candidates":[{"character_id":"候选编号","score":0.0}]}。'
+            '{"observed_text":"图片中读到的文字","keywords":[],"scene":"","candidates":[{"character_id":"候选编号","score":0.0}]}。'
             "最多返回5个候选；不确定时返回空 candidates。候选目录：\n" + self._catalog(characters)
         )
         payload = {
@@ -102,6 +102,9 @@ class VolcengineArkProvider:
                 {
                     "model_version": str(body.get("model") or self.model),
                     "candidates": parsed.get("candidates", []),
+                    "observed_text": parsed.get("observed_text", ""),
+                    "keywords": parsed.get("keywords", []),
+                    "scene": parsed.get("scene", ""),
                 }
             )
         except (httpx.HTTPError, KeyError, IndexError, TypeError, ValueError) as exc:

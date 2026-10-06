@@ -1,23 +1,104 @@
 <view class="page home-page">
+  <image class="home-landscape" src="/assets/home/landscape.jpg" mode="aspectFill" />
+  <view class="landscape-wash"></view>
   <view class="home-hero">
-    <image wx:if="{{merchants.length && merchants[0].image_url}}" class="hero-cover" src="{{merchants[0].image_url}}" mode="aspectFill" />
-    <view class="hero-wash"></view>
-    <view class="hero-top"><view class="location">云南 · 丽江</view><view class="hero-mark">迹</view></view>
-    <view class="brand">东巴寻迹</view><view class="slogan">在一笔一画间，遇见丽江</view>
-    <view class="hero-note">看见一个字，也看见它身后的山河、手艺与人。</view>
-    <button class="recognize" bindtap="camera"><view class="camera-mark"><view></view></view><text class="camera-title">拍照识东巴</text><text class="camera-sub">点击即拍摄 · 看见字里的丽江</text></button>
+    <view class="safe-top" style="height:{{heroTop}}px"></view>
+    <view class="hero-stage">
+      <view class="brand-row">
+        <image class="brand-art" src="/assets/home/brand.png" mode="aspectFit" aria-label="东巴寻迹 · 丽江" />
+        <view class="hero-seal"><text>丽</text><text>江</text></view>
+      </view>
+      <view class="slogan">看见一个符号 · 读懂一段丽江</view>
+      <view class="hero-rule"></view>
+      <view class="hero-note"><text>让古老的文字</text><text>带你遇见更真实的丽江</text></view>
+      <view class="hero-inscription" aria-hidden="true"><text>雪山下的</text><text>东巴文化之旅</text>
+        <view class="inscription-seal">丽</view>
+      </view>
+      <button class="recognize" bindtap="camera" aria-label="拍照识东巴，打开微信系统相机">
+        <image class="camera-mark" src="/assets/home/camera.png" mode="aspectFit" /><text class="camera-title">拍照识东巴</text><text class="camera-sub">一拍即识 · 探索千年</text>
+      </button>
+    </view>
   </view>
-  <feature-note label="待接入" detail="首页专属风景图尚无后台配置入口，当前借用商户配图；拍摄中的实时清晰度、光线提示尚未实现。" />
-  <view class="quick-nav"><view bindtap="map"><text class="nav-symbol">⌖</text><text>东巴地图</text><text class="nav-caption">文化点位</text></view><view bindtap="quests"><text class="nav-symbol">✦</text><text>寻迹任务</text><text class="nav-caption">边走边集章</text></view><view bindtap="catalog"><text class="nav-symbol">◇</text><text>丽江好物</text><text class="nav-caption">手作与风物</text></view></view>
-  <view-state loading="{{loading}}" error="{{error}}" bind:retry="load" />
-  <block wx:if="{{!loading && !error}}">
-    <view class="section section-card"><view class="section-head"><view><text class="eyebrow">DAILY GLYPH</text><text class="heading">今日东巴字</text></view><text class="caption">一字一故事</text></view>
-      <view wx:if="{{today}}" class="today row" bindtap="character"><view class="daily-glyph"><glyph-image src="{{today.image_url}}" name="{{today.cn_name}}" /></view><view class="grow"><view class="daily-name">{{today.cn_name}}</view><view class="muted">{{today.culture_summary}}</view></view><text class="chevron">›</text></view>
-      <view wx:else class="empty-inline">东巴字内容正在整理中</view>
+  <view class="home-content">
+    <view class="home-state">
+      <view-state loading="{{loading}}" error="{{error}}" bind:retry="load" />
     </view>
-    <view class="section"><view class="section-head"><view><text class="eyebrow">LOCAL PICKS</text><text class="heading">丽江发现</text></view><button class="link small" bindtap="more">全部 ›</button></view>
-      <view wx:for="{{merchants}}" wx:key="id" class="list-row" data-id="{{item.id}}" bindtap="merchant"><image wx:if="{{item.image_url}}" class="thumb" src="{{item.image_url}}" mode="aspectFill" /><view class="grow"><view class="item-title">{{item.name}}</view><view class="muted">{{item.address}}</view><view><text wx:for="{{item.tags}}" wx:for-item="tag" wx:key="*this" class="tag">{{tag}}</text></view></view><text class="caption">{{item.distance}}</text></view>
-      <view wx:if="{{!merchants.length}}" class="empty-inline">已审核的文化商户将在这里展示</view>
+    <view wx:if="{{!loading && !error}}" class="daily-card">
+      <image class="paper-texture" src="/assets/home/paper.png" mode="aspectFill" aria-hidden="true" />
+      <image class="ink-mountain" src="/assets/home/ink-mountain.png" mode="aspectFit" aria-hidden="true" />
+      <view class="daily-header">
+        <view><text class="daily-heading">今日东巴字</text><text class="daily-date">{{todayText}}</text></view><button wx:if="{{today}}" class="daily-detail" size="mini" bindtap="character" aria-label="查看今日东巴字详情"><text>查看详情</text><text class="detail-arrow">›</text></button>
+      </view>
+      <view wx:if="{{today}}" class="today" bindtap="character" aria-role="button" aria-label="查看今日东巴字{{today.cn_name}}">
+        <view class="daily-glyph-frame">
+          <view class="daily-glyph">
+            <glyph-image src="{{today.image_url}}" name="{{today.cn_name}}" />
+          </view>
+        </view>
+        <view class="daily-copy">
+          <view class="daily-name-row"><text class="daily-name">{{today.cn_name}}</text><text wx:if="{{today.category_l1}}" class="daily-category">{{today.category_l1}}</text></view>
+          <view class="daily-summary">{{today.culture_summary || '文化释义正在整理中'}}</view>
+        </view>
+      </view>
+      <view wx:else class="daily-empty">东巴字内容正在整理中</view>
     </view>
-  </block>
+    <view class="quick-nav">
+      <button class="nav-map" bindtap="map" aria-label="东巴地图，探索文化地标">
+        <view class="nav-symbol">
+          <image src="/assets/home/map.png" mode="aspectFit" />
+        </view>
+        <view class="nav-copy"><text class="nav-name">东巴地图</text>
+          <view class="nav-caption"><text>探索文化地标</text><text class="nav-arrow">›</text></view>
+        </view>
+      </button>
+      <button class="nav-quest" bindtap="quests" aria-label="寻迹任务，查看集章路线">
+        <view class="nav-symbol">
+          <image src="/assets/home/scroll.png" mode="aspectFit" />
+        </view>
+        <view class="nav-copy"><text class="nav-name">寻迹任务</text>
+          <view class="nav-caption"><text>集章寻文化</text><text class="nav-arrow">›</text></view>
+        </view>
+      </button>
+      <button class="nav-shop" bindtap="catalog" aria-label="丽江好物，特色文创推荐">
+        <view class="nav-symbol">
+          <image src="/assets/home/bag.png" mode="aspectFit" />
+        </view>
+        <view class="nav-copy"><text class="nav-name">丽江好物</text>
+          <view class="nav-caption"><text>特色文创推荐</text><text class="nav-arrow">›</text></view>
+        </view>
+      </button>
+    </view>
+    <view wx:if="{{!loading && !error}}" class="discoveries">
+      <view class="discoveries-header">
+        <view class="discoveries-title">
+          <image src="/assets/home/pin.png" mode="aspectFit" /><text>附近发现</text>
+        </view>
+        <view class="discoveries-actions"><button class="locate-button {{location ? 'is-located' : ''}}" bindtap="locate" disabled="{{locating}}" aria-label="{{locating ? '正在定位' : '更新当前位置，按距离查看附近商户'}}">
+            <image src="/assets/home/locate.png" mode="aspectFit" />
+          </button><button class="more-button" size="mini" bindtap="more" aria-label="查看更多文化商户">查看更多<text>›</text></button></view>
+      </view>
+      <view wx:if="{{locationError}}" class="location-note" role="status">{{locationError}}，仍可浏览商户。</view>
+      <scroll-view wx:if="{{merchants.length}}" scroll-x class="merchant-scroll" enhanced show-scrollbar="{{false}}">
+        <view class="merchant-track">
+          <button wx:for="{{merchants}}" wx:key="id" class="merchant-card" data-id="{{item.id}}" bindtap="merchant" aria-label="查看{{item.name}}详情">
+            <view class="merchant-cover">
+              <image wx:if="{{item.image_url && !item.imageFailed}}" src="{{item.image_url}}" mode="aspectFill" lazy-load data-id="{{item.id}}" binderror="merchantImageError" />
+              <view wx:else class="merchant-placeholder">
+                <image src="/assets/home/shop.png" mode="aspectFit" /><text>商户图片待补充</text>
+              </view>
+              <view wx:if="{{item.distance}}" class="distance">
+                <image src="/assets/home/pin-white.png" mode="aspectFit" /><text>{{item.distance}}</text>
+              </view>
+            </view>
+            <view class="merchant-body">
+              <view class="merchant-name">{{item.name}}</view>
+              <view class="merchant-tags"><text wx:for="{{item.displayTags}}" wx:for-item="tag" wx:key="*this" class="merchant-tag">{{tag}}</text></view>
+              <view class="merchant-footer"><text class="merchant-cta">去看看</text></view>
+            </view>
+          </button>
+        </view>
+      </scroll-view>
+      <view wx:else class="merchant-empty">已审核的文化商户将在这里展示</view>
+    </view>
+  </view>
 </view>

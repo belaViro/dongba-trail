@@ -57,7 +57,7 @@ function handleCommand(command: string, row: Row) {
   else if (command === 'history') openHistory(row)
   else if (command === 'qr') void showQr(row)
   else if (command === 'manual') Object.assign(manual, { visible: true, node: row, user_id: '', error: '' })
-  else void changeStatus(row, command)
+  else if (['published', 'draft', 'active'].includes(command)) void changeStatus(row, command)
 }
 function openDetail(row: Row) {
   detail.value = row
@@ -157,7 +157,7 @@ async function remove(row: Row) {
 async function changeStatus(row: Row, status: string) {
   try {
     await save(`${endpoint.value}/${encodeURIComponent(row.id)}`, { status }, 'PATCH')
-    ElMessage.success('状态已更新')
+    ElMessage.success(status === 'published' ? '已审核并发布' : '状态已更新')
     await load()
   } catch (e) {
     ElMessage.error(errorText(e))
@@ -305,11 +305,8 @@ onMounted(load)
                     启用账号
                   </el-dropdown-item>
                   <template v-else>
-                    <el-dropdown-item command="reviewed" :disabled="row.status === 'reviewed'">
-                      审核通过
-                    </el-dropdown-item>
-                    <el-dropdown-item command="published" :disabled="row.status === 'published'">
-                      发布
+                    <el-dropdown-item v-if="row.status !== 'published'" command="published">
+                      审核并发布
                     </el-dropdown-item>
                     <el-dropdown-item command="draft" :disabled="row.status === 'draft'">
                       退回草稿

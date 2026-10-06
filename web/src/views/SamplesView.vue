@@ -114,7 +114,7 @@ const fields = computed<Field[]>(() => [
   },
   {
     key: 'dataset_split',
-    label: '数据集划分（仅管理，不触发训练）',
+    label: '数据集划分',
     type: 'select',
     options: datasetSplits,
     required: true,
@@ -486,7 +486,7 @@ function label(options: { value: string; label: string }[], value: string) {
     :show-close="!exporting.busy"
   >
     <el-alert
-      title="导出ZIP包含manifest.json和私有图片。默认仅导出已通过样本；未审/驳回样本不作为权威标注。数据集划分不会触发训练。"
+      title="默认仅导出审核通过的样本及图片。未审核或已驳回的样本不能作为核验依据。"
       type="info"
       :closable="false"
       class="page-alert"

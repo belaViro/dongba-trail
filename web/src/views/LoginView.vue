@@ -138,7 +138,6 @@ onMounted(check)
             </el-button>
           </el-form>
           <el-button v-if="error" text class="login-retry" @click="check">重新连接</el-button>
-          <p class="login-access-note">商户与运营人员使用已分配的账号登录，系统将进入对应工作空间。</p>
         </template>
       </main>
     </div>

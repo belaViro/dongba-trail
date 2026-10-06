@@ -31,7 +31,10 @@ for (const page of app.pages) {
     if (!new RegExp('\\b' + match[1] + '\\s*\\(').test(source)) errors.push(page + ': missing event handler ' + match[1])
   }
 }
-for (const item of app.tabBar.list) assert.ok(app.pages.includes(item.pagePath), 'Tab route registered')
+for (const item of app.tabBar.list) {
+  assert.ok(app.pages.includes(item.pagePath), 'Tab route registered')
+  for (const key of ['iconPath', 'selectedIconPath']) assert.ok(item[key] && fs.existsSync(path.join(root, item[key])), 'Native tab icon exists: ' + key)
+}
 for (const category of ['culture','merchant','quest']) assert.ok(fs.existsSync(path.join(root, 'assets/marker-' + category + '.png')), 'Native map marker asset exists')
 for (const file of files.filter(file => /\.js$/.test(file) && !file.includes(path.sep + 'tests' + path.sep))) {
   const source = fs.readFileSync(file, 'utf8')
@@ -42,7 +45,7 @@ for (const file of files.filter(file => /\.js$/.test(file) && !file.includes(pat
 assert.equal(errors.length, 0, errors.join('\n'))
 console.log('Validated ' + app.pages.length + ' native pages, JSON/JS syntax, tab routes and WXML event handlers.')
 const fingerprint = crypto.createHash('sha256')
-for (const file of files.filter(value => /\.(js|json|wxml|wxss|png|py)$/.test(value)).sort()) {
+for (const file of files.filter(value => /\.(c?js|json|wxml|wxss|png|jpe?g|py)$/.test(value)).sort()) {
   fingerprint.update(path.relative(root, file).replace(/\\/g, '/') + '\n')
   fingerprint.update(fs.readFileSync(file))
   fingerprint.update('\n')
