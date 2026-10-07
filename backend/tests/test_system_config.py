@@ -96,7 +96,7 @@ def test_encryption_redaction_and_immediate_cross_worker_visibility(context, mon
     context.app.state.settings.quality_checks_enabled = False
     seen = []
 
-    async def fake_recognition(self, image, media_type, characters):
+    async def fake_recognition(self, image, media_type, characters, references=()):
         seen.append((self.model, self.timeout))
         return ProviderResult(model_version=self.model, candidates=[])
 

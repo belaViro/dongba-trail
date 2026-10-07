@@ -30,7 +30,10 @@ page { background: #101314; }
 .corner.br { bottom: -6rpx; right: -6rpx; border-left: none; border-top: none; }
 .crop-tip { padding: 22rpx 32rpx 8rpx; background: #f6f1e8; color: #7a7268; font-size: 23rpx; line-height: 1.5; }
 .crop-actions { display: flex; align-items: center; gap: 16rpx; padding: 12rpx 32rpx 40rpx; background: #f6f1e8; }
-.crop-actions button { flex: 1; min-height: 88rpx; margin: 0; font-size: 28rpx; line-height: 1; }
+/* WeChat's native size="mini" button is inline-block, which overrides the
+   app-level button flex box and leaves the label pinned to the top. Force
+   flex centering on these action buttons, matching .icon-button/.album-entry. */
+.capture-page .crop-actions button[size="mini"] { display: flex; align-items: center; justify-content: center; flex: 1; min-height: 88rpx; margin: 0; font-size: 28rpx; line-height: 1; }
 .crop-reset, .crop-retake { color: #6c5b46; background: #ece2d1; }
 .crop-confirm { color: #fff; background: #b3271c; font-weight: 600; }
 .capture-error { position: fixed; bottom: 24rpx; left: 32rpx; right: 32rpx; z-index: 6; padding: 18rpx 24rpx; border-radius: 14rpx; background: rgba(150,32,24,.94); color: #fff; font-size: 24rpx; line-height: 1.5; }

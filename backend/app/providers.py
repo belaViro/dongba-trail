@@ -1,5 +1,6 @@
 from typing import Protocol
 
+from backend.app.glyph_refs import GlyphReference
 from backend.app.schemas import Character, ProviderResult
 
 
@@ -12,7 +13,11 @@ class RecognitionProvider(Protocol):
     configured: bool
 
     async def recognize(
-        self, image: bytes, media_type: str, characters: tuple[Character, ...]
+        self,
+        image: bytes,
+        media_type: str,
+        characters: tuple[Character, ...],
+        references: tuple[GlyphReference, ...] = (),
     ) -> ProviderResult: ...
 
 
@@ -21,6 +26,10 @@ class UnconfiguredProvider:
     configured = False
 
     async def recognize(
-        self, image: bytes, media_type: str, characters: tuple[Character, ...]
+        self,
+        image: bytes,
+        media_type: str,
+        characters: tuple[Character, ...],
+        references: tuple[GlyphReference, ...] = (),
     ) -> ProviderResult:
         raise ProviderUnavailable("Recognition provider is not configured")

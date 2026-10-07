@@ -1,4 +1,9 @@
-"""Volcengine Ark vision adapter using its OpenAI-compatible chat endpoint."""
+"""Volcengine Ark vision adapter using its [OI]-compatible chat endpoint.
+
+AI-01 / D-066: Dongba glyphs are visually distinct but share no relation to
+their Chinese glosses, so the model must be shown reviewed reference glyph
+images instead of a text-only catalog of names.
+"""
 
 import base64
 import json
@@ -7,11 +12,65 @@ import re
 
 import httpx
 
+from backend.app.glyph_refs import GlyphReference
 from backend.app.providers import ProviderUnavailable
 from backend.app.schemas import Character, ProviderResult
 
 logger = logging.getLogger(__name__)
 DEFAULT_ENDPOINT = "https://ark.cn-beijing.volces.com/api/v3/chat/completions"
+
+
+def catalog_text(characters: tuple[Character, ...]) -> str:
+    return "\n".join(f"- {item.character_id}: {item.cn_name}" for item in characters)
+
+
+def reference_prompt(references: tuple[GlyphReference, ...]) -> str:
+    return (
+        "下面每一组是东巴字典中的一个已审核参考字形：先给出编号与释义，紧接着是该字形的图片。"
+        "请先仔细观察并记住这些参考字形的笔画结构。\n"
+        "然后识别最后那张待识别照片中央由四角取景框圈住的单个东巴文字。"
+        "只抄录实际看到的东巴字形笔画，忽略框外环境、手指、纸张边缘、阴影、装饰和其他文字；"
+        "框内若有多个字形，只取中央最完整的一个。"
+        "不要把字形联想成动物或物体，也不要描述画面内容；"
+        "若框内没有可辨认的东巴文字，必须返回空 candidates，不要猜测。"
+        "只从上面给出的参考字形编号中选择，不能创建新编号，不能编造文化解释。返回严格 JSON："
+        '{"observed_text":"框内东巴字的笔画或读法","keywords":[],"scene":"",'
+        '"candidates":[{"character_id":"参考字形编号","score":0.0}]}。'
+        "最多返回5个候选，按可能性从高到低排列；不确定时返回空 candidates。"
+    )
+
+
+def catalog_prompt(characters: tuple[Character, ...]) -> str:
+    return (
+        "识别图片中央由四角取景框圈住的单个东巴文字。只抄录实际看到的东巴字形笔画，"
+        "忽略框外环境、手指、纸张边缘、阴影、装饰和其他文字；框内若有多个字形，只取中央最完整的一个。"
+        "不要把字形联想成动物或物体，也不要描述画面内容；"
+        "若框内没有可辨认的东巴文字，必须返回空 candidates，不要猜测。"
+        "只从下面的已审核候选中选择，不能创建新编号，不能编造文化解释。返回严格 JSON："
+        '{"observed_text":"框内东巴字的笔画或读法","keywords":[],"scene":"",'
+        '"candidates":[{"character_id":"候选编号","score":0.0}]}。'
+        "最多返回5个候选；不确定时返回空 candidates。候选目录：\n" + catalog_text(characters)
+    )
+
+
+def image_part(image: bytes, media_type: str) -> dict:
+    return {
+        "type": "image_url",
+        "image_url": {"url": "data:" + media_type + ";base64," + base64.b64encode(image).decode()},
+    }
+
+
+def upstream_error_code(response: httpx.Response) -> str:
+    """Return only the upstream error code, never the message or credentials."""
+    try:
+        body = response.json()
+    except ValueError:
+        return "unparsable"
+    if isinstance(body, dict):
+        error = body.get("error")
+        if isinstance(error, dict) and isinstance(error.get("code"), str):
+            return error["code"][:64]
+    return "unknown"
 
 
 class VolcengineArkProvider:
@@ -26,10 +85,6 @@ class VolcengineArkProvider:
     @property
     def configured(self) -> bool:
         return bool(self.api_key and self.model and self.endpoint)
-
-    @staticmethod
-    def _catalog(characters: tuple[Character, ...]) -> str:
-        return "\n".join(f"- {item.character_id}: {item.cn_name}" for item in characters)
 
     @staticmethod
     def _content_text(content) -> str:
@@ -51,44 +106,42 @@ class VolcengineArkProvider:
             raise ValueError("Ark response JSON is not an object")
         return value
 
+    @staticmethod
+    def _message_content(prompt, image, media_type, references=()) -> list[dict]:
+        content: list[dict] = [{"type": "text", "text": prompt}]
+        for reference in references:
+            content.append(
+                {
+                    "type": "text",
+                    "text": f"参考字形 {reference.character_id}（{reference.cn_name}）：",
+                }
+            )
+            content.append(image_part(reference.image, "image/png"))
+        content.append({"type": "text", "text": "待识别照片："})
+        content.append(image_part(image, media_type))
+        return content
+
     async def recognize(
-        self, image: bytes, media_type: str, characters: tuple[Character, ...]
+        self,
+        image: bytes,
+        media_type: str,
+        characters: tuple[Character, ...],
+        references: tuple[GlyphReference, ...] = (),
     ) -> ProviderResult:
         if not self.configured:
             raise ProviderUnavailable("Volcengine Ark provider is not configured")
-        prompt = (
-            "识别图片中央由四角取景框圈住的单个东巴文字。只抄录实际看到的东巴字形笔画，"
-            "忽略框外环境、手指、纸张边缘、阴影、装饰和其他文字；框内若有多个字形，只取中央最完整的一个。"
-            "不要把字形联想成动物或物体，也不要描述画面内容；"
-            "若框内没有可辨认的东巴文字，必须返回空 candidates，不要猜测。"
-            "只从下面的已审核候选中选择，不能创建新编号，不能编造文化解释。返回严格 JSON："
-            '{"observed_text":"框内东巴字的笔画或读法","keywords":[],"scene":"","candidates":[{"character_id":"候选编号","score":0.0}]}。'
-            "最多返回5个候选；不确定时返回空 candidates。候选目录：\n" + self._catalog(characters)
-        )
+        if references:
+            content = self._message_content(
+                reference_prompt(references), image, media_type, references
+            )
+        else:
+            content = self._message_content(catalog_prompt(characters), image, media_type)
         payload = {
             "model": self.model,
             "temperature": 0,
-            "max_tokens": 300,
+            "max_tokens": 400,
             "thinking": {"type": "disabled"},
-            "messages": [
-                {
-                    "role": "user",
-                    "content": [
-                        {"type": "text", "text": prompt},
-                        {
-                            "type": "image_url",
-                            "image_url": {
-                                "url": (
-                                    "data:"
-                                    + media_type
-                                    + ";base64,"
-                                    + base64.b64encode(image).decode()
-                                )
-                            },
-                        },
-                    ],
-                }
-            ],
+            "messages": [{"role": "user", "content": content}],
         }
         headers = {
             "Authorization": f"Bearer {self.api_key}",
@@ -97,10 +150,18 @@ class VolcengineArkProvider:
         try:
             async with httpx.AsyncClient(timeout=self.timeout) as client:
                 response = await client.post(self.endpoint, headers=headers, json=payload)
+            if response.status_code >= 400:
+                # Billing/quota problems must be diagnosable without exposing
+                # upstream messages. An overdue account returns 403.
+                logger.warning(
+                    "volcengine_provider_http_error status=%s code=%s",
+                    response.status_code,
+                    upstream_error_code(response),
+                )
             response.raise_for_status()
             body = response.json()
-            content = body["choices"][0]["message"]["content"]
-            parsed = self._parse_json(self._content_text(content))
+            message = body["choices"][0]["message"]["content"]
+            parsed = self._parse_json(self._content_text(message))
             return ProviderResult.model_validate(
                 {
                     "model_version": str(body.get("model") or self.model),

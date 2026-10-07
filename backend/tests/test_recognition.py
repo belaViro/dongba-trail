@@ -9,9 +9,11 @@ from pydantic import ValidationError
 
 from backend.app.config import Settings
 from backend.app.dictionary import CharacterDictionary
+from backend.app.glyph_refs import REFERENCE_SIDE, GlyphReference, load_references
 from backend.app.main import create_app
 from backend.app.providers import ProviderUnavailable
 from backend.app.schemas import Character, ProviderCandidate, ProviderResult
+from backend.app.volcengine_provider import VolcengineArkProvider
 
 
 def fixture_character(character_id="TEST_A", status="published"):
@@ -35,6 +37,9 @@ def image_bytes(image_format="PNG", size=(8, 8)):
 class FixtureProvider:
     name = "test-fixture"
     configured = True
+    # Fixture recognition never consumes reference glyph images; skip the
+    # filesystem lookup so unit tests stay hermetic.
+    uses_reference_images = False
 
     def __init__(self, result=None, error=None, delay=0):
         self.result = (
@@ -49,8 +54,8 @@ class FixtureProvider:
         self.delay = delay
         self.calls = []
 
-    async def recognize(self, image, media_type, characters):
-        self.calls.append((image, media_type, characters))
+    async def recognize(self, image, media_type, characters, references=()):
+        self.calls.append((image, media_type, characters, references))
         if self.delay:
             await asyncio.sleep(self.delay)
         if self.error:
@@ -266,3 +271,146 @@ def test_dictionary_loader_fails_on_missing_or_invalid_files(tmp_path):
     path.write_text("not json", encoding="utf-8")
     with pytest.raises(ValidationError):
         CharacterDictionary.from_path(path)
+
+
+def reference_character(character_id, image_url):
+    return Character.model_validate(
+        fixture_character(character_id).model_dump() | {"image_url": image_url}
+    )
+
+
+def test_reference_loader_normalizes_reviewed_glyphs(tmp_path):
+    asset = tmp_path / ("a" * 32 + ".png")
+    Image.new("RGB", (64, 64), "white").save(asset, format="PNG")
+    published = reference_character("TEST_A", f"/api/v1/media/{asset.name}")
+    references = load_references([published], tmp_path)
+    assert len(references) == 1
+    reference = references[0]
+    assert (reference.character_id, reference.cn_name) == ("TEST_A", "Fixture only")
+    with Image.open(BytesIO(reference.image)) as rendered:
+        assert rendered.size == (REFERENCE_SIDE, REFERENCE_SIDE)
+        assert rendered.mode == "RGB"
+    # A second load must reuse the cached bytes instead of re-encoding.
+    assert load_references([published], tmp_path)[0].image == reference.image
+
+
+def test_reference_loader_skips_missing_unreadable_and_foreign_urls(tmp_path):
+    good = tmp_path / ("b" * 32 + ".png")
+    Image.new("RGB", (48, 48), "white").save(good, format="PNG")
+    broken = tmp_path / ("c" * 32 + ".png")
+    broken.write_bytes(b"not an image")
+    characters = [
+        reference_character("TEST_A", f"/api/v1/media/{good.name}"),
+        reference_character("TEST_B", f"/api/v1/media/{'d' * 32}.png"),
+        reference_character("TEST_C", f"/api/v1/media/{broken.name}"),
+        reference_character("TEST_D", "https://example.invalid/remote.png"),
+        reference_character("TEST_E", ""),
+    ]
+    references = load_references(characters, tmp_path)
+    assert [reference.character_id for reference in references] == ["TEST_A"]
+    assert load_references(characters, tmp_path, limit=0) == []
+
+
+def test_ark_provider_sends_reference_glyphs_before_the_photo(monkeypatch):
+    import httpx
+
+    captured = {}
+    reference = GlyphReference(
+        character_id="TEST_A",
+        cn_name="Fixture only",
+        image=image_bytes(),
+    )
+    characters = (fixture_character(),)
+
+    class Response:
+        status_code = 200
+
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return {
+                "model": "fixture-ark",
+                "choices": [
+                    {
+                        "message": {
+                            "content": '{"observed_text":"","keywords":[],"scene":"",'
+                            '"candidates":[{"character_id":"TEST_A","score":1.0}]}'
+                        }
+                    }
+                ],
+            }
+
+    class Client:
+        def __init__(self, **kwargs):
+            pass
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, *args):
+            return False
+
+        async def post(self, url, headers=None, json=None):
+            captured["url"] = url
+            captured["headers"] = headers
+            captured["json"] = json
+            return Response()
+
+    monkeypatch.setattr(httpx, "AsyncClient", Client)
+    provider = VolcengineArkProvider(
+        endpoint="https://ark.example.invalid/chat", api_key="k", model="m", timeout=5
+    )
+    result = asyncio.run(
+        provider.recognize(image_bytes("JPEG"), "image/jpeg", characters, (reference,))
+    )
+    assert [candidate.character_id for candidate in result.candidates] == ["TEST_A"]
+    content = captured["json"]["messages"][0]["content"]
+    kinds = [part["type"] for part in content]
+    assert kinds.count("image_url") == 2
+    assert kinds[-1] == "image_url"
+    assert "参考字形 TEST_A" in content[1]["text"]
+    assert content[-2]["text"] == "待识别照片："
+    assert captured["json"]["max_tokens"] == 400
+
+
+def test_ark_provider_without_references_falls_back_to_text_catalog(monkeypatch):
+    import httpx
+
+    captured = {}
+
+    class Response:
+        status_code = 200
+
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return {
+                "model": "fixture-ark",
+                "choices": [{"message": {"content": '{"candidates":[]}'}}],
+            }
+
+    class Client:
+        def __init__(self, **kwargs):
+            pass
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, *args):
+            return False
+
+        async def post(self, url, headers=None, json=None):
+            captured["json"] = json
+            return Response()
+
+    monkeypatch.setattr(httpx, "AsyncClient", Client)
+    provider = VolcengineArkProvider(
+        endpoint="https://ark.example.invalid/chat", api_key="k", model="m", timeout=5
+    )
+    asyncio.run(provider.recognize(image_bytes("JPEG"), "image/jpeg", (fixture_character(),), ()))
+    content = captured["json"]["messages"][0]["content"]
+    assert [part["type"] for part in content] == ["text", "text", "image_url"]
+    assert "TEST_A: Fixture only" in content[0]["text"]
+    assert content[-2]["text"] == "待识别照片："

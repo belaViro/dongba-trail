@@ -11,6 +11,7 @@ from starlette.concurrency import run_in_threadpool
 from backend.app.config import Settings
 from backend.app.dictionary import CharacterDictionary
 from backend.app.errors import ApiError
+from backend.app.glyph_refs import load_references
 from backend.app.providers import ProviderUnavailable, RecognitionProvider
 from backend.app.schemas import ProviderResult, RecognitionCandidate, RecognitionResponse
 
@@ -79,10 +80,25 @@ async def recognize(
         raise ApiError(503, "DICTIONARY_NOT_READY", "No published dictionary entries are available")
 
     started_at = perf_counter()
+    references = ()
+    if getattr(provider, "uses_reference_images", True):
+        try:
+            references = await run_in_threadpool(
+                load_references, characters, settings.media_directory
+            )
+        except Exception as exc:
+            # Reference loading is an accuracy aid; a broken asset must not
+            # take down recognition, the provider still receives the catalog.
+            logger.warning(
+                "glyph_reference_load_failed request_id=%s error_type=%s",
+                request_id,
+                type(exc).__name__,
+            )
+            references = ()
     try:
         async with asyncio.timeout(settings.provider_timeout_seconds):
             result = ProviderResult.model_validate(
-                await provider.recognize(image, media_type, characters)
+                await provider.recognize(image, media_type, characters, tuple(references))
             )
     except TimeoutError as exc:
         raise ApiError(504, "PROVIDER_TIMEOUT", "Recognition provider timed out") from exc
