@@ -152,8 +152,9 @@ def context(request, tmp_path):
     if request.param == "mysql":
         if os.getenv("DONGBA_RUN_MYSQL_TESTS") != "1":
             pytest.skip("Set DONGBA_RUN_MYSQL_TESTS=1 to run isolated MySQL integration tests")
-        config = dotenv_values(ROOT / ".env")
-        url = os.getenv("DONGBA_TEST_DATABASE_URL") or config.get("DONGBA_TEST_DATABASE_URL")
+        url = os.getenv("DONGBA_TEST_DATABASE_URL")
+        if not url:
+            url = dotenv_values(ROOT / ".env").get("DONGBA_TEST_DATABASE_URL")
         assert url and make_url(url).database == "dongba_test", "Dedicated test database required"
         engine = create_engine(url)
         Base.metadata.drop_all(engine)

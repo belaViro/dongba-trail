@@ -1,4 +1,5 @@
 import asyncio
+import logging
 from datetime import UTC, datetime
 from io import BytesIO
 
@@ -311,15 +312,77 @@ def test_reference_loader_skips_missing_unreadable_and_foreign_urls(tmp_path):
     assert load_references(characters, tmp_path, limit=0) == []
 
 
-def test_ark_provider_sends_reference_glyphs_before_the_photo(monkeypatch):
+def reference_glyph(path, shape):
+    """Write a white glyph on a white page so its ink box is deterministic."""
+    image = Image.new("L", (64, 64), 255)
+    pixels = image.load()
+    for x, y in shape:
+        pixels[x, y] = 0
+    image.save(path, format="PNG")
+    return path
+
+
+def test_reference_loader_shortlists_by_local_feature_instead_of_prefix(tmp_path):
+    # Three near-identical horizontal strokes plus one unmistakable vertical bar.
+    bars = [(x, y) for x in range(20, 44) for y in range(18, 22)]
+    shapes = {
+        "TEST_A": bars,
+        "TEST_B": [(x, y + 2) for x, y in bars],
+        "TEST_C": [(x, y + 4) for x, y in bars],
+        "TEST_D": [(x, y) for y in range(12, 52) for x in range(30, 34)],
+    }
+    characters = []
+    for character_id, shape in shapes.items():
+        asset = reference_glyph(tmp_path / f"{character_id}.png", shape)
+        characters.append(reference_character(character_id, f"/api/v1/media/{asset.name}"))
+    query_path = reference_glyph(tmp_path / "query.png", bars)
+    query_bytes = query_path.read_bytes()
+
+    # Without a query the loader still falls back to prefix order (legacy behavior).
+    prefix = load_references(characters, tmp_path, limit=2)
+    assert [reference.character_id for reference in prefix] == ["TEST_A", "TEST_B"]
+
+    # With a query photo the shortlist must include the matching glyph even when
+    # the dictionary is larger than the reference limit.
+    ranked = load_references(characters, tmp_path, limit=2, query=query_bytes)
+    ids = [reference.character_id for reference in ranked]
+    assert len(ids) == 2
+    assert "TEST_A" in ids
+    assert "TEST_D" not in ids
+
+
+def test_reference_loader_query_keeps_every_character_reachable(tmp_path):
+    characters = []
+    for index in range(6):
+        asset = reference_glyph(
+            tmp_path / f"TEST_{index}.png",
+            [(x, y + index) for x in range(16, 48) for y in range(30, 33)],
+        )
+        characters.append(reference_character(f"TEST_{index}", f"/api/v1/media/{asset.name}"))
+    query_shape = [(x, y) for x in range(16, 48) for y in range(41, 44)]
+    query_bytes = reference_glyph(tmp_path / "query.png", query_shape).read_bytes()
+    seen: set[str] = set()
+    for limit in range(1, 7):
+        ranked = load_references(characters, tmp_path, limit=limit, query=query_bytes)
+        assert len(ranked) == limit
+        seen.update(reference.character_id for reference in ranked)
+    # Every published character can be reached through some shortlist size.
+    assert seen == {character.character_id for character in characters}
+
+
+def test_ark_provider_packs_reference_glyphs_before_the_photo(monkeypatch, caplog):
     import httpx
 
     captured = {}
-    reference = GlyphReference(
-        character_id="TEST_A",
-        cn_name="Fixture only",
-        image=image_bytes(),
+    references = (
+        GlyphReference(
+            character_id="TEST_A" if index == 0 else f"TEST_{index:03d}",
+            cn_name="Fixture only",
+            image=image_bytes(),
+        )
+        for index in range(200)
     )
+    references = tuple(references)
     characters = (fixture_character(),)
 
     class Response:
@@ -331,6 +394,11 @@ def test_ark_provider_sends_reference_glyphs_before_the_photo(monkeypatch):
         def json(self):
             return {
                 "model": "fixture-ark",
+                "usage": {
+                    "prompt_tokens": 24000,
+                    "completion_tokens": 40,
+                    "total_tokens": 24040,
+                },
                 "choices": [
                     {
                         "message": {
@@ -361,17 +429,22 @@ def test_ark_provider_sends_reference_glyphs_before_the_photo(monkeypatch):
     provider = VolcengineArkProvider(
         endpoint="https://ark.example.invalid/chat", api_key="k", model="m", timeout=5
     )
+    caplog.set_level(logging.INFO, logger="backend.app.volcengine_provider")
     result = asyncio.run(
-        provider.recognize(image_bytes("JPEG"), "image/jpeg", characters, (reference,))
+        provider.recognize(image_bytes("JPEG"), "image/jpeg", characters, references)
     )
     assert [candidate.character_id for candidate in result.candidates] == ["TEST_A"]
     content = captured["json"]["messages"][0]["content"]
     kinds = [part["type"] for part in content]
-    assert kinds.count("image_url") == 2
+    # All 200 candidates remain present in 10 sheets, plus one query photo.
+    assert kinds.count("image_url") == 11
     assert kinds[-1] == "image_url"
     assert "参考字形 TEST_A" in content[1]["text"]
-    assert content[-2]["text"] == "待识别照片："
+    assert "参考字形 TEST_199" in content[-4]["text"]
+    assert content[-2]["text"] == "以下是待识别照片（不是参考对照图）："
     assert captured["json"]["max_tokens"] == 400
+    assert "reference_count=200 image_count=11" in caplog.text
+    assert "prompt_tokens=24000 completion_tokens=40 total_tokens=24040" in caplog.text
 
 
 def test_ark_provider_without_references_falls_back_to_text_catalog(monkeypatch):
@@ -413,4 +486,4 @@ def test_ark_provider_without_references_falls_back_to_text_catalog(monkeypatch)
     content = captured["json"]["messages"][0]["content"]
     assert [part["type"] for part in content] == ["text", "text", "image_url"]
     assert "TEST_A: Fixture only" in content[0]["text"]
-    assert content[-2]["text"] == "待识别照片："
+    assert content[-2]["text"] == "以下是待识别照片（不是参考对照图）："

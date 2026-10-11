@@ -28,6 +28,11 @@ class Settings(BaseSettings):
     wechat_app_secret: SecretStr | None = None
     public_base_url: str = "http://127.0.0.1:8010"
     media_directory: Path = PROJECT_ROOT / "runtime" / "media"
+    glyph_prototype_directory: Path = PROJECT_ROOT / "runtime" / "glyph-prototype-bundle"
+    local_model_path: Path = PROJECT_ROOT / "runtime" / "db1404-model" / "inference.pt"
+    local_model_sha256: str = "98e773677ce8df711991a92f41ba55177954cc0d2e36f25ab3a4eda29b5fef89"
+    local_model_version: str = "db1404-cpu-v2-20261010"
+    local_model_threads: int = Field(default=2, ge=1, le=16)
     provider_name: str = "unconfigured"
     provider_endpoint: str = ""
     provider_api_key: SecretStr | None = None
@@ -92,7 +97,15 @@ class Settings(BaseSettings):
     def resolve_dictionary_path(cls, value: Path) -> Path:
         return value if value.is_absolute() else PROJECT_ROOT / value
 
-    @field_validator("media_directory")
+    @field_validator("media_directory", "glyph_prototype_directory", "local_model_path")
     @classmethod
     def resolve_media_path(cls, value: Path) -> Path:
         return value if value.is_absolute() else PROJECT_ROOT / value
+
+    @field_validator("local_model_sha256")
+    @classmethod
+    def valid_local_model_sha256(cls, value: str) -> str:
+        value = value.strip().lower()
+        if value and (len(value) != 64 or any(c not in "0123456789abcdef" for c in value)):
+            raise ValueError("Local model SHA-256 must be a 64-character hexadecimal digest")
+        return value

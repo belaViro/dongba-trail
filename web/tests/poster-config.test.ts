@@ -641,7 +641,7 @@ describe('existing load, save, and undo UX', () => {
     expect(field(root, '旅游海报模型 ID').props.modelValue).toBe('poster-fixture')
     expect(options(field(root, '旅游海报模型 ID'))).toEqual([])
     await change(field(root, '清除海报 API Key'), true)
-    const recognitionClear = all(root, (n) => n.type === 'el-checkbox' && !n.props['aria-label'])[0]!
+    const recognitionClear = field(root, '清除 Ark API Key')
     await change(recognitionClear, true)
     http.mockResolvedValueOnce(response(config()))
     await click(root, '撤销修改')

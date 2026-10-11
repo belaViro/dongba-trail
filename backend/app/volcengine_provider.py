@@ -12,7 +12,7 @@ import re
 
 import httpx
 
-from backend.app.glyph_refs import GlyphReference
+from backend.app.glyph_refs import GlyphReference, build_reference_sheets
 from backend.app.providers import ProviderUnavailable
 from backend.app.schemas import Character, ProviderResult
 
@@ -26,8 +26,8 @@ def catalog_text(characters: tuple[Character, ...]) -> str:
 
 def reference_prompt(references: tuple[GlyphReference, ...]) -> str:
     return (
-        "下面每一组是东巴字典中的一个已审核参考字形：先给出编号与释义，紧接着是该字形的图片。"
-        "请先仔细观察并记住这些参考字形的笔画结构。\n"
+        "下面每张参考对照图由多个方格组成，每格顶部是已审核参考字形的编号，下面是对应字形。"
+        "请按方格编号仔细比较这些参考字形的笔画结构。方格顶部编号不是字形笔画。\n"
         "然后识别最后那张待识别照片中央由四角取景框圈住的单个东巴文字。"
         "只抄录实际看到的东巴字形笔画，忽略框外环境、手指、纸张边缘、阴影、装饰和其他文字；"
         "框内若有多个字形，只取中央最完整的一个。"
@@ -109,17 +109,37 @@ class VolcengineArkProvider:
     @staticmethod
     def _message_content(prompt, image, media_type, references=()) -> list[dict]:
         content: list[dict] = [{"type": "text", "text": prompt}]
-        for reference in references:
+        for index, (group, sheet) in enumerate(build_reference_sheets(references), start=1):
             content.append(
                 {
                     "type": "text",
-                    "text": f"参考字形 {reference.character_id}（{reference.cn_name}）：",
+                    "text": f"参考对照图{index}：\n"
+                    + "\n".join(
+                        f"参考字形 {reference.character_id}（{reference.cn_name}）"
+                        for reference in group
+                    ),
                 }
             )
-            content.append(image_part(reference.image, "image/png"))
-        content.append({"type": "text", "text": "待识别照片："})
+            content.append(image_part(sheet, "image/png"))
+        content.append({"type": "text", "text": "以下是待识别照片（不是参考对照图）："})
         content.append(image_part(image, media_type))
         return content
+
+    @staticmethod
+    def _usage_counts(body: dict) -> tuple[int | None, int | None, int | None]:
+        usage = body.get("usage")
+        if not isinstance(usage, dict):
+            return None, None, None
+
+        def count(name: str) -> int | None:
+            value = usage.get(name)
+            return (
+                value
+                if isinstance(value, int) and not isinstance(value, bool) and value >= 0
+                else None
+            )
+
+        return count("prompt_tokens"), count("completion_tokens"), count("total_tokens")
 
     async def recognize(
         self,
@@ -160,6 +180,18 @@ class VolcengineArkProvider:
                 )
             response.raise_for_status()
             body = response.json()
+            prompt_tokens, completion_tokens, total_tokens = self._usage_counts(body)
+            if total_tokens is not None:
+                logger.info(
+                    "volcengine_provider_usage model=%s reference_count=%s image_count=%s "
+                    "prompt_tokens=%s completion_tokens=%s total_tokens=%s",
+                    str(body.get("model") or self.model),
+                    len(references),
+                    (len(references) + 19) // 20 + 1 if references else 1,
+                    prompt_tokens,
+                    completion_tokens,
+                    total_tokens,
+                )
             message = body["choices"][0]["message"]["content"]
             parsed = self._parse_json(self._content_text(message))
             return ProviderResult.model_validate(

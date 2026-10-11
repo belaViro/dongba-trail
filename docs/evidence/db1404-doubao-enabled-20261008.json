@@ -1,0 +1,2687 @@
+{
+  "interpretation": "Experimental packing of top-200 references; NOT deployed or true-camera accuracy.",
+  "original_production_shape_probe": {
+    "started_at": "2026-10-08T03:26:05.304974+00:00",
+    "complete": false,
+    "workbook_sha256": "b71067e68524f506367985eb5853d7c196b4529ab5c8f3f8bf5cef8bb1ba7e94",
+    "manifest_sha256": "0b6d2ebdfb38e2f891419c12cdb811aece64769783fb8aafa3fbb750a2198a66",
+    "provider": "volcengine-ark",
+    "model": "doubao-seed-2-1-turbo-260628",
+    "rag_enabled": false,
+    "provider_timeout_seconds": 60.0,
+    "published": 1403,
+    "planned_cases": 50,
+    "max_references": 200,
+    "quality_min_edge": 200,
+    "code_sha256": {
+      "backend/app/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "backend/app/business/__init__.py": "9a84eec6eefa949202e3ce801eb86c2be385119ec2cf6adb406e76e267f2a620",
+      "backend/app/business/api.py": "ab7c835b92d950d6955780ccab2808a7434366a902ba6b766a24fa642224108d",
+      "backend/app/business/auth.py": "528c95f036db1c02d8a2980927a41e25176bedf0f1fc74f7c95124eda2e1078e",
+      "backend/app/business/content.py": "52ff49af6ff8b5993c1763acc634e9265df8c121ed7110ec6dc962aca54b270c",
+      "backend/app/business/database.py": "cf32f8977a26318a08f78b1c72dcf46c41378673ec73b3c31894e6e76a1e061e",
+      "backend/app/business/exports.py": "87a2f70d8827e6bb705531eae15ecb918ffedaf421f05bd09bcd48df821787d4",
+      "backend/app/business/models.py": "d8abbd200daeaa5a235652940d13795007022928f94a09f84c644ec782bf551b",
+      "backend/app/business/samples.py": "0b19869e6378cdb439a182bffa27170b7922290374d9b3f60791ff7ae9abf695",
+      "backend/app/business/schemas.py": "1dfee323b6db92b751b9aa6847132d392e92da47bec179912c1ff2a6fbd98e89",
+      "backend/app/business/workflows.py": "f4afa56df5ea6d0d73ba981e7166ca3f056978b4d06a7d16639f035e532f26b6",
+      "backend/app/config.py": "d0862a23fb7f5765aff862853098f6c3653f4e1f7ac8a6fd67318e3f035b7114",
+      "backend/app/dictionary.py": "72b990e359e08e436c1f3c79e395400a7981b7847ca987893a812b32f6db9db7",
+      "backend/app/errors.py": "6f9bb68245444046cee4834be9a77a1eecb4018613475d5a9a6837643bf60f8e",
+      "backend/app/glyph_refs.py": "7629645c28aa22c4c15e933509dedb8ec60b4b76d63a1a2610aa082fb45be220",
+      "backend/app/guards.py": "4d13dd0886c12d6b3fc3df7074010e71c0604439a4ac1c0b0f71b81288f2a7f8",
+      "backend/app/image_provider.py": "145ccbdeca06576b5240076391c233e254bf8c00f221a03adb09c9638d967387",
+      "backend/app/main.py": "5af3cc110b86e9d5999e82c718d9357dbc783c3bb9a9bb8f6fd4fa29b1754234",
+      "backend/app/maintenance.py": "edeb6526ce7ba8ede2cf65c1cbd727ee923dc8540a9a8757558268be8b442bed",
+      "backend/app/media.py": "b0271c10645a6cea22fba3fcce5394983dbd67d18f0aa397454e7dc624870eb5",
+      "backend/app/poster_art.py": "8f12f9aae8bf21ed29fc00bfae76ecb96e598ec5316d32ef13022c4e92d98c4c",
+      "backend/app/poster_jobs.py": "edc9c7ca37820271ea9e70224565e17f29687ca51647bccc476202dc850a8707",
+      "backend/app/provider_factory.py": "e5e943a51ebc2df00eb80bf5a87230a5f64347a13e41e717d9d3884451e91677",
+      "backend/app/providers.py": "b3387febb3fe6afe21cc6bfd628985177c45954074cea4ef60bbae4045c8a1ca",
+      "backend/app/rag.py": "982a2015235f719aef311d96c038b3246c3113806129e2d63bccf1b60f34e1de",
+      "backend/app/rag_database.py": "3ec041a22bff3e8dadded050e1f40910839c1295336d7cfd9611ce817c5ef805",
+      "backend/app/rag_models.py": "f1435f4b776275368670637995046152bf3577845bb00d9018b74c1c3ad2d158",
+      "backend/app/recognition.py": "8a9f694eaa983fe3822d1040176fd56314f3ea81e7dea516d5b1e1bfd070a0e5",
+      "backend/app/schemas.py": "4b6fccb7c4cb4cfab3920e3b42449190870e6aa913e8a054be0684b3f814e4a6",
+      "backend/app/system_config.py": "c9a27f49cdaf6f3dd5e8a9f027091359fea5248db95a8acded13f5012f258784",
+      "backend/app/volcengine_provider.py": "0eb8bf94fb335d59faf70b8462d497b103af16c7fdaf2a8eef8c3a7bdea52a8e"
+    },
+    "evaluator_sha256": "3494a831c3145a7432c8c3abc00b3363b547154922e54ab87b803bc2c0b5afa3",
+    "billing_cost": null,
+    "billing_note": "adapter does not expose billed usage",
+    "cases": [
+      {
+        "seq": 1,
+        "cn": "天",
+        "old_wrong": "否",
+        "original": "01-original.jpeg",
+        "original_sha256": "6158afd64d911a2933377dcbb9ae470f0646829561a32e123d224446fef058af",
+        "original_size": [
+          179,
+          95
+        ],
+        "image": "01.jpg",
+        "image_sha256": "74c088c522c58bca08432dc8ec6768b7d557195380f52939c6a3c7e622d416d9",
+        "sent_size": [
+          512,
+          272
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0001"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": null,
+        "shortlist_has_correct": false,
+        "status": "ERROR",
+        "error_type": "ApiError",
+        "error_code": "PROVIDER_UNAVAILABLE"
+      }
+    ],
+    "summary": {
+      "total": 1,
+      "top1": 0,
+      "top5": 0,
+      "errors": 1,
+      "unknown": 0,
+      "shortlist_recall": 0,
+      "dictionary_coverage": 1,
+      "original_quality": {
+        "IMAGE_TOO_SMALL": 1
+      }
+    },
+    "stopped_reason": "first_probe_failed",
+    "finished_at": "2026-10-08T03:26:25.569860+00:00"
+  },
+  "original_shape_diagnostic": {
+    "model": "doubao-seed-2-1-turbo-260628",
+    "references": 200,
+    "input_image_count": 201,
+    "error_type": "ProviderUnavailable",
+    "http_status": 400,
+    "validation_keywords_only": [
+      "total",
+      "tokens",
+      "of",
+      "image",
+      "and",
+      "text",
+      "exceed",
+      "max",
+      "tokens"
+    ],
+    "error_code": "InvalidParameter"
+  },
+  "small_reference_probe": {
+    "model": "doubao-seed-2-1-turbo-260628",
+    "references": 20,
+    "input_image_count": 21,
+    "seq": 2,
+    "image_sha256": "c718c8f278f6e0db5814b76a8718cc4c8efd62d8582fb345324c1c44277cbbe8",
+    "started_at": "2026-10-08T03:31:03.575296+00:00",
+    "evaluation_only_override": true,
+    "success": true,
+    "candidate_count": 3,
+    "model_version": "doubao-seed-2-1-turbo-260628",
+    "candidates": [
+      {
+        "character_id": "DB1404_0002",
+        "cn_name": "日"
+      },
+      {
+        "character_id": "DB1404_0971",
+        "cn_name": "不吉之日"
+      },
+      {
+        "character_id": "DB1404_0185",
+        "cn_name": "宝物"
+      }
+    ],
+    "latency_ms": 8056
+  },
+  "experiment": {
+    "started_at": "2026-10-08T03:32:52.482485+00:00",
+    "complete": true,
+    "workbook_sha256": "b71067e68524f506367985eb5853d7c196b4529ab5c8f3f8bf5cef8bb1ba7e94",
+    "manifest_sha256": "0b6d2ebdfb38e2f891419c12cdb811aece64769783fb8aafa3fbb750a2198a66",
+    "provider": "volcengine-ark",
+    "model": "doubao-seed-2-1-turbo-260628",
+    "rag_enabled": false,
+    "provider_timeout_seconds": 60.0,
+    "published": 1403,
+    "planned_cases": 50,
+    "max_references": 200,
+    "quality_min_edge": 200,
+    "code_sha256": {
+      "backend/app/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "backend/app/business/__init__.py": "9a84eec6eefa949202e3ce801eb86c2be385119ec2cf6adb406e76e267f2a620",
+      "backend/app/business/api.py": "ab7c835b92d950d6955780ccab2808a7434366a902ba6b766a24fa642224108d",
+      "backend/app/business/auth.py": "528c95f036db1c02d8a2980927a41e25176bedf0f1fc74f7c95124eda2e1078e",
+      "backend/app/business/content.py": "52ff49af6ff8b5993c1763acc634e9265df8c121ed7110ec6dc962aca54b270c",
+      "backend/app/business/database.py": "cf32f8977a26318a08f78b1c72dcf46c41378673ec73b3c31894e6e76a1e061e",
+      "backend/app/business/exports.py": "87a2f70d8827e6bb705531eae15ecb918ffedaf421f05bd09bcd48df821787d4",
+      "backend/app/business/models.py": "d8abbd200daeaa5a235652940d13795007022928f94a09f84c644ec782bf551b",
+      "backend/app/business/samples.py": "0b19869e6378cdb439a182bffa27170b7922290374d9b3f60791ff7ae9abf695",
+      "backend/app/business/schemas.py": "1dfee323b6db92b751b9aa6847132d392e92da47bec179912c1ff2a6fbd98e89",
+      "backend/app/business/workflows.py": "f4afa56df5ea6d0d73ba981e7166ca3f056978b4d06a7d16639f035e532f26b6",
+      "backend/app/config.py": "d0862a23fb7f5765aff862853098f6c3653f4e1f7ac8a6fd67318e3f035b7114",
+      "backend/app/dictionary.py": "72b990e359e08e436c1f3c79e395400a7981b7847ca987893a812b32f6db9db7",
+      "backend/app/errors.py": "6f9bb68245444046cee4834be9a77a1eecb4018613475d5a9a6837643bf60f8e",
+      "backend/app/glyph_refs.py": "7629645c28aa22c4c15e933509dedb8ec60b4b76d63a1a2610aa082fb45be220",
+      "backend/app/guards.py": "4d13dd0886c12d6b3fc3df7074010e71c0604439a4ac1c0b0f71b81288f2a7f8",
+      "backend/app/image_provider.py": "145ccbdeca06576b5240076391c233e254bf8c00f221a03adb09c9638d967387",
+      "backend/app/main.py": "5af3cc110b86e9d5999e82c718d9357dbc783c3bb9a9bb8f6fd4fa29b1754234",
+      "backend/app/maintenance.py": "edeb6526ce7ba8ede2cf65c1cbd727ee923dc8540a9a8757558268be8b442bed",
+      "backend/app/media.py": "b0271c10645a6cea22fba3fcce5394983dbd67d18f0aa397454e7dc624870eb5",
+      "backend/app/poster_art.py": "8f12f9aae8bf21ed29fc00bfae76ecb96e598ec5316d32ef13022c4e92d98c4c",
+      "backend/app/poster_jobs.py": "edc9c7ca37820271ea9e70224565e17f29687ca51647bccc476202dc850a8707",
+      "backend/app/provider_factory.py": "e5e943a51ebc2df00eb80bf5a87230a5f64347a13e41e717d9d3884451e91677",
+      "backend/app/providers.py": "b3387febb3fe6afe21cc6bfd628985177c45954074cea4ef60bbae4045c8a1ca",
+      "backend/app/rag.py": "982a2015235f719aef311d96c038b3246c3113806129e2d63bccf1b60f34e1de",
+      "backend/app/rag_database.py": "3ec041a22bff3e8dadded050e1f40910839c1295336d7cfd9611ce817c5ef805",
+      "backend/app/rag_models.py": "f1435f4b776275368670637995046152bf3577845bb00d9018b74c1c3ad2d158",
+      "backend/app/recognition.py": "8a9f694eaa983fe3822d1040176fd56314f3ea81e7dea516d5b1e1bfd070a0e5",
+      "backend/app/schemas.py": "4b6fccb7c4cb4cfab3920e3b42449190870e6aa913e8a054be0684b3f814e4a6",
+      "backend/app/system_config.py": "c9a27f49cdaf6f3dd5e8a9f027091359fea5248db95a8acded13f5012f258784",
+      "backend/app/volcengine_provider.py": "0eb8bf94fb335d59faf70b8462d497b103af16c7fdaf2a8eef8c3a7bdea52a8e"
+    },
+    "evaluator_sha256": "2d7ca6db6d7f67d6d8d2ea1527563587d2148b4a9c7fabef0a42f54e1d6a9981",
+    "contact_sheets_experiment": true,
+    "contact_sheets_script_sha256": "bf3408fa82e52c89d80b3aabfc658d3b2b4c3b3180103301c53ce631361a8c81",
+    "billing_cost": null,
+    "billing_note": "adapter does not expose billed usage",
+    "cases": [
+      {
+        "seq": 1,
+        "cn": "天",
+        "old_wrong": "否",
+        "original": "01-original.jpeg",
+        "original_sha256": "6158afd64d911a2933377dcbb9ae470f0646829561a32e123d224446fef058af",
+        "original_size": [
+          179,
+          95
+        ],
+        "image": "01.jpg",
+        "image_sha256": "74c088c522c58bca08432dc8ec6768b7d557195380f52939c6a3c7e622d416d9",
+        "sent_size": [
+          512,
+          272
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0001"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": null,
+        "shortlist_has_correct": false,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 8006,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_1027",
+            "cn_name": "夜晚"
+          }
+        ]
+      },
+      {
+        "seq": 2,
+        "cn": "日",
+        "old_wrong": "否",
+        "original": "02-original.jpeg",
+        "original_sha256": "db010b952b426f9ad23daebe7c6a8abcbd1fdb8081b976148ffe17f3a7ff6575",
+        "original_size": [
+          166,
+          126
+        ],
+        "image": "02.jpg",
+        "image_sha256": "c718c8f278f6e0db5814b76a8718cc4c8efd62d8582fb345324c1c44277cbbe8",
+        "sent_size": [
+          512,
+          389
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0002"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": 0,
+        "shortlist_has_correct": true,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 13578,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0002",
+            "cn_name": "日"
+          },
+          {
+            "character_id": "DB1404_0433",
+            "cn_name": "昼"
+          },
+          {
+            "character_id": "DB1404_0971",
+            "cn_name": "不吉之日"
+          },
+          {
+            "character_id": "DB1404_0972",
+            "cn_name": "黑太阳"
+          },
+          {
+            "character_id": "DB1404_0251",
+            "cn_name": "窗户"
+          }
+        ]
+      },
+      {
+        "seq": 3,
+        "cn": "月",
+        "old_wrong": "是",
+        "original": "03-original.jpeg",
+        "original_sha256": "8178ceb1cc4dc65a9da4bf38f8db10d5ac614be2da98ef9cc32de1e876b18c27",
+        "original_size": [
+          161,
+          89
+        ],
+        "image": "03.jpg",
+        "image_sha256": "94c5af43016ae50516010c3ab3c523508b918578a8133cc477724049338a20ed",
+        "sent_size": [
+          512,
+          283
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0003"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": null,
+        "shortlist_has_correct": false,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 6483,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0983",
+            "cn_name": "阴魂"
+          },
+          {
+            "character_id": "DB1404_0978",
+            "cn_name": "黑月亮"
+          },
+          {
+            "character_id": "DB1404_0360",
+            "cn_name": "雄"
+          }
+        ]
+      },
+      {
+        "seq": 4,
+        "cn": "星",
+        "old_wrong": "否",
+        "original": "04-original.jpeg",
+        "original_sha256": "5e726d05efc3deee068e125b33ef9351cf6540a88bbffaab931ca913b2048682",
+        "original_size": [
+          109,
+          65
+        ],
+        "image": "04.jpg",
+        "image_sha256": "d626e7f33faa1e20a3f4fa002cad41a8859d15eebce9b92ce93fa68f28eecd58",
+        "sent_size": [
+          512,
+          305
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0004"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": null,
+        "shortlist_has_correct": false,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 8161,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0417",
+            "cn_name": "北极星"
+          },
+          {
+            "character_id": "DB1404_0569",
+            "cn_name": "种子"
+          },
+          {
+            "character_id": "DB1404_0991",
+            "cn_name": "三星之手"
+          },
+          {
+            "character_id": "DB1404_1014",
+            "cn_name": "壁宿"
+          },
+          {
+            "character_id": "DB1404_0392",
+            "cn_name": "北斗星"
+          }
+        ]
+      },
+      {
+        "seq": 5,
+        "cn": "云",
+        "old_wrong": "否",
+        "original": "05-original.jpeg",
+        "original_sha256": "7a5a6adb8296efe01530748d23eb53cfff1c92fdb0d3553a5e04c0eb1bf4a757",
+        "original_size": [
+          120,
+          76
+        ],
+        "image": "05.jpg",
+        "image_sha256": "c66b05138f0eb7ae07ea0c8ad46c604a63e53233106caec3b4cc9c5565a048aa",
+        "sent_size": [
+          512,
+          324
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0005"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": null,
+        "shortlist_has_correct": false,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 7750,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0851",
+            "cn_name": "缠绕"
+          },
+          {
+            "character_id": "DB1404_1346",
+            "cn_name": "弹羊毛之弓"
+          },
+          {
+            "character_id": "DB1404_0867",
+            "cn_name": "毛线"
+          }
+        ]
+      },
+      {
+        "seq": 6,
+        "cn": "雨",
+        "old_wrong": "是",
+        "original": "06-original.jpeg",
+        "original_sha256": "b796c36781bd2db11e6260bf67f0b796e2ba1cde7ea5c4a4aed259384f68c5fd",
+        "original_size": [
+          114,
+          61
+        ],
+        "image": "06.jpg",
+        "image_sha256": "df106eb2db3a34c4f678df5d3957d165efec4f1ed8668a10e6e2c1147e6e5f3e",
+        "sent_size": [
+          512,
+          274
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0006"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": 62,
+        "shortlist_has_correct": true,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 8278,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0006",
+            "cn_name": "雨"
+          }
+        ]
+      },
+      {
+        "seq": 7,
+        "cn": "雪",
+        "old_wrong": "是",
+        "original": "07-original.jpeg",
+        "original_sha256": "d2142dadae10a273d612436961988179e6e29f87b1561e86d8b64babe16c71a0",
+        "original_size": [
+          164,
+          129
+        ],
+        "image": "07.jpg",
+        "image_sha256": "314d40a555e8d34243952b72427ec216c2a2987a805d78a800bca332da3d2e3e",
+        "sent_size": [
+          512,
+          403
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0007"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": null,
+        "shortlist_has_correct": false,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 9468,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0396",
+            "cn_name": "霜"
+          }
+        ]
+      },
+      {
+        "seq": 8,
+        "cn": "地",
+        "old_wrong": "是",
+        "original": "08-original.jpeg",
+        "original_sha256": "d35dc21fae101573169e5895d2114cf137ac9d8453ba8079cf1bef273483fd0d",
+        "original_size": [
+          186,
+          73
+        ],
+        "image": "08.jpg",
+        "image_sha256": "0ec41f25c13320b395a7b8c728aa25c73a27cfac4d4149a18aa02d134896b0d7",
+        "sent_size": [
+          512,
+          201
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0008"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": 12,
+        "shortlist_has_correct": true,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 9863,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0008",
+            "cn_name": "地"
+          },
+          {
+            "character_id": "DB1404_0865",
+            "cn_name": "胰腺"
+          },
+          {
+            "character_id": "DB1404_0477",
+            "cn_name": "秧田"
+          },
+          {
+            "character_id": "DB1404_0870",
+            "cn_name": "草席"
+          },
+          {
+            "character_id": "DB1404_1211",
+            "cn_name": "竹棚"
+          }
+        ]
+      },
+      {
+        "seq": 9,
+        "cn": "山",
+        "old_wrong": "否",
+        "original": "09-original.jpeg",
+        "original_sha256": "e61f1c77748f7ed6f39d894442d131ef86c2495c5602567ecffab0d060d3dd85",
+        "original_size": [
+          100,
+          85
+        ],
+        "image": "09.jpg",
+        "image_sha256": "a903b0772844443fe7e962e547c4302de122d0c92525a2497ed9148fa8c6a045",
+        "sent_size": [
+          512,
+          435
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0009"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": 1,
+        "shortlist_has_correct": true,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 9516,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0009",
+            "cn_name": "山"
+          },
+          {
+            "character_id": "DB1404_0459",
+            "cn_name": "雪山"
+          },
+          {
+            "character_id": "DB1404_0460",
+            "cn_name": "土山"
+          },
+          {
+            "character_id": "DB1404_0024",
+            "cn_name": "高山"
+          },
+          {
+            "character_id": "DB1404_0523",
+            "cn_name": "山巅"
+          }
+        ]
+      },
+      {
+        "seq": 10,
+        "cn": "坡",
+        "old_wrong": "是",
+        "original": "10-original.jpeg",
+        "original_sha256": "c4170fed7d7adeac381649879abb9a3761c9a6428804dfaeef4ea2a8fb0d89cc",
+        "original_size": [
+          180,
+          123
+        ],
+        "image": "10.jpg",
+        "image_sha256": "0c0342a9071356e075102d1e33c2a2e0d64def7e7a2d601f6c2dcd60620630c3",
+        "sent_size": [
+          512,
+          350
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0010"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": 50,
+        "shortlist_has_correct": true,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 8469,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0010",
+            "cn_name": "坡"
+          }
+        ]
+      },
+      {
+        "seq": 11,
+        "cn": "风",
+        "old_wrong": "是",
+        "original": "11-original.jpeg",
+        "original_sha256": "b065d389296b9835b4c6e25d8df20cfbfe21dfcd3e9210c8fa8d3e8852dd9e1b",
+        "original_size": [
+          174,
+          80
+        ],
+        "image": "11.jpg",
+        "image_sha256": "46e4d31a7bae4bce4be49cee45351437ab9cfba49a79bcb0be02963f131ad262",
+        "sent_size": [
+          512,
+          235
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0011"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": 1,
+        "shortlist_has_correct": true,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 7305,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0011",
+            "cn_name": "风"
+          }
+        ]
+      },
+      {
+        "seq": 12,
+        "cn": "亮",
+        "old_wrong": "是",
+        "original": "12-original.jpeg",
+        "original_sha256": "0169e3a068ddf6debc13b327dce5b7bb172daefeacca31d956620615b25c9469",
+        "original_size": [
+          155,
+          151
+        ],
+        "image": "12.jpg",
+        "image_sha256": "cfb1cbdfc5a9d5175aa726f949ab8841b35081b0814195775f1755d7d6b575a6",
+        "sent_size": [
+          512,
+          499
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0012"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": null,
+        "shortlist_has_correct": false,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 8011,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0013",
+            "cn_name": "暗"
+          }
+        ]
+      },
+      {
+        "seq": 13,
+        "cn": "暗",
+        "old_wrong": "是",
+        "original": "13-original.jpeg",
+        "original_sha256": "06398f3b429ce0bd0c662086b4637155b3a937b559ce9b5f313ae15f089d4ee2",
+        "original_size": [
+          144,
+          140
+        ],
+        "image": "13.jpg",
+        "image_sha256": "73c6fe78509789b03ec505c44a0e855bd0d39edb347f2d5d62422559ddb9258c",
+        "sent_size": [
+          512,
+          498
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0013"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": 0,
+        "shortlist_has_correct": true,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 9166,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0013",
+            "cn_name": "暗"
+          }
+        ]
+      },
+      {
+        "seq": 14,
+        "cn": "电",
+        "old_wrong": "是",
+        "original": "14-original.jpeg",
+        "original_sha256": "62f47bc0477200c2f2a9a24b2c684c31c2d63f74b1c42ae07bd1a082e5fac434",
+        "original_size": [
+          164,
+          130
+        ],
+        "image": "14.jpg",
+        "image_sha256": "66f4bd0662213fa414793226c40860d1a190c72e0431e56a776eae8b9fd2790a",
+        "sent_size": [
+          512,
+          406
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0018"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": 35,
+        "shortlist_has_correct": true,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 7777,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0941",
+            "cn_name": "打虎机"
+          },
+          {
+            "character_id": "DB1404_0018",
+            "cn_name": "电"
+          },
+          {
+            "character_id": "DB1404_1255",
+            "cn_name": "塞"
+          }
+        ]
+      },
+      {
+        "seq": 15,
+        "cn": "冰",
+        "old_wrong": "是",
+        "original": "15-original.jpeg",
+        "original_sha256": "676a6d3ed0beca27240259d042c916e81fbc62b77ac4c85f6665ebe322176a87",
+        "original_size": [
+          110,
+          110
+        ],
+        "image": "15.jpg",
+        "image_sha256": "7b0acdd92033c5d80fee6734e68364bfb430961c8bdf8b247515eb2f58161f0a",
+        "sent_size": [
+          512,
+          512
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0019"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": 162,
+        "shortlist_has_correct": true,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 8158,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_1387",
+            "cn_name": "竖起刺箭"
+          },
+          {
+            "character_id": "DB1404_0019",
+            "cn_name": "冰"
+          },
+          {
+            "character_id": "DB1404_0531",
+            "cn_name": "责任"
+          },
+          {
+            "character_id": "DB1404_0529",
+            "cn_name": "烟"
+          },
+          {
+            "character_id": "DB1404_0373",
+            "cn_name": "热"
+          }
+        ]
+      },
+      {
+        "seq": 16,
+        "cn": "深",
+        "old_wrong": "是",
+        "original": "16-original.jpeg",
+        "original_sha256": "2ea5a8b15c43d93a2b36578f8a5ac92d7b393ee245603dcc15d63a7275752876",
+        "original_size": [
+          200,
+          120
+        ],
+        "image": "16.jpg",
+        "image_sha256": "4fded85253fdafede7169f375976c74f939f00ae5b8872c2e83141e705073ed6",
+        "sent_size": [
+          512,
+          307
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0021"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": 37,
+        "shortlist_has_correct": true,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 9719,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0455",
+            "cn_name": "山洪"
+          },
+          {
+            "character_id": "DB1404_0238",
+            "cn_name": "米"
+          },
+          {
+            "character_id": "DB1404_1321",
+            "cn_name": "煨茶"
+          },
+          {
+            "character_id": "DB1404_0472",
+            "cn_name": "沟"
+          },
+          {
+            "character_id": "DB1404_1232",
+            "cn_name": "晒"
+          }
+        ]
+      },
+      {
+        "seq": 17,
+        "cn": "水",
+        "old_wrong": "是",
+        "original": "17-original.jpeg",
+        "original_sha256": "77817b9a0701336d3774d8a21c55d0ab98ff6bf059bf84f8ed6bc4d7baec18dd",
+        "original_size": [
+          220,
+          124
+        ],
+        "image": "17.jpg",
+        "image_sha256": "bc0fd94a9d7311beb523592429e042edada48bc8d1b9d429e4ff30db48e11874",
+        "sent_size": [
+          512,
+          289
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0026"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": null,
+        "shortlist_has_correct": false,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 8120,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0468",
+            "cn_name": "南方"
+          },
+          {
+            "character_id": "DB1404_0470",
+            "cn_name": "阻水"
+          },
+          {
+            "character_id": "DB1404_0501",
+            "cn_name": "冲"
+          },
+          {
+            "character_id": "DB1404_0473",
+            "cn_name": "水尾"
+          },
+          {
+            "character_id": "DB1404_0447",
+            "cn_name": "彗星"
+          }
+        ]
+      },
+      {
+        "seq": 18,
+        "cn": "湖",
+        "old_wrong": "是",
+        "original": "18-original.jpeg",
+        "original_sha256": "63964d3ac1ee4182d3d7313e73b1036f98d3d6af9fd359c62f8c5e473bab5f84",
+        "original_size": [
+          178,
+          90
+        ],
+        "image": "18.jpg",
+        "image_sha256": "b6db68d2f0e46a63046f91557ab5173adf7f75fbfee5ffdcfc54639c9051c8c8",
+        "sent_size": [
+          512,
+          259
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0028"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": 3,
+        "shortlist_has_correct": true,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 8596,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0028",
+            "cn_name": "湖"
+          },
+          {
+            "character_id": "DB1404_0894",
+            "cn_name": "长庚星"
+          },
+          {
+            "character_id": "DB1404_0141",
+            "cn_name": "啊"
+          },
+          {
+            "character_id": "DB1404_0938",
+            "cn_name": "锥"
+          },
+          {
+            "character_id": "DB1404_0131",
+            "cn_name": "瘦肉"
+          }
+        ]
+      },
+      {
+        "seq": 19,
+        "cn": "石",
+        "old_wrong": "是",
+        "original": "19-original.jpeg",
+        "original_sha256": "ae57f2f8c208a13db6fe4f65c560967dfab9ecf288e418782b5d130f092ffd56",
+        "original_size": [
+          160,
+          131
+        ],
+        "image": "19.jpg",
+        "image_sha256": "b962f8defb2f9d96ce33417a7bd76c4911bba59b594eb7f095a42df3393417fa",
+        "sent_size": [
+          512,
+          419
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0030"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": null,
+        "shortlist_has_correct": false,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 8090,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_1034",
+            "cn_name": "石上生草"
+          },
+          {
+            "character_id": "DB1404_0377",
+            "cn_name": "压物"
+          },
+          {
+            "character_id": "DB1404_0031",
+            "cn_name": "石裂"
+          }
+        ]
+      },
+      {
+        "seq": 20,
+        "cn": "树",
+        "old_wrong": "是",
+        "original": "20-original.jpeg",
+        "original_sha256": "e1228827eabb2c6152f97c8d8464649a2313da1c6bf054cdb0bceed56aa476f7",
+        "original_size": [
+          179,
+          159
+        ],
+        "image": "20.jpg",
+        "image_sha256": "fb407b38ed413323fc0a7a0dd55ef111c619f3146a0dfd985e424dfbd0133a5a",
+        "sent_size": [
+          512,
+          455
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0032"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": null,
+        "shortlist_has_correct": false,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 9965,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0560",
+            "cn_name": "藤"
+          },
+          {
+            "character_id": "DB1404_0830",
+            "cn_name": "绳断"
+          },
+          {
+            "character_id": "DB1404_0038",
+            "cn_name": "树发芽"
+          },
+          {
+            "character_id": "DB1404_0566",
+            "cn_name": "韭菜"
+          },
+          {
+            "character_id": "DB1404_0554",
+            "cn_name": "细"
+          }
+        ]
+      },
+      {
+        "seq": 21,
+        "cn": "柴",
+        "old_wrong": "是",
+        "original": "21-original.jpeg",
+        "original_sha256": "2b5f3346428bbdef20b2a93ddb2ba01e7fcd5b9999d1d9a315f5aabb16b15eef",
+        "original_size": [
+          283,
+          166
+        ],
+        "image": "21.jpg",
+        "image_sha256": "9bf0c71ace4f7a4948c4f1eb446a601c285515acb65ccfc2afd44eab49276e4d",
+        "sent_size": [
+          512,
+          300
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0033"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": 100,
+        "shortlist_has_correct": true,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 8202,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0033",
+            "cn_name": "柴"
+          },
+          {
+            "character_id": "DB1404_0563",
+            "cn_name": "艾"
+          },
+          {
+            "character_id": "DB1404_0040",
+            "cn_name": "树弯"
+          },
+          {
+            "character_id": "DB1404_0358",
+            "cn_name": "尾"
+          },
+          {
+            "character_id": "DB1404_1156",
+            "cn_name": "楷木"
+          }
+        ]
+      },
+      {
+        "seq": 22,
+        "cn": "草",
+        "old_wrong": "是",
+        "original": "22-original.jpeg",
+        "original_sha256": "863788e532cb7de2300982eed73784405bc316f28239b882ba8f9361fc1ec7a9",
+        "original_size": [
+          135,
+          135
+        ],
+        "image": "22.jpg",
+        "image_sha256": "ddf6512676213bab2c2923dd4e4af0a59e3773c443d57839d719fa5659cd15c7",
+        "sent_size": [
+          512,
+          512
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0039"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": 0,
+        "shortlist_has_correct": true,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 8731,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0006",
+            "cn_name": "雨"
+          },
+          {
+            "character_id": "DB1404_0395",
+            "cn_name": "雹"
+          },
+          {
+            "character_id": "DB1404_0631",
+            "cn_name": "火化场"
+          },
+          {
+            "character_id": "DB1404_1387",
+            "cn_name": "竖起刺箭"
+          }
+        ]
+      },
+      {
+        "seq": 23,
+        "cn": "落",
+        "old_wrong": "是",
+        "original": "23-original.jpeg",
+        "original_sha256": "61a0b1427f6e1ce90c1773da630da7b148a19d88084d44713e86ed591342e3b1",
+        "original_size": [
+          189,
+          163
+        ],
+        "image": "23.jpg",
+        "image_sha256": "5974b449bbee9c5d526a89c174ca1b90eb616c13f3fcf0b9677b0d3816723b38",
+        "sent_size": [
+          512,
+          442
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0041"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": 157,
+        "shortlist_has_correct": true,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 9729,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0041",
+            "cn_name": "落"
+          },
+          {
+            "character_id": "DB1404_1154",
+            "cn_name": "梨"
+          },
+          {
+            "character_id": "DB1404_0423",
+            "cn_name": "黄豆"
+          },
+          {
+            "character_id": "DB1404_1151",
+            "cn_name": "山茱萸"
+          },
+          {
+            "character_id": "DB1404_0536",
+            "cn_name": "梅"
+          }
+        ]
+      },
+      {
+        "seq": 24,
+        "cn": "粗",
+        "old_wrong": "是",
+        "original": "24-original.jpeg",
+        "original_sha256": "df416082c67238d08020d48cc5dd2d53f85b1c11a646f6aa54858a8cd5c3c287",
+        "original_size": [
+          130,
+          198
+        ],
+        "image": "24.jpg",
+        "image_sha256": "602deb698b3fb23bf00d3b747670da580ca09299b391c15db871622c8ac57d09",
+        "sent_size": [
+          336,
+          512
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0042",
+          "DB1404_1114"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": 4,
+        "shortlist_has_correct": true,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 9159,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0042",
+            "cn_name": "粗"
+          },
+          {
+            "character_id": "DB1404_1176",
+            "cn_name": "白稻病"
+          },
+          {
+            "character_id": "DB1404_1375",
+            "cn_name": "颗粒"
+          },
+          {
+            "character_id": "DB1404_0388",
+            "cn_name": "开坛经"
+          },
+          {
+            "character_id": "DB1404_0256",
+            "cn_name": "塔"
+          }
+        ]
+      },
+      {
+        "seq": 25,
+        "cn": "叶",
+        "old_wrong": "否",
+        "original": "25-original.jpeg",
+        "original_sha256": "5b1d2b5c83630ed771e81c5e345770177173908cc83891816bb8d400e0f408e7",
+        "original_size": [
+          112,
+          174
+        ],
+        "image": "25.jpg",
+        "image_sha256": "b86117eae96708a4b5d61bca22f6f30eb5155aac988180e9ebb93fdee98a3cbf",
+        "sent_size": [
+          330,
+          512
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0043"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": null,
+        "shortlist_has_correct": false,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 13044,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0540",
+            "cn_name": "小米"
+          },
+          {
+            "character_id": "DB1404_1177",
+            "cn_name": "稗子"
+          },
+          {
+            "character_id": "DB1404_0942",
+            "cn_name": "活扣"
+          },
+          {
+            "character_id": "DB1404_0903",
+            "cn_name": "挖泥木铣"
+          },
+          {
+            "character_id": "DB1404_0568",
+            "cn_name": "生的"
+          }
+        ]
+      },
+      {
+        "seq": 26,
+        "cn": "菌",
+        "old_wrong": "是",
+        "original": "26-original.jpeg",
+        "original_sha256": "b842619f1de0cce43b024427f2e839a646af3eaa2f0dd79eecd5236f924f6776",
+        "original_size": [
+          187,
+          175
+        ],
+        "image": "26.jpg",
+        "image_sha256": "50890a5443ab9985b9ae5c24c8ea4217009ad9182c35ad9e0a18ffec15f60d96",
+        "sent_size": [
+          512,
+          479
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0045"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": null,
+        "shortlist_has_correct": false,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 7764,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0892",
+            "cn_name": "世代"
+          }
+        ]
+      },
+      {
+        "seq": 27,
+        "cn": "人",
+        "old_wrong": "否",
+        "original": "27-original.jpeg",
+        "original_sha256": "bac6d4c7bd5edcea9e064caffd37fcd9a4cc6007a3603a28595c0e059a9d9e84",
+        "original_size": [
+          190,
+          170
+        ],
+        "image": "27.jpg",
+        "image_sha256": "08d9a64493a8c0c42609ca89ca8d72849c4489aa6abed2315fa32bf26184b4bf",
+        "sent_size": [
+          512,
+          458
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0048"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": 145,
+        "shortlist_has_correct": true,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 9334,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0601",
+            "cn_name": "父族"
+          },
+          {
+            "character_id": "DB1404_0660",
+            "cn_name": "枯"
+          },
+          {
+            "character_id": "DB1404_0696",
+            "cn_name": "口舌是非"
+          },
+          {
+            "character_id": "DB1404_0049",
+            "cn_name": "男"
+          },
+          {
+            "character_id": "DB1404_0654",
+            "cn_name": "胎儿"
+          }
+        ]
+      },
+      {
+        "seq": 28,
+        "cn": "男",
+        "old_wrong": "是",
+        "original": "28-original.jpeg",
+        "original_sha256": "c13d29180f064e99157e245c917df57e3c9b49d3d3f732a23931b9cb4469c4cb",
+        "original_size": [
+          185,
+          160
+        ],
+        "image": "28.jpg",
+        "image_sha256": "8c30a2ab726e74f65c82c1820a9aecb083999cd22da9defebcc77211b2767c58",
+        "sent_size": [
+          512,
+          443
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0049"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": 45,
+        "shortlist_has_correct": true,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 10070,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0049",
+            "cn_name": "男"
+          },
+          {
+            "character_id": "DB1404_1040",
+            "cn_name": "纳西经一部经典"
+          },
+          {
+            "character_id": "DB1404_0391",
+            "cn_name": "神"
+          },
+          {
+            "character_id": "DB1404_0618",
+            "cn_name": "你"
+          },
+          {
+            "character_id": "DB1404_0725",
+            "cn_name": "舅父"
+          }
+        ]
+      },
+      {
+        "seq": 29,
+        "cn": "女",
+        "old_wrong": "是",
+        "original": "29-original.jpeg",
+        "original_sha256": "1f856334c68fb972a92d469af25316c482bcdac18b82dfd9c47a0e73f66af413",
+        "original_size": [
+          148,
+          207
+        ],
+        "image": "29.jpg",
+        "image_sha256": "8127704dbd1d02e973e11a5e0eaf9537b4a1e3f43d175d2312f31f504d9b378e",
+        "sent_size": [
+          366,
+          512
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0050"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": 38,
+        "shortlist_has_correct": true,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 11374,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0050",
+            "cn_name": "女"
+          },
+          {
+            "character_id": "DB1404_0659",
+            "cn_name": "绝育"
+          },
+          {
+            "character_id": "DB1404_0048",
+            "cn_name": "人"
+          },
+          {
+            "character_id": "DB1404_0601",
+            "cn_name": "父族"
+          },
+          {
+            "character_id": "DB1404_0696",
+            "cn_name": "口舌是非"
+          }
+        ]
+      },
+      {
+        "seq": 30,
+        "cn": "立",
+        "old_wrong": "否",
+        "original": "30-original.jpeg",
+        "original_sha256": "1b9a5e603e09f9b31aee3e433b7949770dfc46a9c8cf32ef6e5f59b1a2898182",
+        "original_size": [
+          167,
+          203
+        ],
+        "image": "30.jpg",
+        "image_sha256": "eb7696691a2841d8981fae5a1a5ec54fc5659cef6b357d20ebb8f925779b2432",
+        "sent_size": [
+          421,
+          512
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0052"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": 7,
+        "shortlist_has_correct": true,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 10529,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0052",
+            "cn_name": "立"
+          },
+          {
+            "character_id": "DB1404_0691",
+            "cn_name": "不干净的立处"
+          },
+          {
+            "character_id": "DB1404_0654",
+            "cn_name": "胎儿"
+          },
+          {
+            "character_id": "DB1404_0659",
+            "cn_name": "绝育"
+          },
+          {
+            "character_id": "DB1404_0068",
+            "cn_name": "鬼"
+          }
+        ]
+      },
+      {
+        "seq": 31,
+        "cn": "坐",
+        "old_wrong": "否",
+        "original": "31-original.jpeg",
+        "original_sha256": "70891ff78b4d7731f26adf714dfdce00b2baa7f419b5d86c5fca28f383793c1c",
+        "original_size": [
+          157,
+          151
+        ],
+        "image": "31.jpg",
+        "image_sha256": "eebf49e4fca1f856d08bdf6a71e317d78413c07d7963b82f2054123c7c5c604e",
+        "sent_size": [
+          512,
+          492
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0053"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": 36,
+        "shortlist_has_correct": true,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 10211,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0575",
+            "cn_name": "客"
+          },
+          {
+            "character_id": "DB1404_0692",
+            "cn_name": "戴帽"
+          },
+          {
+            "character_id": "DB1404_0048",
+            "cn_name": "人"
+          },
+          {
+            "character_id": "DB1404_0696",
+            "cn_name": "口舌是非"
+          },
+          {
+            "character_id": "DB1404_0071",
+            "cn_name": "担"
+          }
+        ]
+      },
+      {
+        "seq": 32,
+        "cn": "起",
+        "old_wrong": "是",
+        "original": "32-original.jpeg",
+        "original_sha256": "1b212674f764f9e565eccc3b4291d8654b04f9886ec1291fc4205705aef16889",
+        "original_size": [
+          172,
+          160
+        ],
+        "image": "32.jpg",
+        "image_sha256": "cdc4d7381ed53b40cb982be9bf0d1706e61bd2852111580b39c1a3c6555d8b21",
+        "sent_size": [
+          512,
+          476
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0054"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": 71,
+        "shortlist_has_correct": true,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 9571,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0620",
+            "cn_name": "蹲"
+          },
+          {
+            "character_id": "DB1404_0054",
+            "cn_name": "起"
+          },
+          {
+            "character_id": "DB1404_0058",
+            "cn_name": "抖"
+          },
+          {
+            "character_id": "DB1404_0095",
+            "cn_name": "右"
+          },
+          {
+            "character_id": "DB1404_0801",
+            "cn_name": "拿起"
+          }
+        ]
+      },
+      {
+        "seq": 33,
+        "cn": "跪",
+        "old_wrong": "是",
+        "original": "33-original.jpeg",
+        "original_sha256": "7306a79e7806fefc2b54b1d057f8c2c2bf0970088c8cb0e8ffaa98c4af210ff1",
+        "original_size": [
+          145,
+          184
+        ],
+        "image": "33.jpg",
+        "image_sha256": "8c2090c72c0c86eb967248c095ef1f56d60545f32a7627f34a31287d894c1feb",
+        "sent_size": [
+          403,
+          512
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0055"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": 92,
+        "shortlist_has_correct": true,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 9790,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0620",
+            "cn_name": "蹲"
+          },
+          {
+            "character_id": "DB1404_0095",
+            "cn_name": "右"
+          },
+          {
+            "character_id": "DB1404_0586",
+            "cn_name": "接"
+          },
+          {
+            "character_id": "DB1404_0048",
+            "cn_name": "人"
+          },
+          {
+            "character_id": "DB1404_0628",
+            "cn_name": "捞"
+          }
+        ]
+      },
+      {
+        "seq": 34,
+        "cn": "求",
+        "old_wrong": "是",
+        "original": "34-original.jpeg",
+        "original_sha256": "9e8f459ebc25a0dd1b9a74ac01da558367acd159e4ac540613e11f1e0abb5793",
+        "original_size": [
+          178,
+          178
+        ],
+        "image": "34.jpg",
+        "image_sha256": "dd5db1e83bfc485dd7265cb0616e6a9b83330d6b890ea1bbe8f14a6173a962c7",
+        "sent_size": [
+          512,
+          512
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0056"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": 14,
+        "shortlist_has_correct": true,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 8995,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0597",
+            "cn_name": "哥哥"
+          },
+          {
+            "character_id": "DB1404_0586",
+            "cn_name": "接"
+          },
+          {
+            "character_id": "DB1404_0646",
+            "cn_name": "劝架"
+          }
+        ]
+      },
+      {
+        "seq": 35,
+        "cn": "跌",
+        "old_wrong": "是",
+        "original": "35-original.jpeg",
+        "original_sha256": "4de1322e1bfae50f4921539304e0b294a61e837449424074db8f31203ef1c880",
+        "original_size": [
+          188,
+          164
+        ],
+        "image": "35.jpg",
+        "image_sha256": "4b86e3771917066572e739634c327a74408b932df9f8f721c4579089736b3dbf",
+        "sent_size": [
+          512,
+          447
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0057"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": null,
+        "shortlist_has_correct": false,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 10543,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0707",
+            "cn_name": "引领"
+          },
+          {
+            "character_id": "DB1404_1016",
+            "cn_name": "最后一颗星"
+          },
+          {
+            "character_id": "DB1404_1010",
+            "cn_name": "意味最吉利的星星"
+          },
+          {
+            "character_id": "DB1404_0326",
+            "cn_name": "百"
+          },
+          {
+            "character_id": "DB1404_0325",
+            "cn_name": "十"
+          }
+        ]
+      },
+      {
+        "seq": 36,
+        "cn": "抖",
+        "old_wrong": "是",
+        "original": "36-original.jpeg",
+        "original_sha256": "341eae7f67f023f0769c537caceaebf0721c7734eba856e28652f33567089339",
+        "original_size": [
+          152,
+          160
+        ],
+        "image": "36.jpg",
+        "image_sha256": "03d883d90b59b51ceafc0530e05a2a1b26d2f9125aee3608bd41a7e7795d4e1b",
+        "sent_size": [
+          486,
+          512
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0058"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": 3,
+        "shortlist_has_correct": true,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 8141,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0052",
+            "cn_name": "立"
+          },
+          {
+            "character_id": "DB1404_0724",
+            "cn_name": "白族人"
+          },
+          {
+            "character_id": "DB1404_0654",
+            "cn_name": "胎儿"
+          },
+          {
+            "character_id": "DB1404_0620",
+            "cn_name": "蹲"
+          },
+          {
+            "character_id": "DB1404_0068",
+            "cn_name": "鬼"
+          }
+        ]
+      },
+      {
+        "seq": 37,
+        "cn": "爬",
+        "old_wrong": "是",
+        "original": "37-original.jpeg",
+        "original_sha256": "d3eeea228e2d7ce1a8ec5b3a6ffb26ac381e7aad1d22111b5b348399d43fdb97",
+        "original_size": [
+          200,
+          176
+        ],
+        "image": "37.jpg",
+        "image_sha256": "69f79dadedee942b71c65a97b8d0aa9c3ed26f74950d37b01db014e255dae4eb",
+        "sent_size": [
+          512,
+          451
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0059"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": null,
+        "shortlist_has_correct": false,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 7277,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0111",
+            "cn_name": "鬓"
+          }
+        ]
+      },
+      {
+        "seq": 38,
+        "cn": "懒",
+        "old_wrong": "是",
+        "original": "38-original.jpeg",
+        "original_sha256": "9cb2ce4eb114b88517e72cde650fab815adc09711816cd56a23465293b215de9",
+        "original_size": [
+          216,
+          184
+        ],
+        "image": "38.jpg",
+        "image_sha256": "a012fc8a35da92a34300b05aeef1229de53dad8d27e3cbd6682859f35131e471",
+        "sent_size": [
+          512,
+          436
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0060"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": null,
+        "shortlist_has_correct": false,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 8199,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0057",
+            "cn_name": "跌"
+          },
+          {
+            "character_id": "DB1404_0141",
+            "cn_name": "啊"
+          },
+          {
+            "character_id": "DB1404_1017",
+            "cn_name": "行星"
+          }
+        ]
+      },
+      {
+        "seq": 39,
+        "cn": "舞",
+        "old_wrong": "是",
+        "original": "39-original.jpeg",
+        "original_sha256": "e806db811c006621311f7ceb9a08f90795df0c9f94e3b6dac8a8648f12550ba9",
+        "original_size": [
+          172,
+          180
+        ],
+        "image": "39.jpg",
+        "image_sha256": "57d3602e927fa6c6eb0df48434f982d3ccf8e3bbf563963e077c6130a579d9a0",
+        "sent_size": [
+          489,
+          512
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0061"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": null,
+        "shortlist_has_correct": false,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 9339,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0095",
+            "cn_name": "右"
+          },
+          {
+            "character_id": "DB1404_0050",
+            "cn_name": "女"
+          },
+          {
+            "character_id": "DB1404_0068",
+            "cn_name": "鬼"
+          },
+          {
+            "character_id": "DB1404_0659",
+            "cn_name": "绝育"
+          },
+          {
+            "character_id": "DB1404_0660",
+            "cn_name": "枯"
+          }
+        ]
+      },
+      {
+        "seq": 40,
+        "cn": "举",
+        "old_wrong": "是",
+        "original": "40-original.jpeg",
+        "original_sha256": "1b6ed69d5839803445dcd8b3c1b4dbaa7c44919b04b3e9a60baa700a01a89c34",
+        "original_size": [
+          188,
+          184
+        ],
+        "image": "40.jpg",
+        "image_sha256": "d82a4e8b717b4df3f097a02e6f19a862ea75f27b83bfbee83bdf9fa7762baf0a",
+        "sent_size": [
+          512,
+          501
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0062"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": 149,
+        "shortlist_has_correct": true,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 10047,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0071",
+            "cn_name": "担"
+          },
+          {
+            "character_id": "DB1404_0632",
+            "cn_name": "丈量单位"
+          },
+          {
+            "character_id": "DB1404_0095",
+            "cn_name": "右"
+          },
+          {
+            "character_id": "DB1404_0801",
+            "cn_name": "拿起"
+          },
+          {
+            "character_id": "DB1404_0054",
+            "cn_name": "起"
+          }
+        ]
+      },
+      {
+        "seq": 41,
+        "cn": "得",
+        "old_wrong": "是",
+        "original": "41-original.jpeg",
+        "original_sha256": "6d7919b1623d55e7aa832481522e1ddac203de67581063ac447f8d7e070fd105",
+        "original_size": [
+          204,
+          204
+        ],
+        "image": "41.jpg",
+        "image_sha256": "ecfdc4ec91486139e6d61bc70afa48a710ddbf4a97b95b0385fd4fc4a23326c6",
+        "sent_size": [
+          512,
+          512
+        ],
+        "original_quality": "PASS",
+        "expected_ids": [
+          "DB1404_0063"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": 0,
+        "shortlist_has_correct": true,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 8215,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0063",
+            "cn_name": "得"
+          }
+        ]
+      },
+      {
+        "seq": 42,
+        "cn": "背",
+        "old_wrong": "是",
+        "original": "42-original.jpeg",
+        "original_sha256": "7a50f281ccd1a082807d6415d285952c871606f87f2cacc10b48ef0f7778d1b4",
+        "original_size": [
+          208,
+          200
+        ],
+        "image": "42.jpg",
+        "image_sha256": "dea5ed9c610779656dc7a346c8a2212cff115aa99931679325549687b5d74a74",
+        "sent_size": [
+          512,
+          492
+        ],
+        "original_quality": "PASS",
+        "expected_ids": [
+          "DB1404_0064"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": 0,
+        "shortlist_has_correct": true,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 6787,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0064",
+            "cn_name": "背"
+          }
+        ]
+      },
+      {
+        "seq": 43,
+        "cn": "怕",
+        "old_wrong": "是",
+        "original": "43-original.jpeg",
+        "original_sha256": "3004da78aa10c8136155c48634cd190a8abc997bd576d67aea20bbf2786c2244",
+        "original_size": [
+          220,
+          180
+        ],
+        "image": "43.jpg",
+        "image_sha256": "cd1103bd4d47bd7bb177e128f46f8043d053b6721f971c7c5b1edfdc31e08a71",
+        "sent_size": [
+          512,
+          419
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0065"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": null,
+        "shortlist_has_correct": false,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 8488,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0076",
+            "cn_name": "冷"
+          },
+          {
+            "character_id": "DB1404_1310",
+            "cn_name": "煎"
+          },
+          {
+            "character_id": "DB1404_0490",
+            "cn_name": "地之中央"
+          }
+        ]
+      },
+      {
+        "seq": 44,
+        "cn": "死",
+        "old_wrong": "是",
+        "original": "44-original.jpeg",
+        "original_sha256": "1c71b0095b39862d9901772376123497f1af431c817346151250f6153dbabb98",
+        "original_size": [
+          280,
+          152
+        ],
+        "image": "44.jpg",
+        "image_sha256": "39d957a8d5ca38406a1c394c8f5161a9ce50a148e0c5822308ad7a8a43e23de9",
+        "sent_size": [
+          512,
+          278
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0067"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": null,
+        "shortlist_has_correct": false,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 10437,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0760",
+            "cn_name": "塞"
+          }
+        ]
+      },
+      {
+        "seq": 45,
+        "cn": "鬼",
+        "old_wrong": "是",
+        "original": "45-original.jpeg",
+        "original_sha256": "5151d257e1758e15d10155257bbd77da0850f02bc1bfac79ea250b7e3e8bac6f",
+        "original_size": [
+          224,
+          244
+        ],
+        "image": "45.jpg",
+        "image_sha256": "e76577c52899d37323e7319b7c15e432093b45af0510e29dbb566d185683c3f8",
+        "sent_size": [
+          470,
+          512
+        ],
+        "original_quality": "PASS",
+        "expected_ids": [
+          "DB1404_0068"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": 122,
+        "shortlist_has_correct": true,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 10420,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0068",
+            "cn_name": "鬼"
+          }
+        ]
+      },
+      {
+        "seq": 46,
+        "cn": "躲",
+        "old_wrong": "是",
+        "original": "46-original.jpeg",
+        "original_sha256": "eed82b2adfd4d8cf0cd0ceb0b77f3de1d8b72a23b612b8df5e98fc3d7cb1c315",
+        "original_size": [
+          248,
+          216
+        ],
+        "image": "46.jpg",
+        "image_sha256": "4c2de482589755d2f2b3f5427b1218306ae062907a0adee897ceb2f60d938f18",
+        "sent_size": [
+          512,
+          446
+        ],
+        "original_quality": "PASS",
+        "expected_ids": [
+          "DB1404_0069"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": 30,
+        "shortlist_has_correct": true,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 9984,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0069",
+            "cn_name": "躲"
+          }
+        ]
+      },
+      {
+        "seq": 47,
+        "cn": "睡",
+        "old_wrong": "否",
+        "original": "47-original.jpeg",
+        "original_sha256": "92dc0ab0481057b4f3d57713b9ba0bee03d16b38e5d3d1061d3bc0c3f67ffd56",
+        "original_size": [
+          220,
+          180
+        ],
+        "image": "47.jpg",
+        "image_sha256": "21772dfdeb54c6e37310d69886183decbabf63fe4deca5087d02ff013ac9d776",
+        "sent_size": [
+          512,
+          419
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0070"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": null,
+        "shortlist_has_correct": false,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 11474,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0944",
+            "cn_name": "墨斗"
+          },
+          {
+            "character_id": "DB1404_1229",
+            "cn_name": "碓"
+          },
+          {
+            "character_id": "DB1404_0285",
+            "cn_name": "称量"
+          }
+        ]
+      },
+      {
+        "seq": 48,
+        "cn": "担",
+        "old_wrong": "是",
+        "original": "48-original.jpeg",
+        "original_sha256": "201af199cd74229a9a0e1e73db8f6346a8de00350c34269312b6f550578f0222",
+        "original_size": [
+          196,
+          192
+        ],
+        "image": "48.jpg",
+        "image_sha256": "6c70c21f84799bbcc6f0253dcf56d4480058f4e4c3cce0b9a4b56badb4f93ffc",
+        "sent_size": [
+          512,
+          502
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0071"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": 18,
+        "shortlist_has_correct": true,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 15295,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0071",
+            "cn_name": "担"
+          },
+          {
+            "character_id": "DB1404_0801",
+            "cn_name": "拿起"
+          },
+          {
+            "character_id": "DB1404_0770",
+            "cn_name": "大脖子"
+          },
+          {
+            "character_id": "DB1404_0095",
+            "cn_name": "右"
+          },
+          {
+            "character_id": "DB1404_0632",
+            "cn_name": "丈量单位"
+          }
+        ]
+      },
+      {
+        "seq": 49,
+        "cn": "抬",
+        "old_wrong": "是",
+        "original": "49-original.jpeg",
+        "original_sha256": "482a12bbcc14d156b50c00da6a4c45c332c68f73852de733f1d90348d92db67b",
+        "original_size": [
+          172,
+          200
+        ],
+        "image": "49.jpg",
+        "image_sha256": "5b6c4ea183d217df090279827bc23602fd5223eee0bef0f952a77852269ba618",
+        "sent_size": [
+          440,
+          512
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0072"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": null,
+        "shortlist_has_correct": false,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 10941,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0625",
+            "cn_name": "卖"
+          },
+          {
+            "character_id": "DB1404_0638",
+            "cn_name": "驱赶"
+          },
+          {
+            "character_id": "DB1404_0148",
+            "cn_name": "甜"
+          },
+          {
+            "character_id": "DB1404_0586",
+            "cn_name": "接"
+          },
+          {
+            "character_id": "DB1404_0707",
+            "cn_name": "引领"
+          }
+        ]
+      },
+      {
+        "seq": 50,
+        "cn": "靠",
+        "old_wrong": "是",
+        "original": "50-original.jpeg",
+        "original_sha256": "b6987a639dd63b16e5123c34d51dcac2f9156e5dcbbd668b92a30505427eebb0",
+        "original_size": [
+          136,
+          168
+        ],
+        "image": "50.jpg",
+        "image_sha256": "4b7a6767771e2a34c97b00ae13fdbf3e7987a2e3d0dd8de77643098fb619fc8b",
+        "sent_size": [
+          414,
+          512
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0073"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": null,
+        "shortlist_has_correct": false,
+        "status": "NEED_USER_CONFIRM",
+        "latency_ms": 8089,
+        "model_version": "doubao-seed-2-1-turbo-260628",
+        "candidates": [
+          {
+            "character_id": "DB1404_0294",
+            "cn_name": "开门"
+          }
+        ]
+      }
+    ],
+    "summary": {
+      "total": 50,
+      "top1": 19,
+      "top5": 22,
+      "errors": 0,
+      "unknown": 0,
+      "shortlist_recall": 30,
+      "dictionary_coverage": 50,
+      "original_quality": {
+        "IMAGE_TOO_SMALL": 46,
+        "PASS": 4
+      }
+    },
+    "finished_at": "2026-10-08T03:41:08.465900+00:00"
+  },
+  "analysis": {
+    "total": 50,
+    "top1": 19,
+    "top5": 22,
+    "errors": 0,
+    "unknown": 0,
+    "shortlist_miss": [
+      {
+        "seq": 1,
+        "cn": "天"
+      },
+      {
+        "seq": 3,
+        "cn": "月"
+      },
+      {
+        "seq": 4,
+        "cn": "星"
+      },
+      {
+        "seq": 5,
+        "cn": "云"
+      },
+      {
+        "seq": 7,
+        "cn": "雪"
+      },
+      {
+        "seq": 12,
+        "cn": "亮"
+      },
+      {
+        "seq": 17,
+        "cn": "水"
+      },
+      {
+        "seq": 19,
+        "cn": "石"
+      },
+      {
+        "seq": 20,
+        "cn": "树"
+      },
+      {
+        "seq": 25,
+        "cn": "叶"
+      },
+      {
+        "seq": 26,
+        "cn": "菌"
+      },
+      {
+        "seq": 35,
+        "cn": "跌"
+      },
+      {
+        "seq": 37,
+        "cn": "爬"
+      },
+      {
+        "seq": 38,
+        "cn": "懒"
+      },
+      {
+        "seq": 39,
+        "cn": "舞"
+      },
+      {
+        "seq": 43,
+        "cn": "怕"
+      },
+      {
+        "seq": 44,
+        "cn": "死"
+      },
+      {
+        "seq": 47,
+        "cn": "睡"
+      },
+      {
+        "seq": 49,
+        "cn": "抬"
+      },
+      {
+        "seq": 50,
+        "cn": "靠"
+      }
+    ],
+    "in_shortlist_top1_miss": [
+      {
+        "seq": 14,
+        "cn": "电",
+        "candidates": [
+          "打虎机",
+          "电",
+          "塞"
+        ]
+      },
+      {
+        "seq": 15,
+        "cn": "冰",
+        "candidates": [
+          "竖起刺箭",
+          "冰",
+          "责任",
+          "烟",
+          "热"
+        ]
+      },
+      {
+        "seq": 16,
+        "cn": "深",
+        "candidates": [
+          "山洪",
+          "米",
+          "煨茶",
+          "沟",
+          "晒"
+        ]
+      },
+      {
+        "seq": 22,
+        "cn": "草",
+        "candidates": [
+          "雨",
+          "雹",
+          "火化场",
+          "竖起刺箭"
+        ]
+      },
+      {
+        "seq": 27,
+        "cn": "人",
+        "candidates": [
+          "父族",
+          "枯",
+          "口舌是非",
+          "男",
+          "胎儿"
+        ]
+      },
+      {
+        "seq": 31,
+        "cn": "坐",
+        "candidates": [
+          "客",
+          "戴帽",
+          "人",
+          "口舌是非",
+          "担"
+        ]
+      },
+      {
+        "seq": 32,
+        "cn": "起",
+        "candidates": [
+          "蹲",
+          "起",
+          "抖",
+          "右",
+          "拿起"
+        ]
+      },
+      {
+        "seq": 33,
+        "cn": "跪",
+        "candidates": [
+          "蹲",
+          "右",
+          "接",
+          "人",
+          "捞"
+        ]
+      },
+      {
+        "seq": 34,
+        "cn": "求",
+        "candidates": [
+          "哥哥",
+          "接",
+          "劝架"
+        ]
+      },
+      {
+        "seq": 36,
+        "cn": "抖",
+        "candidates": [
+          "立",
+          "白族人",
+          "胎儿",
+          "蹲",
+          "鬼"
+        ]
+      },
+      {
+        "seq": 40,
+        "cn": "举",
+        "candidates": [
+          "担",
+          "丈量单位",
+          "右",
+          "拿起",
+          "起"
+        ]
+      }
+    ],
+    "in_shortlist_top5_miss": [
+      {
+        "seq": 16,
+        "cn": "深",
+        "candidates": [
+          "山洪",
+          "米",
+          "煨茶",
+          "沟",
+          "晒"
+        ]
+      },
+      {
+        "seq": 22,
+        "cn": "草",
+        "candidates": [
+          "雨",
+          "雹",
+          "火化场",
+          "竖起刺箭"
+        ]
+      },
+      {
+        "seq": 27,
+        "cn": "人",
+        "candidates": [
+          "父族",
+          "枯",
+          "口舌是非",
+          "男",
+          "胎儿"
+        ]
+      },
+      {
+        "seq": 31,
+        "cn": "坐",
+        "candidates": [
+          "客",
+          "戴帽",
+          "人",
+          "口舌是非",
+          "担"
+        ]
+      },
+      {
+        "seq": 33,
+        "cn": "跪",
+        "candidates": [
+          "蹲",
+          "右",
+          "接",
+          "人",
+          "捞"
+        ]
+      },
+      {
+        "seq": 34,
+        "cn": "求",
+        "candidates": [
+          "哥哥",
+          "接",
+          "劝架"
+        ]
+      },
+      {
+        "seq": 36,
+        "cn": "抖",
+        "candidates": [
+          "立",
+          "白族人",
+          "胎儿",
+          "蹲",
+          "鬼"
+        ]
+      },
+      {
+        "seq": 40,
+        "cn": "举",
+        "candidates": [
+          "担",
+          "丈量单位",
+          "右",
+          "拿起",
+          "起"
+        ]
+      }
+    ],
+    "latency_ms": {
+      "mean": 9293,
+      "median": 9162.5,
+      "p95_nearest_rank": 13044,
+      "max": 15295
+    },
+    "both_top1": 17,
+    "newly_top1": [
+      {
+        "seq": 6,
+        "cn": "雨"
+      },
+      {
+        "seq": 9,
+        "cn": "山"
+      }
+    ],
+    "lost_top1": [
+      {
+        "seq": 14,
+        "cn": "电"
+      },
+      {
+        "seq": 15,
+        "cn": "冰"
+      },
+      {
+        "seq": 16,
+        "cn": "深"
+      },
+      {
+        "seq": 33,
+        "cn": "跪"
+      },
+      {
+        "seq": 34,
+        "cn": "求"
+      }
+    ]
+  },
+  "raw_results_sha256": "bc99ea8fbd3620baeab540cea96368b19072666add42d8fcc40e875f6b2f0b08"
+}

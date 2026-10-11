@@ -11,6 +11,7 @@ from sqlalchemy.orm import Session
 from backend.app.config import Settings
 from backend.app.errors import ApiError
 from backend.app.provider_factory import create_provider
+from backend.app.provider_status import RecognitionServiceStatus, describe_provider
 
 from .business.models import Setting
 
@@ -23,6 +24,29 @@ IMAGE_FIELDS = (
     "image_provider_size",
     "image_provider_quality",
 )
+
+
+class SystemConfigPublic(BaseModel):
+    provider_name: str
+    provider_endpoint: str
+    provider_model: str
+    provider_timeout_seconds: float
+    provider_api_key_configured: bool
+    local_model_version: str
+    local_model_threads: int
+    recognition_service: RecognitionServiceStatus
+    image_provider_name: str
+    image_provider_endpoint: str
+    image_provider_model: str
+    image_provider_timeout_seconds: float
+    image_provider_size: str
+    image_provider_quality: str
+    image_provider_api_key_configured: bool
+    key_editable: bool
+    map_web_key: str
+    map_center_longitude: float
+    map_center_latitude: float
+    map_default_zoom: int
 
 
 class SystemConfigUpdate(BaseModel):
@@ -38,7 +62,7 @@ class SystemConfigUpdate(BaseModel):
     provider_endpoint: str = Field(max_length=500)
     provider_model: str = Field(max_length=160)
     provider_timeout_seconds: float = Field(gt=0, le=60)
-    provider_api_key: str = Field(default="", max_length=4096)
+    provider_api_key: str = Field(default="", max_length=4096, repr=False)
     clear_provider_api_key: bool = False
     map_web_key: str = Field(max_length=256)
     map_center_longitude: float = Field(default=100.235, ge=73, le=135)
@@ -55,9 +79,21 @@ class SystemConfigUpdate(BaseModel):
     @field_validator("provider_name")
     @classmethod
     def valid_provider(cls, value: str) -> str:
-        if value.strip().lower() not in {"unconfigured", "ark", "volcengine", "volcengine-ark"}:
+        if value.strip().lower() not in {
+            "unconfigured",
+            "local",
+            "db1404-local",
+            "ark",
+            "volcengine",
+            "volcengine-ark",
+        }:
             raise ValueError("Unsupported provider")
-        return value.strip().lower()
+        name = value.strip().lower()
+        return {
+            "local": "db1404-local",
+            "ark": "volcengine-ark",
+            "volcengine": "volcengine-ark",
+        }.get(name, name)
 
     @field_validator("provider_endpoint")
     @classmethod
@@ -141,7 +177,11 @@ def effective(session: Session, settings: Settings) -> Settings:
         )
         if key in data
     }
-    if data.get("encrypted_api_key"):
+    name = override.get("provider_name", settings.provider_name).strip().lower()
+    if name in {"local", "db1404-local", "unconfigured"}:
+        # The retained external key is unrelated to local inference (D-088).
+        override["provider_api_key"] = None
+    elif data.get("encrypted_api_key"):
         try:
             override["provider_api_key"] = SecretStr(
                 cipher(settings).decrypt(data["encrypted_api_key"].encode()).decode()
@@ -159,18 +199,24 @@ def public_config(session: Session, settings: Settings) -> dict:
     data = stored(session)
     active = effective(session, settings)
     image = image_effective(session, settings)
+    provider = create_provider(active)
     return {
         **{key: getattr(image, key) for key in IMAGE_FIELDS},
         "image_provider_api_key_configured": bool(
             image.image_provider_api_key and image.image_provider_api_key.get_secret_value()
         ),
-        "provider_name": active.provider_name,
+        "provider_name": provider.name,
         "provider_endpoint": active.provider_endpoint,
         "provider_model": active.provider_model,
         "provider_timeout_seconds": active.provider_timeout_seconds,
-        "provider_api_key_configured": bool(
-            active.provider_api_key and active.provider_api_key.get_secret_value()
+        "provider_api_key_configured": bool(data.get("encrypted_api_key"))
+        or (
+            not data.get("clear_provider_api_key")
+            and bool(settings.provider_api_key and settings.provider_api_key.get_secret_value())
         ),
+        "local_model_version": settings.local_model_version,
+        "local_model_threads": settings.local_model_threads,
+        "recognition_service": describe_provider(provider, active).model_dump(),
         "key_editable": bool(settings.system_config_encryption_key),
         "map_web_key": data.get("map_web_key", ""),
         "map_center_longitude": data.get("map_center_longitude", 100.235),

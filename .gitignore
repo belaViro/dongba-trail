@@ -6,6 +6,7 @@
 !**/.env.example
 /.venv/
 /runtime/
+/.deploy-local/
 /*.docx
 __pycache__/
 *.py[cod]
@@ -19,7 +20,20 @@ coverage/
 miniprogram/project.private.config.json
 
 # Local source datasets and deployment snapshots are not repository artifacts
-/数据集/
+/东巴字图片_按中文含义命名/
+/数据集/*
+!/数据集/东巴字模型训练/
+/数据集/东巴字模型训练/*
+!/数据集/东巴字模型训练/src/
+!/数据集/东巴字模型训练/tests/
+!/数据集/东巴字模型训练/tools/
+!/数据集/东巴字模型训练/configs/
+!/数据集/东巴字模型训练/README.md
+!/数据集/东巴字模型训练/requirements.txt
+!/数据集/东巴字模型训练/start-training.ps1
+!/数据集/东巴字模型训练/start-training-threads8.ps1
+!/数据集/东巴字模型训练/stop-training.ps1
+!/数据集/东巴字模型训练/stop-training-threads8.ps1
 /tmp-web-prev/
 /*.rar
 /*.zip

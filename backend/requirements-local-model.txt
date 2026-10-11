@@ -1,0 +1,4 @@
+# Install after requirements.txt when DONGBA_PROVIDER_NAME=db1404-local.
+# This index selects the CPU-only wheel; no CUDA runtime is required.
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.8.0+cpu

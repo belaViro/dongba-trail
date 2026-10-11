@@ -1,19 +1,27 @@
 """Runtime configuration uses synthetic credentials and a disposable database only."""
 
 from io import BytesIO
+from uuid import uuid4
 
+import pytest
 from cryptography.fernet import Fernet
 from PIL import Image
 from pydantic import SecretStr
 
-from backend.app.business.models import Audit, Setting
+from backend.app.business.models import Audit, RecognitionRecord, Setting
 from backend.app.main import create_app
 from backend.app.schemas import ProviderResult
-from backend.app.system_config import CONFIG_KEY
+from backend.app.system_config import CONFIG_KEY, SystemConfigUpdate
 from backend.app.volcengine_provider import VolcengineArkProvider
 from backend.tests import test_business_api
 
 context = test_business_api.context
+
+
+def service(context):
+    response = context.client.get("/api/v1/admin/provider", headers=context.admin)
+    assert response.status_code == 200, response.text
+    return response.json()
 
 
 def payload(**updates):
@@ -154,3 +162,182 @@ def test_invalid_endpoint_and_missing_encryption_key(context):
             ).status_code
             == 422
         )
+
+
+@pytest.mark.parametrize(
+    ("alias", "name"),
+    [(" LOCAL ", "db1404-local"), ("Ark", "volcengine-ark"), ("volcengine", "volcengine-ark")],
+)
+def test_provider_aliases_are_canonical(alias, name):
+    assert SystemConfigUpdate(**payload(provider_name=alias)).provider_name == name
+
+
+def test_local_config_preserves_ark_and_reports_actual_identity(context, tmp_path, monkeypatch):
+    settings = context.app.state.settings
+    settings.system_config_encryption_key = SecretStr(Fernet.generate_key().decode())
+    settings.local_model_path = tmp_path / "missing-model.pt"
+    settings.local_model_version = "fixture-local-v2"
+    settings.local_model_threads = 1
+    path = "/api/v1/admin/system-config"
+
+    async def forbidden(*args, **kwargs):
+        pytest.fail("Status/config/local recognition must not call Ark")
+
+    monkeypatch.setattr(VolcengineArkProvider, "recognize", forbidden)
+    assert (
+        context.client.put(
+            path, headers=context.admin, json=payload(provider_api_key="fixture-ark-key")
+        ).status_code
+        == 200
+    )
+    external = service(context)
+    assert external["status"] == "configured"  # Configuration, not a network probe.
+    assert external["model"] == "fixture-vision-model"
+
+    result = context.client.put(path, headers=context.admin, json=payload(provider_name="local"))
+    assert result.status_code == 200, result.text
+    value = result.json()
+    assert value["provider_name"] == "db1404-local"
+    assert value["provider_model"] == "fixture-vision-model"  # Reserved Ark settings.
+    assert value["provider_api_key_configured"]
+    assert value["local_model_version"] == "fixture-local-v2"
+    assert value["local_model_threads"] == 1
+    local = service(context)
+    assert value["recognition_service"] == {key: local[key] for key in value["recognition_service"]}
+    assert local["name"] == "db1404-local"
+    assert local["model"] == "fixture-local-v2"
+    assert local["kind"] == "local"
+    assert local["status"] == "unavailable"
+    assert not local["configured"]
+    assert local["endpoint_configured"] is None
+    assert local["timeout_seconds"] == 20
+    assert local["cpu_threads"] == 1
+    assert not local["automatic_fallback"]
+    assert not local["calibrated_confidence"]
+    assert context.client.get("/ready").json()["provider_configured"] is False
+
+    # Quality/input failures must not be recorded as the reserved Ark model either.
+    response = context.client.post(
+        "/api/v1/recognize",
+        headers=context.admin,
+        files={"image": ("bad.png", b"bad", "image/png")},
+    )
+    assert response.status_code == 400
+    with context.app.state.database.session() as session:
+        record = session.get(RecognitionRecord, response.json()["request_id"])
+        assert record.provider == "db1404-local"
+        assert record.model == "fixture-local-v2"
+
+    assert context.client.put(path, headers=context.admin, json=payload()).status_code == 200
+    assert service(context)["configured"]  # Retained encrypted key used again.
+
+
+def test_local_runtime_is_independent_of_unreadable_reserved_ark_key(context, tmp_path):
+    context.app.state.settings.local_model_path = tmp_path / "missing.pt"
+    with context.app.state.database.write() as session:
+        session.add(
+            Setting(
+                key=CONFIG_KEY,
+                value={
+                    **payload(provider_name="db1404-local"),
+                    "encrypted_api_key": "fixture-invalid-ciphertext",
+                },
+            )
+        )
+    assert service(context)["status"] == "unavailable"
+    response = context.client.get("/api/v1/admin/system-config", headers=context.admin)
+    assert response.status_code == 200
+    assert response.json()["provider_api_key_configured"]  # Stored, not validated or exposed.
+    response = context.client.put(
+        "/api/v1/admin/system-config", headers=context.admin, json=payload()
+    )
+    assert response.status_code == 503  # Switching to Ark still requires a readable key.
+    assert service(context)["name"] == "db1404-local"  # Failed update rolled back.
+
+
+def test_provider_statistics_only_include_active_provider_and_model(context):
+    response = context.client.put(
+        "/api/v1/admin/system-config", headers=context.admin, json=payload()
+    )
+    assert response.status_code == 200
+    user, _ = context.actor()
+
+    def record(provider="volcengine-ark", model="fixture-vision-model", latency=1, error=None):
+        context.app.state.database.record_recognition(
+            request_id=str(uuid4()),
+            user_id=user["id"],
+            status="FAILED" if error else "UNKNOWN",
+            provider=provider,
+            model=model,
+            candidates=[],
+            latency_ms=latency,
+            error_code=error,
+        )
+
+    for latency in range(1, 21):
+        record(latency=latency)
+    record(latency=10000, error="PROVIDER_TIMEOUT")
+    record(provider="db1404-local", latency=99000)
+    record(model="old-ark-model", latency=88000)
+    status = service(context)
+    assert status["recent_requests"] == 21
+    assert status["recent_errors"] == 1
+    assert status["p95_latency_ms"] == 19
+    assert status["statistics_scope"] == "current_provider_and_model"
+    assert status["statistics_limit"] == 1000
+    _, merchant = context.actor("merchant", context.merchant()["id"])
+    assert context.client.get("/api/v1/admin/provider").status_code == 401
+    assert context.client.get("/api/v1/admin/provider", headers=merchant).status_code == 403
+
+
+def test_local_loaded_status_and_unavailable_recognition_never_falls_back(
+    context, tmp_path, monkeypatch
+):
+    from backend.tests.test_local_glyph_provider import artifact
+
+    path, digest = artifact(tmp_path)
+    settings = context.app.state.settings
+    settings.local_model_path = path
+    settings.local_model_sha256 = digest
+    settings.local_model_version = "fixture-http-local"
+    settings.quality_checks_enabled = False
+    context.character()
+
+    async def forbidden(*args, **kwargs):
+        pytest.fail("Local failure must not fall back to Ark")
+
+    monkeypatch.setattr(VolcengineArkProvider, "recognize", forbidden)
+    result = context.client.put(
+        "/api/v1/admin/system-config",
+        headers=context.admin,
+        json=payload(provider_name="db1404-local"),
+    )
+    assert result.status_code == 200, result.text
+    assert result.json()["recognition_service"]["status"] == "ready"
+    assert service(context)["configured"]
+    assert service(context)["model"] == "fixture-http-local"
+    assert context.client.get("/ready").json()["provider_configured"]
+    picture = BytesIO()
+    Image.new("RGB", (256, 256), "white").save(picture, format="PNG")
+    path.write_bytes(b"corrupted fixture model after status check")
+    assert service(context)["status"] == "unavailable"
+    result = context.client.post(
+        "/api/v1/recognize",
+        headers=context.admin,
+        files={"image": ("fixture.png", picture.getvalue(), "image/png")},
+    )
+    assert result.status_code == 503
+    with context.app.state.database.session() as session:
+        record = session.get(RecognitionRecord, result.json()["request_id"])
+        assert record.model == "fixture-http-local"
+        assert record.error_code == "PROVIDER_NOT_CONFIGURED"
+    assert service(context)["recent_errors"] == 1
+    result = context.client.put(
+        "/api/v1/admin/system-config",
+        headers=context.admin,
+        json=payload(provider_name="unconfigured"),
+    )
+    assert result.status_code == 200
+    assert service(context)["model"] == ""
+    assert service(context)["status"] == "unconfigured"
+    assert service(context)["p95_latency_ms"] is None

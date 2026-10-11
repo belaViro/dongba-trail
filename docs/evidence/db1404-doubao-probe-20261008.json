@@ -1,0 +1,104 @@
+{
+  "evaluation": {
+    "started_at": "2026-10-08T03:19:54.726519+00:00",
+    "complete": false,
+    "workbook_sha256": "b71067e68524f506367985eb5853d7c196b4529ab5c8f3f8bf5cef8bb1ba7e94",
+    "manifest_sha256": "0b6d2ebdfb38e2f891419c12cdb811aece64769783fb8aafa3fbb750a2198a66",
+    "provider": "volcengine-ark",
+    "model": "doubao-seed-2-1-turbo-260628",
+    "rag_enabled": false,
+    "provider_timeout_seconds": 60.0,
+    "published": 1403,
+    "planned_cases": 50,
+    "max_references": 200,
+    "quality_min_edge": 200,
+    "code_sha256": {
+      "backend/app/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "backend/app/business/__init__.py": "9a84eec6eefa949202e3ce801eb86c2be385119ec2cf6adb406e76e267f2a620",
+      "backend/app/business/api.py": "ab7c835b92d950d6955780ccab2808a7434366a902ba6b766a24fa642224108d",
+      "backend/app/business/auth.py": "528c95f036db1c02d8a2980927a41e25176bedf0f1fc74f7c95124eda2e1078e",
+      "backend/app/business/content.py": "52ff49af6ff8b5993c1763acc634e9265df8c121ed7110ec6dc962aca54b270c",
+      "backend/app/business/database.py": "cf32f8977a26318a08f78b1c72dcf46c41378673ec73b3c31894e6e76a1e061e",
+      "backend/app/business/exports.py": "87a2f70d8827e6bb705531eae15ecb918ffedaf421f05bd09bcd48df821787d4",
+      "backend/app/business/models.py": "d8abbd200daeaa5a235652940d13795007022928f94a09f84c644ec782bf551b",
+      "backend/app/business/samples.py": "0b19869e6378cdb439a182bffa27170b7922290374d9b3f60791ff7ae9abf695",
+      "backend/app/business/schemas.py": "1dfee323b6db92b751b9aa6847132d392e92da47bec179912c1ff2a6fbd98e89",
+      "backend/app/business/workflows.py": "f4afa56df5ea6d0d73ba981e7166ca3f056978b4d06a7d16639f035e532f26b6",
+      "backend/app/config.py": "d0862a23fb7f5765aff862853098f6c3653f4e1f7ac8a6fd67318e3f035b7114",
+      "backend/app/dictionary.py": "72b990e359e08e436c1f3c79e395400a7981b7847ca987893a812b32f6db9db7",
+      "backend/app/errors.py": "6f9bb68245444046cee4834be9a77a1eecb4018613475d5a9a6837643bf60f8e",
+      "backend/app/glyph_refs.py": "7629645c28aa22c4c15e933509dedb8ec60b4b76d63a1a2610aa082fb45be220",
+      "backend/app/guards.py": "4d13dd0886c12d6b3fc3df7074010e71c0604439a4ac1c0b0f71b81288f2a7f8",
+      "backend/app/image_provider.py": "145ccbdeca06576b5240076391c233e254bf8c00f221a03adb09c9638d967387",
+      "backend/app/main.py": "5af3cc110b86e9d5999e82c718d9357dbc783c3bb9a9bb8f6fd4fa29b1754234",
+      "backend/app/maintenance.py": "edeb6526ce7ba8ede2cf65c1cbd727ee923dc8540a9a8757558268be8b442bed",
+      "backend/app/media.py": "b0271c10645a6cea22fba3fcce5394983dbd67d18f0aa397454e7dc624870eb5",
+      "backend/app/poster_art.py": "8f12f9aae8bf21ed29fc00bfae76ecb96e598ec5316d32ef13022c4e92d98c4c",
+      "backend/app/poster_jobs.py": "edc9c7ca37820271ea9e70224565e17f29687ca51647bccc476202dc850a8707",
+      "backend/app/provider_factory.py": "e5e943a51ebc2df00eb80bf5a87230a5f64347a13e41e717d9d3884451e91677",
+      "backend/app/providers.py": "b3387febb3fe6afe21cc6bfd628985177c45954074cea4ef60bbae4045c8a1ca",
+      "backend/app/rag.py": "982a2015235f719aef311d96c038b3246c3113806129e2d63bccf1b60f34e1de",
+      "backend/app/rag_database.py": "3ec041a22bff3e8dadded050e1f40910839c1295336d7cfd9611ce817c5ef805",
+      "backend/app/rag_models.py": "f1435f4b776275368670637995046152bf3577845bb00d9018b74c1c3ad2d158",
+      "backend/app/recognition.py": "8a9f694eaa983fe3822d1040176fd56314f3ea81e7dea516d5b1e1bfd070a0e5",
+      "backend/app/schemas.py": "4b6fccb7c4cb4cfab3920e3b42449190870e6aa913e8a054be0684b3f814e4a6",
+      "backend/app/system_config.py": "c9a27f49cdaf6f3dd5e8a9f027091359fea5248db95a8acded13f5012f258784",
+      "backend/app/volcengine_provider.py": "0eb8bf94fb335d59faf70b8462d497b103af16c7fdaf2a8eef8c3a7bdea52a8e"
+    },
+    "evaluator_sha256": "3494a831c3145a7432c8c3abc00b3363b547154922e54ab87b803bc2c0b5afa3",
+    "billing_cost": null,
+    "billing_note": "adapter does not expose billed usage",
+    "cases": [
+      {
+        "seq": 1,
+        "cn": "天",
+        "old_wrong": "否",
+        "original": "01-original.jpeg",
+        "original_sha256": "6158afd64d911a2933377dcbb9ae470f0646829561a32e123d224446fef058af",
+        "original_size": [
+          179,
+          95
+        ],
+        "image": "01.jpg",
+        "image_sha256": "74c088c522c58bca08432dc8ec6768b7d557195380f52939c6a3c7e622d416d9",
+        "sent_size": [
+          512,
+          272
+        ],
+        "original_quality": "IMAGE_TOO_SMALL",
+        "expected_ids": [
+          "DB1404_0001"
+        ],
+        "reference_count": 200,
+        "shortlist_rank_0based": null,
+        "shortlist_has_correct": false,
+        "status": "ERROR",
+        "error_type": "ApiError",
+        "error_code": "PROVIDER_UNAVAILABLE"
+      }
+    ],
+    "summary": {
+      "total": 1,
+      "top1": 0,
+      "top5": 0,
+      "errors": 1,
+      "unknown": 0,
+      "shortlist_recall": 0,
+      "dictionary_coverage": 1,
+      "original_quality": {
+        "IMAGE_TOO_SMALL": 1
+      }
+    },
+    "stopped_reason": "first_probe_failed",
+    "finished_at": "2026-10-08T03:20:07.576600+00:00"
+  },
+  "upstream_error_counts": [
+    {
+      "http_status": 404,
+      "code": "ModelNotOpen",
+      "count": 1
+    }
+  ],
+  "raw_results_sha256": "27bfbc518e16e0df31bc3976035d98aa0964865b99b85560801a811bc1651763",
+  "interpretation": "Model accuracy unavailable; 1 failed probe, remaining 49 not attempted. Not 0% accuracy."
+}

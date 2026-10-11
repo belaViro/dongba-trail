@@ -1,0 +1,3516 @@
+{
+  "scope": "local shortlist recall only; no external model call and no camera accuracy claim",
+  "target_folder": "东巴字图片_按中文含义命名",
+  "target_folder_sha256": "dd6414457ae1eeeb913afa19502f941e0afb3fa5d8dea1775117e6b937350676",
+  "query_long_edge": 512,
+  "index_sha256": "7907194cd061fc8e0f2933e2e89008fc473f03ee3e2a91f9f6ddbad9e8b03515",
+  "index_stats": {
+    "class_count": 1404,
+    "sample_count": 445272,
+    "prototype_count": 11232,
+    "unreadable_count": 0,
+    "elapsed_seconds": 184.84
+  },
+  "case_count": 50,
+  "exact_duplicate_cases": 0,
+  "same_feature_cases": 0,
+  "summary": {
+    "primary": {
+      "top_1": 7,
+      "top_5": 14,
+      "top_20": 17,
+      "top_50": 21,
+      "top_100": 26,
+      "top_200": 34,
+      "top_500": 40,
+      "mean_ms": 87.765,
+      "max_ms": 173.842
+    },
+    "primary_variant": {
+      "top_1": 6,
+      "top_5": 12,
+      "top_20": 17,
+      "top_50": 22,
+      "top_100": 26,
+      "top_200": 36,
+      "top_500": 41,
+      "mean_ms": 175.558,
+      "max_ms": 285.515
+    },
+    "multi_prototype": {
+      "top_1": 10,
+      "top_5": 18,
+      "top_20": 24,
+      "top_50": 34,
+      "top_100": 38,
+      "top_200": 42,
+      "top_500": 46,
+      "mean_ms": 680.803,
+      "max_ms": 1084.937
+    },
+    "multi_prototype_leave_exact_out": {
+      "top_1": 10,
+      "top_5": 18,
+      "top_20": 24,
+      "top_50": 34,
+      "top_100": 38,
+      "top_200": 42,
+      "top_500": 46,
+      "mean_ms": 687.527,
+      "max_ms": 1146.3
+    }
+  },
+  "cases": [
+    {
+      "name": "举",
+      "file": "举.jpg",
+      "sha256": "1b6ed69d5839803445dcd8b3c1b4dbaa7c44919b04b3e9a60baa700a01a89c34",
+      "expected_ids": [
+        "DB1404_0062"
+      ],
+      "query_size": [
+        512,
+        501
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 151,
+          "nearest_expected_source": "0062/0062+230.jpg",
+          "nearest_expected_distance": 12699,
+          "top_ids": [
+            "DB1404_0800",
+            "DB1404_1170",
+            "DB1404_0651",
+            "DB1404_1051",
+            "DB1404_0806"
+          ],
+          "elapsed_ms": 117.273
+        },
+        "primary_variant": {
+          "rank": 181,
+          "nearest_expected_source": "0062/0062+230.jpg",
+          "nearest_expected_distance": 12699,
+          "top_ids": [
+            "DB1404_0800",
+            "DB1404_0095",
+            "DB1404_1170",
+            "DB1404_0651",
+            "DB1404_1051"
+          ],
+          "elapsed_ms": 235.785
+        },
+        "multi_prototype": {
+          "rank": null,
+          "nearest_expected_source": null,
+          "nearest_expected_distance": null,
+          "top_ids": [
+            "DB1404_0308",
+            "DB1404_0830",
+            "DB1404_1042",
+            "DB1404_1051",
+            "DB1404_1084"
+          ],
+          "elapsed_ms": 799.499
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": null,
+          "nearest_expected_source": null,
+          "nearest_expected_distance": null,
+          "top_ids": [
+            "DB1404_0308",
+            "DB1404_0830",
+            "DB1404_1042",
+            "DB1404_1051",
+            "DB1404_1084"
+          ],
+          "elapsed_ms": 731.218
+        }
+      }
+    },
+    {
+      "name": "云",
+      "file": "云.jpg",
+      "sha256": "7a5a6adb8296efe01530748d23eb53cfff1c92fdb0d3553a5e04c0eb1bf4a757",
+      "expected_ids": [
+        "DB1404_0005"
+      ],
+      "query_size": [
+        512,
+        324
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 103,
+          "nearest_expected_source": "0005/0005+631.jpg",
+          "nearest_expected_distance": 7153,
+          "top_ids": [
+            "DB1404_0939",
+            "DB1404_1211",
+            "DB1404_1391",
+            "DB1404_1327",
+            "DB1404_0143"
+          ],
+          "elapsed_ms": 77.279
+        },
+        "primary_variant": {
+          "rank": 94,
+          "nearest_expected_source": "0005/0005+577.jpg",
+          "nearest_expected_distance": 6421,
+          "top_ids": [
+            "DB1404_0593",
+            "DB1404_0939",
+            "DB1404_1199",
+            "DB1404_0264",
+            "DB1404_0983"
+          ],
+          "elapsed_ms": 183.536
+        },
+        "multi_prototype": {
+          "rank": 38,
+          "nearest_expected_source": "0005/0005+321.jpg",
+          "nearest_expected_distance": 6004,
+          "top_ids": [
+            "DB1404_1216",
+            "DB1404_1266",
+            "DB1404_0227",
+            "DB1404_0939",
+            "DB1404_0470"
+          ],
+          "elapsed_ms": 707.522
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 38,
+          "nearest_expected_source": "0005/0005+321.jpg",
+          "nearest_expected_distance": 6004,
+          "top_ids": [
+            "DB1404_1216",
+            "DB1404_1266",
+            "DB1404_0227",
+            "DB1404_0939",
+            "DB1404_0470"
+          ],
+          "elapsed_ms": 573.869
+        }
+      }
+    },
+    {
+      "name": "亮",
+      "file": "亮.jpg",
+      "sha256": "0169e3a068ddf6debc13b327dce5b7bb172daefeacca31d956620615b25c9469",
+      "expected_ids": [
+        "DB1404_0012"
+      ],
+      "query_size": [
+        512,
+        499
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 264,
+          "nearest_expected_source": "0012/0012+509.jpg",
+          "nearest_expected_distance": 6976,
+          "top_ids": [
+            "DB1404_1328",
+            "DB1404_0013",
+            "DB1404_1146",
+            "DB1404_0127",
+            "DB1404_1327"
+          ],
+          "elapsed_ms": 83.623
+        },
+        "primary_variant": {
+          "rank": 283,
+          "nearest_expected_source": "0012/0012+509.jpg",
+          "nearest_expected_distance": 6976,
+          "top_ids": [
+            "DB1404_1328",
+            "DB1404_0013",
+            "DB1404_1146",
+            "DB1404_0127",
+            "DB1404_1327"
+          ],
+          "elapsed_ms": 185.793
+        },
+        "multi_prototype": {
+          "rank": 44,
+          "nearest_expected_source": "0012/0012+259.jpg",
+          "nearest_expected_distance": 5799,
+          "top_ids": [
+            "DB1404_0013",
+            "DB1404_0127",
+            "DB1404_1146",
+            "DB1404_0128",
+            "DB1404_0890"
+          ],
+          "elapsed_ms": 711.425
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 44,
+          "nearest_expected_source": "0012/0012+259.jpg",
+          "nearest_expected_distance": 5799,
+          "top_ids": [
+            "DB1404_0013",
+            "DB1404_0127",
+            "DB1404_1146",
+            "DB1404_0128",
+            "DB1404_0890"
+          ],
+          "elapsed_ms": 729.09
+        }
+      }
+    },
+    {
+      "name": "人",
+      "file": "人.jpg",
+      "sha256": "bac6d4c7bd5edcea9e064caffd37fcd9a4cc6007a3603a28595c0e059a9d9e84",
+      "expected_ids": [
+        "DB1404_0048"
+      ],
+      "query_size": [
+        512,
+        458
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 51,
+          "nearest_expected_source": "0048/0048+301.jpg",
+          "nearest_expected_distance": 11264,
+          "top_ids": [
+            "DB1404_0651",
+            "DB1404_0370",
+            "DB1404_1170",
+            "DB1404_0806",
+            "DB1404_1366"
+          ],
+          "elapsed_ms": 94.866
+        },
+        "primary_variant": {
+          "rank": 62,
+          "nearest_expected_source": "0048/0048+301.jpg",
+          "nearest_expected_distance": 11264,
+          "top_ids": [
+            "DB1404_0651",
+            "DB1404_0370",
+            "DB1404_1170",
+            "DB1404_0806",
+            "DB1404_1366"
+          ],
+          "elapsed_ms": 193.65
+        },
+        "multi_prototype": {
+          "rank": 31,
+          "nearest_expected_source": "0048/0048+388.jpg",
+          "nearest_expected_distance": 10562,
+          "top_ids": [
+            "DB1404_0164",
+            "DB1404_0095",
+            "DB1404_0601",
+            "DB1404_1051",
+            "DB1404_0691"
+          ],
+          "elapsed_ms": 682.919
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 31,
+          "nearest_expected_source": "0048/0048+388.jpg",
+          "nearest_expected_distance": 10562,
+          "top_ids": [
+            "DB1404_0164",
+            "DB1404_0095",
+            "DB1404_0601",
+            "DB1404_1051",
+            "DB1404_0691"
+          ],
+          "elapsed_ms": 635.583
+        }
+      }
+    },
+    {
+      "name": "冰",
+      "file": "冰.jpg",
+      "sha256": "676a6d3ed0beca27240259d042c916e81fbc62b77ac4c85f6665ebe322176a87",
+      "expected_ids": [
+        "DB1404_0019"
+      ],
+      "query_size": [
+        512,
+        512
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 352,
+          "nearest_expected_source": "0019/0019+340.jpg",
+          "nearest_expected_distance": 19706,
+          "top_ids": [
+            "DB1404_1393",
+            "DB1404_1033",
+            "DB1404_0276",
+            "DB1404_0496",
+            "DB1404_0233"
+          ],
+          "elapsed_ms": 94.212
+        },
+        "primary_variant": {
+          "rank": 2,
+          "nearest_expected_source": "0019/0019+249.jpg",
+          "nearest_expected_distance": 15671,
+          "top_ids": [
+            "DB1404_0835",
+            "DB1404_0019",
+            "DB1404_0166",
+            "DB1404_0797",
+            "DB1404_0917"
+          ],
+          "elapsed_ms": 163.55
+        },
+        "multi_prototype": {
+          "rank": 4,
+          "nearest_expected_source": "0019/0019+266.jpg",
+          "nearest_expected_distance": 15500,
+          "top_ids": [
+            "DB1404_0191",
+            "DB1404_1036",
+            "DB1404_0495",
+            "DB1404_0019",
+            "DB1404_0202"
+          ],
+          "elapsed_ms": 693.006
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 4,
+          "nearest_expected_source": "0019/0019+266.jpg",
+          "nearest_expected_distance": 15500,
+          "top_ids": [
+            "DB1404_0191",
+            "DB1404_1036",
+            "DB1404_0495",
+            "DB1404_0019",
+            "DB1404_0202"
+          ],
+          "elapsed_ms": 613.437
+        }
+      }
+    },
+    {
+      "name": "叶",
+      "file": "叶.jpg",
+      "sha256": "5b1d2b5c83630ed771e81c5e345770177173908cc83891816bb8d400e0f408e7",
+      "expected_ids": [
+        "DB1404_0043"
+      ],
+      "query_size": [
+        330,
+        512
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 5,
+          "nearest_expected_source": "0043/0043+326.jpg",
+          "nearest_expected_distance": 7007,
+          "top_ids": [
+            "DB1404_0903",
+            "DB1404_0540",
+            "DB1404_0546",
+            "DB1404_0568",
+            "DB1404_0043"
+          ],
+          "elapsed_ms": 73.371
+        },
+        "primary_variant": {
+          "rank": 6,
+          "nearest_expected_source": "0043/0043+326.jpg",
+          "nearest_expected_distance": 7007,
+          "top_ids": [
+            "DB1404_0903",
+            "DB1404_0540",
+            "DB1404_0546",
+            "DB1404_1258",
+            "DB1404_0568"
+          ],
+          "elapsed_ms": 165.965
+        },
+        "multi_prototype": {
+          "rank": 8,
+          "nearest_expected_source": "0043/0043+350.jpg",
+          "nearest_expected_distance": 6841,
+          "top_ids": [
+            "DB1404_0903",
+            "DB1404_0540",
+            "DB1404_0545",
+            "DB1404_1174",
+            "DB1404_0989"
+          ],
+          "elapsed_ms": 615.799
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 8,
+          "nearest_expected_source": "0043/0043+350.jpg",
+          "nearest_expected_distance": 6841,
+          "top_ids": [
+            "DB1404_0903",
+            "DB1404_0540",
+            "DB1404_0545",
+            "DB1404_1174",
+            "DB1404_0989"
+          ],
+          "elapsed_ms": 549.549
+        }
+      }
+    },
+    {
+      "name": "地",
+      "file": "地.jpg",
+      "sha256": "d35dc21fae101573169e5895d2114cf137ac9d8453ba8079cf1bef273483fd0d",
+      "expected_ids": [
+        "DB1404_0008"
+      ],
+      "query_size": [
+        512,
+        201
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": null,
+          "nearest_expected_source": null,
+          "nearest_expected_distance": null,
+          "top_ids": [
+            "DB1404_1403",
+            "DB1404_1146",
+            "DB1404_0143",
+            "DB1404_1006",
+            "DB1404_0357"
+          ],
+          "elapsed_ms": 68.167
+        },
+        "primary_variant": {
+          "rank": 108,
+          "nearest_expected_source": "0008/0008+831.jpg",
+          "nearest_expected_distance": 4633,
+          "top_ids": [
+            "DB1404_1403",
+            "DB1404_1146",
+            "DB1404_0143",
+            "DB1404_1006",
+            "DB1404_0105"
+          ],
+          "elapsed_ms": 152.78
+        },
+        "multi_prototype": {
+          "rank": 97,
+          "nearest_expected_source": "0008/0008+546.jpg",
+          "nearest_expected_distance": 4824,
+          "top_ids": [
+            "DB1404_1403",
+            "DB1404_1216",
+            "DB1404_0128",
+            "DB1404_1146",
+            "DB1404_0475"
+          ],
+          "elapsed_ms": 512.346
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 97,
+          "nearest_expected_source": "0008/0008+546.jpg",
+          "nearest_expected_distance": 4824,
+          "top_ids": [
+            "DB1404_1403",
+            "DB1404_1216",
+            "DB1404_0128",
+            "DB1404_1146",
+            "DB1404_0475"
+          ],
+          "elapsed_ms": 572.119
+        }
+      }
+    },
+    {
+      "name": "坐",
+      "file": "坐.jpg",
+      "sha256": "70891ff78b4d7731f26adf714dfdce00b2baa7f419b5d86c5fca28f383793c1c",
+      "expected_ids": [
+        "DB1404_0053"
+      ],
+      "query_size": [
+        512,
+        492
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 1,
+          "nearest_expected_source": "0053/0053+37.jpg",
+          "nearest_expected_distance": 12558,
+          "top_ids": [
+            "DB1404_0053",
+            "DB1404_0541",
+            "DB1404_0855",
+            "DB1404_0651",
+            "DB1404_0052"
+          ],
+          "elapsed_ms": 72.487
+        },
+        "primary_variant": {
+          "rank": 1,
+          "nearest_expected_source": "0053/0053+37.jpg",
+          "nearest_expected_distance": 12558,
+          "top_ids": [
+            "DB1404_0053",
+            "DB1404_0932",
+            "DB1404_0541",
+            "DB1404_1073",
+            "DB1404_0855"
+          ],
+          "elapsed_ms": 140.351
+        },
+        "multi_prototype": {
+          "rank": 2,
+          "nearest_expected_source": "0053/0053+36.jpg",
+          "nearest_expected_distance": 12509,
+          "top_ids": [
+            "DB1404_0379",
+            "DB1404_0053",
+            "DB1404_0016",
+            "DB1404_1128",
+            "DB1404_0759"
+          ],
+          "elapsed_ms": 560.934
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 2,
+          "nearest_expected_source": "0053/0053+36.jpg",
+          "nearest_expected_distance": 12509,
+          "top_ids": [
+            "DB1404_0379",
+            "DB1404_0053",
+            "DB1404_0016",
+            "DB1404_1128",
+            "DB1404_0759"
+          ],
+          "elapsed_ms": 453.797
+        }
+      }
+    },
+    {
+      "name": "坡",
+      "file": "坡.jpg",
+      "sha256": "c4170fed7d7adeac381649879abb9a3761c9a6428804dfaeef4ea2a8fb0d89cc",
+      "expected_ids": [
+        "DB1404_0010"
+      ],
+      "query_size": [
+        512,
+        350
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 56,
+          "nearest_expected_source": "0010/0010+357.jpg",
+          "nearest_expected_distance": 8379,
+          "top_ids": [
+            "DB1404_0221",
+            "DB1404_0528",
+            "DB1404_0252",
+            "DB1404_0516",
+            "DB1404_0827"
+          ],
+          "elapsed_ms": 55.65
+        },
+        "primary_variant": {
+          "rank": 56,
+          "nearest_expected_source": "0010/0010+357.jpg",
+          "nearest_expected_distance": 8379,
+          "top_ids": [
+            "DB1404_0221",
+            "DB1404_0528",
+            "DB1404_0252",
+            "DB1404_0516",
+            "DB1404_0827"
+          ],
+          "elapsed_ms": 117.735
+        },
+        "multi_prototype": {
+          "rank": 4,
+          "nearest_expected_source": "0010/0010+446.jpg",
+          "nearest_expected_distance": 7122,
+          "top_ids": [
+            "DB1404_0940",
+            "DB1404_1334",
+            "DB1404_0009",
+            "DB1404_0010",
+            "DB1404_1114"
+          ],
+          "elapsed_ms": 454.818
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 4,
+          "nearest_expected_source": "0010/0010+446.jpg",
+          "nearest_expected_distance": 7122,
+          "top_ids": [
+            "DB1404_0940",
+            "DB1404_1334",
+            "DB1404_0009",
+            "DB1404_0010",
+            "DB1404_1114"
+          ],
+          "elapsed_ms": 812.954
+        }
+      }
+    },
+    {
+      "name": "天",
+      "file": "天.jpg",
+      "sha256": "6158afd64d911a2933377dcbb9ae470f0646829561a32e123d224446fef058af",
+      "expected_ids": [
+        "DB1404_0001"
+      ],
+      "query_size": [
+        512,
+        272
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 1,
+          "nearest_expected_source": "0001/0001+382.jpg",
+          "nearest_expected_distance": 1924,
+          "top_ids": [
+            "DB1404_0001",
+            "DB1404_1403",
+            "DB1404_1021",
+            "DB1404_0357",
+            "DB1404_1113"
+          ],
+          "elapsed_ms": 39.971
+        },
+        "primary_variant": {
+          "rank": 1,
+          "nearest_expected_source": "0001/0001+382.jpg",
+          "nearest_expected_distance": 1924,
+          "top_ids": [
+            "DB1404_0001",
+            "DB1404_1403",
+            "DB1404_1021",
+            "DB1404_0357",
+            "DB1404_1113"
+          ],
+          "elapsed_ms": 94.786
+        },
+        "multi_prototype": {
+          "rank": 1,
+          "nearest_expected_source": "0001/0001+411.jpg",
+          "nearest_expected_distance": 2417,
+          "top_ids": [
+            "DB1404_0001",
+            "DB1404_1403",
+            "DB1404_1021",
+            "DB1404_0127",
+            "DB1404_0880"
+          ],
+          "elapsed_ms": 524.565
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 1,
+          "nearest_expected_source": "0001/0001+411.jpg",
+          "nearest_expected_distance": 2417,
+          "top_ids": [
+            "DB1404_0001",
+            "DB1404_1403",
+            "DB1404_1021",
+            "DB1404_0127",
+            "DB1404_0880"
+          ],
+          "elapsed_ms": 392.72
+        }
+      }
+    },
+    {
+      "name": "女",
+      "file": "女.jpg",
+      "sha256": "1f856334c68fb972a92d469af25316c482bcdac18b82dfd9c47a0e73f66af413",
+      "expected_ids": [
+        "DB1404_0050"
+      ],
+      "query_size": [
+        366,
+        512
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 20,
+          "nearest_expected_source": "0050/0050+137.jpg",
+          "nearest_expected_distance": 6932,
+          "top_ids": [
+            "DB1404_0169",
+            "DB1404_1366",
+            "DB1404_0899",
+            "DB1404_0572",
+            "DB1404_1206"
+          ],
+          "elapsed_ms": 60.851
+        },
+        "primary_variant": {
+          "rank": 31,
+          "nearest_expected_source": "0050/0050+137.jpg",
+          "nearest_expected_distance": 6932,
+          "top_ids": [
+            "DB1404_0169",
+            "DB1404_1366",
+            "DB1404_0899",
+            "DB1404_0572",
+            "DB1404_0062"
+          ],
+          "elapsed_ms": 152.987
+        },
+        "multi_prototype": {
+          "rank": 106,
+          "nearest_expected_source": "0050/0050+290.jpg",
+          "nearest_expected_distance": 7395,
+          "top_ids": [
+            "DB1404_1268",
+            "DB1404_0880",
+            "DB1404_1021",
+            "DB1404_0169",
+            "DB1404_0830"
+          ],
+          "elapsed_ms": 403.052
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 106,
+          "nearest_expected_source": "0050/0050+290.jpg",
+          "nearest_expected_distance": 7395,
+          "top_ids": [
+            "DB1404_1268",
+            "DB1404_0880",
+            "DB1404_1021",
+            "DB1404_0169",
+            "DB1404_0830"
+          ],
+          "elapsed_ms": 503.759
+        }
+      }
+    },
+    {
+      "name": "山",
+      "file": "山.jpg",
+      "sha256": "e61f1c77748f7ed6f39d894442d131ef86c2495c5602567ecffab0d060d3dd85",
+      "expected_ids": [
+        "DB1404_0009"
+      ],
+      "query_size": [
+        512,
+        435
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 1,
+          "nearest_expected_source": "0009/0009+728.jpg",
+          "nearest_expected_distance": 10356,
+          "top_ids": [
+            "DB1404_0009",
+            "DB1404_0459",
+            "DB1404_0053",
+            "DB1404_0868",
+            "DB1404_0744"
+          ],
+          "elapsed_ms": 102.279
+        },
+        "primary_variant": {
+          "rank": 1,
+          "nearest_expected_source": "0009/0009+728.jpg",
+          "nearest_expected_distance": 10356,
+          "top_ids": [
+            "DB1404_0009",
+            "DB1404_0459",
+            "DB1404_1032",
+            "DB1404_0053",
+            "DB1404_0868"
+          ],
+          "elapsed_ms": 191.891
+        },
+        "multi_prototype": {
+          "rank": 1,
+          "nearest_expected_source": "0009/0009+452.jpg",
+          "nearest_expected_distance": 10063,
+          "top_ids": [
+            "DB1404_0009",
+            "DB1404_0459",
+            "DB1404_0479",
+            "DB1404_0252",
+            "DB1404_1028"
+          ],
+          "elapsed_ms": 605.315
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 1,
+          "nearest_expected_source": "0009/0009+452.jpg",
+          "nearest_expected_distance": 10063,
+          "top_ids": [
+            "DB1404_0009",
+            "DB1404_0459",
+            "DB1404_0479",
+            "DB1404_0252",
+            "DB1404_1028"
+          ],
+          "elapsed_ms": 456.715
+        }
+      }
+    },
+    {
+      "name": "得",
+      "file": "得.jpg",
+      "sha256": "6d7919b1623d55e7aa832481522e1ddac203de67581063ac447f8d7e070fd105",
+      "expected_ids": [
+        "DB1404_0063"
+      ],
+      "query_size": [
+        512,
+        512
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 1,
+          "nearest_expected_source": "0063/0063+125.jpg",
+          "nearest_expected_distance": 8701,
+          "top_ids": [
+            "DB1404_0063",
+            "DB1404_0862",
+            "DB1404_0816",
+            "DB1404_1185",
+            "DB1404_0329"
+          ],
+          "elapsed_ms": 55.483
+        },
+        "primary_variant": {
+          "rank": 1,
+          "nearest_expected_source": "0063/0063+125.jpg",
+          "nearest_expected_distance": 8701,
+          "top_ids": [
+            "DB1404_0063",
+            "DB1404_0862",
+            "DB1404_0816",
+            "DB1404_1033",
+            "DB1404_1185"
+          ],
+          "elapsed_ms": 116.882
+        },
+        "multi_prototype": {
+          "rank": 2,
+          "nearest_expected_source": "0063/0063+194.jpg",
+          "nearest_expected_distance": 8969,
+          "top_ids": [
+            "DB1404_0273",
+            "DB1404_0063",
+            "DB1404_0816",
+            "DB1404_1130",
+            "DB1404_0272"
+          ],
+          "elapsed_ms": 457.086
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 2,
+          "nearest_expected_source": "0063/0063+194.jpg",
+          "nearest_expected_distance": 8969,
+          "top_ids": [
+            "DB1404_0273",
+            "DB1404_0063",
+            "DB1404_0816",
+            "DB1404_1130",
+            "DB1404_0272"
+          ],
+          "elapsed_ms": 427.103
+        }
+      }
+    },
+    {
+      "name": "怕",
+      "file": "怕.jpg",
+      "sha256": "3004da78aa10c8136155c48634cd190a8abc997bd576d67aea20bbf2786c2244",
+      "expected_ids": [
+        "DB1404_0065"
+      ],
+      "query_size": [
+        512,
+        419
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": null,
+          "nearest_expected_source": null,
+          "nearest_expected_distance": null,
+          "top_ids": [
+            "DB1404_0361",
+            "DB1404_0089",
+            "DB1404_1125",
+            "DB1404_0636",
+            "DB1404_0797"
+          ],
+          "elapsed_ms": 44.142
+        },
+        "primary_variant": {
+          "rank": null,
+          "nearest_expected_source": null,
+          "nearest_expected_distance": null,
+          "top_ids": [
+            "DB1404_0361",
+            "DB1404_0089",
+            "DB1404_1125",
+            "DB1404_0636",
+            "DB1404_0797"
+          ],
+          "elapsed_ms": 139.664
+        },
+        "multi_prototype": {
+          "rank": 1,
+          "nearest_expected_source": "0065/0065+99.jpg",
+          "nearest_expected_distance": 6747,
+          "top_ids": [
+            "DB1404_0065",
+            "DB1404_1379",
+            "DB1404_0325",
+            "DB1404_1125",
+            "DB1404_0724"
+          ],
+          "elapsed_ms": 478.964
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 1,
+          "nearest_expected_source": "0065/0065+99.jpg",
+          "nearest_expected_distance": 6747,
+          "top_ids": [
+            "DB1404_0065",
+            "DB1404_1379",
+            "DB1404_0325",
+            "DB1404_1125",
+            "DB1404_0724"
+          ],
+          "elapsed_ms": 510.221
+        }
+      }
+    },
+    {
+      "name": "懒",
+      "file": "懒.jpg",
+      "sha256": "9cb2ce4eb114b88517e72cde650fab815adc09711816cd56a23465293b215de9",
+      "expected_ids": [
+        "DB1404_0060"
+      ],
+      "query_size": [
+        512,
+        436
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": null,
+          "nearest_expected_source": null,
+          "nearest_expected_distance": null,
+          "top_ids": [
+            "DB1404_1211",
+            "DB1404_0939",
+            "DB1404_0143",
+            "DB1404_0593",
+            "DB1404_0421"
+          ],
+          "elapsed_ms": 49.11
+        },
+        "primary_variant": {
+          "rank": null,
+          "nearest_expected_source": null,
+          "nearest_expected_distance": null,
+          "top_ids": [
+            "DB1404_1211",
+            "DB1404_0028",
+            "DB1404_0939",
+            "DB1404_0105",
+            "DB1404_0143"
+          ],
+          "elapsed_ms": 127.186
+        },
+        "multi_prototype": {
+          "rank": 401,
+          "nearest_expected_source": "0060/0060+575.jpg",
+          "nearest_expected_distance": 8771,
+          "top_ids": [
+            "DB1404_0278",
+            "DB1404_0890",
+            "DB1404_0127",
+            "DB1404_0470",
+            "DB1404_0358"
+          ],
+          "elapsed_ms": 463.419
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 401,
+          "nearest_expected_source": "0060/0060+575.jpg",
+          "nearest_expected_distance": 8771,
+          "top_ids": [
+            "DB1404_0278",
+            "DB1404_0890",
+            "DB1404_0127",
+            "DB1404_0470",
+            "DB1404_0358"
+          ],
+          "elapsed_ms": 628.212
+        }
+      }
+    },
+    {
+      "name": "抖",
+      "file": "抖.jpg",
+      "sha256": "341eae7f67f023f0769c537caceaebf0721c7734eba856e28652f33567089339",
+      "expected_ids": [
+        "DB1404_0058"
+      ],
+      "query_size": [
+        486,
+        512
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 5,
+          "nearest_expected_source": "0058/0058+287.jpg",
+          "nearest_expected_distance": 13043,
+          "top_ids": [
+            "DB1404_0632",
+            "DB1404_0052",
+            "DB1404_0770",
+            "DB1404_0071",
+            "DB1404_0058"
+          ],
+          "elapsed_ms": 70.431
+        },
+        "primary_variant": {
+          "rank": 9,
+          "nearest_expected_source": "0058/0058+287.jpg",
+          "nearest_expected_distance": 13043,
+          "top_ids": [
+            "DB1404_0632",
+            "DB1404_0052",
+            "DB1404_0770",
+            "DB1404_0097",
+            "DB1404_1378"
+          ],
+          "elapsed_ms": 241.078
+        },
+        "multi_prototype": {
+          "rank": 65,
+          "nearest_expected_source": "0058/0058+126.jpg",
+          "nearest_expected_distance": 13742,
+          "top_ids": [
+            "DB1404_0632",
+            "DB1404_0095",
+            "DB1404_0052",
+            "DB1404_0798",
+            "DB1404_0064"
+          ],
+          "elapsed_ms": 428.687
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 65,
+          "nearest_expected_source": "0058/0058+126.jpg",
+          "nearest_expected_distance": 13742,
+          "top_ids": [
+            "DB1404_0632",
+            "DB1404_0095",
+            "DB1404_0052",
+            "DB1404_0798",
+            "DB1404_0064"
+          ],
+          "elapsed_ms": 381.029
+        }
+      }
+    },
+    {
+      "name": "抬",
+      "file": "抬.jpg",
+      "sha256": "482a12bbcc14d156b50c00da6a4c45c332c68f73852de733f1d90348d92db67b",
+      "expected_ids": [
+        "DB1404_0072"
+      ],
+      "query_size": [
+        440,
+        512
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 436,
+          "nearest_expected_source": "0072/0072+475.jpg",
+          "nearest_expected_distance": 16241,
+          "top_ids": [
+            "DB1404_0077",
+            "DB1404_1273",
+            "DB1404_0862",
+            "DB1404_0628",
+            "DB1404_0761"
+          ],
+          "elapsed_ms": 53.356
+        },
+        "primary_variant": {
+          "rank": null,
+          "nearest_expected_source": null,
+          "nearest_expected_distance": null,
+          "top_ids": [
+            "DB1404_0077",
+            "DB1404_0531",
+            "DB1404_1156",
+            "DB1404_0398",
+            "DB1404_1161"
+          ],
+          "elapsed_ms": 153.547
+        },
+        "multi_prototype": {
+          "rank": 34,
+          "nearest_expected_source": "0072/0072+825.jpg",
+          "nearest_expected_distance": 13477,
+          "top_ids": [
+            "DB1404_0034",
+            "DB1404_0676",
+            "DB1404_1070",
+            "DB1404_0087",
+            "DB1404_0728"
+          ],
+          "elapsed_ms": 420.388
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 34,
+          "nearest_expected_source": "0072/0072+825.jpg",
+          "nearest_expected_distance": 13477,
+          "top_ids": [
+            "DB1404_0034",
+            "DB1404_0676",
+            "DB1404_1070",
+            "DB1404_0087",
+            "DB1404_0728"
+          ],
+          "elapsed_ms": 498.89
+        }
+      }
+    },
+    {
+      "name": "担",
+      "file": "担.jpg",
+      "sha256": "201af199cd74229a9a0e1e73db8f6346a8de00350c34269312b6f550578f0222",
+      "expected_ids": [
+        "DB1404_0071"
+      ],
+      "query_size": [
+        512,
+        502
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 21,
+          "nearest_expected_source": "0071/0071+247.jpg",
+          "nearest_expected_distance": 10635,
+          "top_ids": [
+            "DB1404_0806",
+            "DB1404_0646",
+            "DB1404_0696",
+            "DB1404_0648",
+            "DB1404_1170"
+          ],
+          "elapsed_ms": 65.222
+        },
+        "primary_variant": {
+          "rank": 25,
+          "nearest_expected_source": "0071/0071+247.jpg",
+          "nearest_expected_distance": 10635,
+          "top_ids": [
+            "DB1404_0806",
+            "DB1404_0064",
+            "DB1404_0646",
+            "DB1404_0696",
+            "DB1404_0095"
+          ],
+          "elapsed_ms": 148.289
+        },
+        "multi_prototype": {
+          "rank": 136,
+          "nearest_expected_source": "0071/0071+165.jpg",
+          "nearest_expected_distance": 11303,
+          "top_ids": [
+            "DB1404_0308",
+            "DB1404_0648",
+            "DB1404_1155",
+            "DB1404_0801",
+            "DB1404_0830"
+          ],
+          "elapsed_ms": 400.733
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 136,
+          "nearest_expected_source": "0071/0071+165.jpg",
+          "nearest_expected_distance": 11303,
+          "top_ids": [
+            "DB1404_0308",
+            "DB1404_0648",
+            "DB1404_1155",
+            "DB1404_0801",
+            "DB1404_0830"
+          ],
+          "elapsed_ms": 419.761
+        }
+      }
+    },
+    {
+      "name": "日",
+      "file": "日.jpg",
+      "sha256": "db010b952b426f9ad23daebe7c6a8abcbd1fdb8081b976148ffe17f3a7ff6575",
+      "expected_ids": [
+        "DB1404_0002"
+      ],
+      "query_size": [
+        512,
+        389
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 3,
+          "nearest_expected_source": "0002/0002+583.jpg",
+          "nearest_expected_distance": 14445,
+          "top_ids": [
+            "DB1404_0384",
+            "DB1404_0374",
+            "DB1404_0002",
+            "DB1404_0193",
+            "DB1404_0490"
+          ],
+          "elapsed_ms": 50.131
+        },
+        "primary_variant": {
+          "rank": 3,
+          "nearest_expected_source": "0002/0002+583.jpg",
+          "nearest_expected_distance": 14445,
+          "top_ids": [
+            "DB1404_0384",
+            "DB1404_0374",
+            "DB1404_0002",
+            "DB1404_0193",
+            "DB1404_0490"
+          ],
+          "elapsed_ms": 223.393
+        },
+        "multi_prototype": {
+          "rank": 1,
+          "nearest_expected_source": "0002/0002+391.jpg",
+          "nearest_expected_distance": 7980,
+          "top_ids": [
+            "DB1404_0002",
+            "DB1404_1398",
+            "DB1404_0239",
+            "DB1404_0971",
+            "DB1404_1232"
+          ],
+          "elapsed_ms": 558.838
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 1,
+          "nearest_expected_source": "0002/0002+391.jpg",
+          "nearest_expected_distance": 7980,
+          "top_ids": [
+            "DB1404_0002",
+            "DB1404_1398",
+            "DB1404_0239",
+            "DB1404_0971",
+            "DB1404_1232"
+          ],
+          "elapsed_ms": 464.297
+        }
+      }
+    },
+    {
+      "name": "星",
+      "file": "星.jpg",
+      "sha256": "5e726d05efc3deee068e125b33ef9351cf6540a88bbffaab931ca913b2048682",
+      "expected_ids": [
+        "DB1404_0004"
+      ],
+      "query_size": [
+        512,
+        305
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 135,
+          "nearest_expected_source": "0004/0004+342.jpg",
+          "nearest_expected_distance": 7215,
+          "top_ids": [
+            "DB1404_1021",
+            "DB1404_1140",
+            "DB1404_1237",
+            "DB1404_1327",
+            "DB1404_0285"
+          ],
+          "elapsed_ms": 71.576
+        },
+        "primary_variant": {
+          "rank": 155,
+          "nearest_expected_source": "0004/0004+342.jpg",
+          "nearest_expected_distance": 7215,
+          "top_ids": [
+            "DB1404_1021",
+            "DB1404_1140",
+            "DB1404_0454",
+            "DB1404_1237",
+            "DB1404_1104"
+          ],
+          "elapsed_ms": 148.555
+        },
+        "multi_prototype": {
+          "rank": 50,
+          "nearest_expected_source": "0004/0004+177.jpg",
+          "nearest_expected_distance": 6787,
+          "top_ids": [
+            "DB1404_0180",
+            "DB1404_1021",
+            "DB1404_1130",
+            "DB1404_0866",
+            "DB1404_0475"
+          ],
+          "elapsed_ms": 889.722
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 50,
+          "nearest_expected_source": "0004/0004+177.jpg",
+          "nearest_expected_distance": 6787,
+          "top_ids": [
+            "DB1404_0180",
+            "DB1404_1021",
+            "DB1404_1130",
+            "DB1404_0866",
+            "DB1404_0475"
+          ],
+          "elapsed_ms": 698.652
+        }
+      }
+    },
+    {
+      "name": "暗",
+      "file": "暗.jpg",
+      "sha256": "06398f3b429ce0bd0c662086b4637155b3a937b559ce9b5f313ae15f089d4ee2",
+      "expected_ids": [
+        "DB1404_0013"
+      ],
+      "query_size": [
+        512,
+        498
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 1,
+          "nearest_expected_source": "0013/0013+62.jpg",
+          "nearest_expected_distance": 5137,
+          "top_ids": [
+            "DB1404_0013",
+            "DB1404_0275",
+            "DB1404_1327",
+            "DB1404_0143",
+            "DB1404_0033"
+          ],
+          "elapsed_ms": 80.468
+        },
+        "primary_variant": {
+          "rank": 2,
+          "nearest_expected_source": "0013/0013+62.jpg",
+          "nearest_expected_distance": 5137,
+          "top_ids": [
+            "DB1404_0830",
+            "DB1404_0013",
+            "DB1404_0275",
+            "DB1404_0259",
+            "DB1404_1327"
+          ],
+          "elapsed_ms": 123.132
+        },
+        "multi_prototype": {
+          "rank": 1,
+          "nearest_expected_source": "0013/0013+104.jpg",
+          "nearest_expected_distance": 3633,
+          "top_ids": [
+            "DB1404_0013",
+            "DB1404_0470",
+            "DB1404_1181",
+            "DB1404_0830",
+            "DB1404_0127"
+          ],
+          "elapsed_ms": 474.374
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 1,
+          "nearest_expected_source": "0013/0013+104.jpg",
+          "nearest_expected_distance": 3633,
+          "top_ids": [
+            "DB1404_0013",
+            "DB1404_0470",
+            "DB1404_1181",
+            "DB1404_0830",
+            "DB1404_0127"
+          ],
+          "elapsed_ms": 460.865
+        }
+      }
+    },
+    {
+      "name": "月",
+      "file": "月.jpg",
+      "sha256": "8178ceb1cc4dc65a9da4bf38f8db10d5ac614be2da98ef9cc32de1e876b18c27",
+      "expected_ids": [
+        "DB1404_0003"
+      ],
+      "query_size": [
+        512,
+        283
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 79,
+          "nearest_expected_source": "0003/0003+568.jpg",
+          "nearest_expected_distance": 5297,
+          "top_ids": [
+            "DB1404_0817",
+            "DB1404_1204",
+            "DB1404_0365",
+            "DB1404_0109",
+            "DB1404_0028"
+          ],
+          "elapsed_ms": 61.69
+        },
+        "primary_variant": {
+          "rank": 86,
+          "nearest_expected_source": "0003/0003+568.jpg",
+          "nearest_expected_distance": 5297,
+          "top_ids": [
+            "DB1404_0817",
+            "DB1404_1204",
+            "DB1404_0365",
+            "DB1404_0109",
+            "DB1404_0028"
+          ],
+          "elapsed_ms": 188.007
+        },
+        "multi_prototype": {
+          "rank": 88,
+          "nearest_expected_source": "0003/0003+376.jpg",
+          "nearest_expected_distance": 5386,
+          "top_ids": [
+            "DB1404_0127",
+            "DB1404_0212",
+            "DB1404_1218",
+            "DB1404_1217",
+            "DB1404_0365"
+          ],
+          "elapsed_ms": 595.353
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 88,
+          "nearest_expected_source": "0003/0003+376.jpg",
+          "nearest_expected_distance": 5386,
+          "top_ids": [
+            "DB1404_0127",
+            "DB1404_0212",
+            "DB1404_1218",
+            "DB1404_1217",
+            "DB1404_0365"
+          ],
+          "elapsed_ms": 1146.3
+        }
+      }
+    },
+    {
+      "name": "柴",
+      "file": "柴.jpg",
+      "sha256": "2b5f3346428bbdef20b2a93ddb2ba01e7fcd5b9999d1d9a315f5aabb16b15eef",
+      "expected_ids": [
+        "DB1404_0033"
+      ],
+      "query_size": [
+        512,
+        300
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 106,
+          "nearest_expected_source": "0033/0033+615.jpg",
+          "nearest_expected_distance": 6073,
+          "top_ids": [
+            "DB1404_1149",
+            "DB1404_1390",
+            "DB1404_0098",
+            "DB1404_1203",
+            "DB1404_0880"
+          ],
+          "elapsed_ms": 104.763
+        },
+        "primary_variant": {
+          "rank": 111,
+          "nearest_expected_source": "0033/0033+615.jpg",
+          "nearest_expected_distance": 6073,
+          "top_ids": [
+            "DB1404_1149",
+            "DB1404_1390",
+            "DB1404_0098",
+            "DB1404_1203",
+            "DB1404_0880"
+          ],
+          "elapsed_ms": 153.848
+        },
+        "multi_prototype": {
+          "rank": 148,
+          "nearest_expected_source": "0033/0033+101.jpg",
+          "nearest_expected_distance": 6220,
+          "top_ids": [
+            "DB1404_0421",
+            "DB1404_0880",
+            "DB1404_0968",
+            "DB1404_1113",
+            "DB1404_1133"
+          ],
+          "elapsed_ms": 581.567
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 148,
+          "nearest_expected_source": "0033/0033+101.jpg",
+          "nearest_expected_distance": 6220,
+          "top_ids": [
+            "DB1404_0421",
+            "DB1404_0880",
+            "DB1404_0968",
+            "DB1404_1113",
+            "DB1404_1133"
+          ],
+          "elapsed_ms": 691.605
+        }
+      }
+    },
+    {
+      "name": "树",
+      "file": "树.jpg",
+      "sha256": "e1228827eabb2c6152f97c8d8464649a2313da1c6bf054cdb0bceed56aa476f7",
+      "expected_ids": [
+        "DB1404_0032"
+      ],
+      "query_size": [
+        512,
+        455
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": null,
+          "nearest_expected_source": null,
+          "nearest_expected_distance": null,
+          "top_ids": [
+            "DB1404_0806",
+            "DB1404_1238",
+            "DB1404_0410",
+            "DB1404_0560",
+            "DB1404_0238"
+          ],
+          "elapsed_ms": 86.012
+        },
+        "primary_variant": {
+          "rank": null,
+          "nearest_expected_source": null,
+          "nearest_expected_distance": null,
+          "top_ids": [
+            "DB1404_0806",
+            "DB1404_0303",
+            "DB1404_1238",
+            "DB1404_0534",
+            "DB1404_1021"
+          ],
+          "elapsed_ms": 217.566
+        },
+        "multi_prototype": {
+          "rank": 134,
+          "nearest_expected_source": "0032/0032+394.jpg",
+          "nearest_expected_distance": 10299,
+          "top_ids": [
+            "DB1404_0806",
+            "DB1404_0410",
+            "DB1404_1156",
+            "DB1404_0623",
+            "DB1404_0892"
+          ],
+          "elapsed_ms": 902.665
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 134,
+          "nearest_expected_source": "0032/0032+394.jpg",
+          "nearest_expected_distance": 10299,
+          "top_ids": [
+            "DB1404_0806",
+            "DB1404_0410",
+            "DB1404_1156",
+            "DB1404_0623",
+            "DB1404_0892"
+          ],
+          "elapsed_ms": 657.353
+        }
+      }
+    },
+    {
+      "name": "死",
+      "file": "死.jpg",
+      "sha256": "1c71b0095b39862d9901772376123497f1af431c817346151250f6153dbabb98",
+      "expected_ids": [
+        "DB1404_0067"
+      ],
+      "query_size": [
+        512,
+        278
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": null,
+          "nearest_expected_source": null,
+          "nearest_expected_distance": null,
+          "top_ids": [
+            "DB1404_1327",
+            "DB1404_0143",
+            "DB1404_0940",
+            "DB1404_1211",
+            "DB1404_0033"
+          ],
+          "elapsed_ms": 61.439
+        },
+        "primary_variant": {
+          "rank": null,
+          "nearest_expected_source": null,
+          "nearest_expected_distance": null,
+          "top_ids": [
+            "DB1404_1327",
+            "DB1404_0143",
+            "DB1404_0940",
+            "DB1404_1211",
+            "DB1404_0033"
+          ],
+          "elapsed_ms": 128.182
+        },
+        "multi_prototype": {
+          "rank": null,
+          "nearest_expected_source": null,
+          "nearest_expected_distance": null,
+          "top_ids": [
+            "DB1404_0890",
+            "DB1404_0128",
+            "DB1404_0127",
+            "DB1404_0470",
+            "DB1404_0278"
+          ],
+          "elapsed_ms": 686.635
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": null,
+          "nearest_expected_source": null,
+          "nearest_expected_distance": null,
+          "top_ids": [
+            "DB1404_0890",
+            "DB1404_0128",
+            "DB1404_0127",
+            "DB1404_0470",
+            "DB1404_0278"
+          ],
+          "elapsed_ms": 664.155
+        }
+      }
+    },
+    {
+      "name": "水",
+      "file": "水.jpg",
+      "sha256": "77817b9a0701336d3774d8a21c55d0ab98ff6bf059bf84f8ed6bc4d7baec18dd",
+      "expected_ids": [
+        "DB1404_0026"
+      ],
+      "query_size": [
+        512,
+        289
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 3,
+          "nearest_expected_source": "0026/0026+378.jpg",
+          "nearest_expected_distance": 7215,
+          "top_ids": [
+            "DB1404_0468",
+            "DB1404_0501",
+            "DB1404_0026",
+            "DB1404_0470",
+            "DB1404_1199"
+          ],
+          "elapsed_ms": 103.253
+        },
+        "primary_variant": {
+          "rank": 3,
+          "nearest_expected_source": "0026/0026+378.jpg",
+          "nearest_expected_distance": 7215,
+          "top_ids": [
+            "DB1404_0468",
+            "DB1404_0501",
+            "DB1404_0026",
+            "DB1404_0470",
+            "DB1404_0953"
+          ],
+          "elapsed_ms": 207.876
+        },
+        "multi_prototype": {
+          "rank": 1,
+          "nearest_expected_source": "0026/0026+86.jpg",
+          "nearest_expected_distance": 6734,
+          "top_ids": [
+            "DB1404_0026",
+            "DB1404_1124",
+            "DB1404_0470",
+            "DB1404_0473",
+            "DB1404_0830"
+          ],
+          "elapsed_ms": 704.104
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 1,
+          "nearest_expected_source": "0026/0026+86.jpg",
+          "nearest_expected_distance": 6734,
+          "top_ids": [
+            "DB1404_0026",
+            "DB1404_1124",
+            "DB1404_0470",
+            "DB1404_0473",
+            "DB1404_0830"
+          ],
+          "elapsed_ms": 785.37
+        }
+      }
+    },
+    {
+      "name": "求",
+      "file": "求.jpg",
+      "sha256": "9e8f459ebc25a0dd1b9a74ac01da558367acd159e4ac540613e11f1e0abb5793",
+      "expected_ids": [
+        "DB1404_0056"
+      ],
+      "query_size": [
+        512,
+        512
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 15,
+          "nearest_expected_source": "0056/0056+536.jpg",
+          "nearest_expected_distance": 13834,
+          "top_ids": [
+            "DB1404_1051",
+            "DB1404_0268",
+            "DB1404_0692",
+            "DB1404_0725",
+            "DB1404_1075"
+          ],
+          "elapsed_ms": 124.089
+        },
+        "primary_variant": {
+          "rank": 16,
+          "nearest_expected_source": "0056/0056+536.jpg",
+          "nearest_expected_distance": 13834,
+          "top_ids": [
+            "DB1404_1051",
+            "DB1404_0268",
+            "DB1404_0692",
+            "DB1404_0725",
+            "DB1404_1075"
+          ],
+          "elapsed_ms": 264.148
+        },
+        "multi_prototype": {
+          "rank": 3,
+          "nearest_expected_source": "0056/0056+597.jpg",
+          "nearest_expected_distance": 12631,
+          "top_ids": [
+            "DB1404_0655",
+            "DB1404_1370",
+            "DB1404_0056",
+            "DB1404_0571",
+            "DB1404_0482"
+          ],
+          "elapsed_ms": 759.366
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 3,
+          "nearest_expected_source": "0056/0056+597.jpg",
+          "nearest_expected_distance": 12631,
+          "top_ids": [
+            "DB1404_0655",
+            "DB1404_1370",
+            "DB1404_0056",
+            "DB1404_0571",
+            "DB1404_0482"
+          ],
+          "elapsed_ms": 921.921
+        }
+      }
+    },
+    {
+      "name": "深",
+      "file": "深.jpg",
+      "sha256": "2ea5a8b15c43d93a2b36578f8a5ac92d7b393ee245603dcc15d63a7275752876",
+      "expected_ids": [
+        "DB1404_0021"
+      ],
+      "query_size": [
+        512,
+        307
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 40,
+          "nearest_expected_source": "0021/0021+702.jpg",
+          "nearest_expected_distance": 7318,
+          "top_ids": [
+            "DB1404_0518",
+            "DB1404_0461",
+            "DB1404_1058",
+            "DB1404_0631",
+            "DB1404_1397"
+          ],
+          "elapsed_ms": 129.545
+        },
+        "primary_variant": {
+          "rank": 40,
+          "nearest_expected_source": "0021/0021+702.jpg",
+          "nearest_expected_distance": 7318,
+          "top_ids": [
+            "DB1404_0518",
+            "DB1404_0461",
+            "DB1404_1058",
+            "DB1404_0631",
+            "DB1404_1397"
+          ],
+          "elapsed_ms": 281.894
+        },
+        "multi_prototype": {
+          "rank": 45,
+          "nearest_expected_source": "0021/0021+673.jpg",
+          "nearest_expected_distance": 7525,
+          "top_ids": [
+            "DB1404_0455",
+            "DB1404_0010",
+            "DB1404_0393",
+            "DB1404_1270",
+            "DB1404_1387"
+          ],
+          "elapsed_ms": 899.573
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 45,
+          "nearest_expected_source": "0021/0021+673.jpg",
+          "nearest_expected_distance": 7525,
+          "top_ids": [
+            "DB1404_0455",
+            "DB1404_0010",
+            "DB1404_0393",
+            "DB1404_1270",
+            "DB1404_1387"
+          ],
+          "elapsed_ms": 838.954
+        }
+      }
+    },
+    {
+      "name": "湖",
+      "file": "湖.jpg",
+      "sha256": "63964d3ac1ee4182d3d7313e73b1036f98d3d6af9fd359c62f8c5e473bab5f84",
+      "expected_ids": [
+        "DB1404_0028"
+      ],
+      "query_size": [
+        512,
+        259
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 2,
+          "nearest_expected_source": "0028/0028+224.jpg",
+          "nearest_expected_distance": 3981,
+          "top_ids": [
+            "DB1404_0938",
+            "DB1404_0028",
+            "DB1404_0865",
+            "DB1404_1394",
+            "DB1404_0944"
+          ],
+          "elapsed_ms": 150.069
+        },
+        "primary_variant": {
+          "rank": 2,
+          "nearest_expected_source": "0028/0028+224.jpg",
+          "nearest_expected_distance": 3981,
+          "top_ids": [
+            "DB1404_0938",
+            "DB1404_0028",
+            "DB1404_0865",
+            "DB1404_1394",
+            "DB1404_0944"
+          ],
+          "elapsed_ms": 257.026
+        },
+        "multi_prototype": {
+          "rank": 1,
+          "nearest_expected_source": "0028/0028+260.jpg",
+          "nearest_expected_distance": 3906,
+          "top_ids": [
+            "DB1404_0028",
+            "DB1404_0431",
+            "DB1404_1390",
+            "DB1404_1267",
+            "DB1404_1115"
+          ],
+          "elapsed_ms": 850.672
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 1,
+          "nearest_expected_source": "0028/0028+260.jpg",
+          "nearest_expected_distance": 3906,
+          "top_ids": [
+            "DB1404_0028",
+            "DB1404_0431",
+            "DB1404_1390",
+            "DB1404_1267",
+            "DB1404_1115"
+          ],
+          "elapsed_ms": 878.084
+        }
+      }
+    },
+    {
+      "name": "爬",
+      "file": "爬.jpg",
+      "sha256": "d3eeea228e2d7ce1a8ec5b3a6ffb26ac381e7aad1d22111b5b348399d43fdb97",
+      "expected_ids": [
+        "DB1404_0059"
+      ],
+      "query_size": [
+        512,
+        451
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 374,
+          "nearest_expected_source": "0059/0059+271.jpg",
+          "nearest_expected_distance": 10266,
+          "top_ids": [
+            "DB1404_1174",
+            "DB1404_0098",
+            "DB1404_0924",
+            "DB1404_0063",
+            "DB1404_0920"
+          ],
+          "elapsed_ms": 150.487
+        },
+        "primary_variant": {
+          "rank": 394,
+          "nearest_expected_source": "0059/0059+271.jpg",
+          "nearest_expected_distance": 10266,
+          "top_ids": [
+            "DB1404_1174",
+            "DB1404_0098",
+            "DB1404_0924",
+            "DB1404_0063",
+            "DB1404_0920"
+          ],
+          "elapsed_ms": 230.59
+        },
+        "multi_prototype": {
+          "rank": 25,
+          "nearest_expected_source": "0059/0059+339.jpg",
+          "nearest_expected_distance": 8530,
+          "top_ids": [
+            "DB1404_0219",
+            "DB1404_1067",
+            "DB1404_0337",
+            "DB1404_1377",
+            "DB1404_1174"
+          ],
+          "elapsed_ms": 689.736
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 25,
+          "nearest_expected_source": "0059/0059+339.jpg",
+          "nearest_expected_distance": 8530,
+          "top_ids": [
+            "DB1404_0219",
+            "DB1404_1067",
+            "DB1404_0337",
+            "DB1404_1377",
+            "DB1404_1174"
+          ],
+          "elapsed_ms": 813.394
+        }
+      }
+    },
+    {
+      "name": "电",
+      "file": "电.jpg",
+      "sha256": "62f47bc0477200c2f2a9a24b2c684c31c2d63f74b1c42ae07bd1a082e5fac434",
+      "expected_ids": [
+        "DB1404_0018"
+      ],
+      "query_size": [
+        512,
+        406
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 107,
+          "nearest_expected_source": "0018/0018+212.jpg",
+          "nearest_expected_distance": 13920,
+          "top_ids": [
+            "DB1404_1354",
+            "DB1404_1122",
+            "DB1404_1281",
+            "DB1404_0941",
+            "DB1404_0264"
+          ],
+          "elapsed_ms": 77.465
+        },
+        "primary_variant": {
+          "rank": 190,
+          "nearest_expected_source": "0018/0018+212.jpg",
+          "nearest_expected_distance": 13920,
+          "top_ids": [
+            "DB1404_1354",
+            "DB1404_0949",
+            "DB1404_1069",
+            "DB1404_1180",
+            "DB1404_0690"
+          ],
+          "elapsed_ms": 190.186
+        },
+        "multi_prototype": {
+          "rank": 2,
+          "nearest_expected_source": "0018/0018+256.jpg",
+          "nearest_expected_distance": 11662,
+          "top_ids": [
+            "DB1404_0941",
+            "DB1404_0018",
+            "DB1404_0079",
+            "DB1404_0711",
+            "DB1404_1069"
+          ],
+          "elapsed_ms": 1084.937
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 2,
+          "nearest_expected_source": "0018/0018+256.jpg",
+          "nearest_expected_distance": 11662,
+          "top_ids": [
+            "DB1404_0941",
+            "DB1404_0018",
+            "DB1404_0079",
+            "DB1404_0711",
+            "DB1404_1069"
+          ],
+          "elapsed_ms": 795.045
+        }
+      }
+    },
+    {
+      "name": "男",
+      "file": "男.jpg",
+      "sha256": "c13d29180f064e99157e245c917df57e3c9b49d3d3f732a23931b9cb4469c4cb",
+      "expected_ids": [
+        "DB1404_0049"
+      ],
+      "query_size": [
+        512,
+        443
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 5,
+          "nearest_expected_source": "0049/0049+242.jpg",
+          "nearest_expected_distance": 8763,
+          "top_ids": [
+            "DB1404_0370",
+            "DB1404_1170",
+            "DB1404_0533",
+            "DB1404_0601",
+            "DB1404_0049"
+          ],
+          "elapsed_ms": 79.125
+        },
+        "primary_variant": {
+          "rank": 5,
+          "nearest_expected_source": "0049/0049+242.jpg",
+          "nearest_expected_distance": 8763,
+          "top_ids": [
+            "DB1404_0370",
+            "DB1404_1170",
+            "DB1404_0533",
+            "DB1404_0601",
+            "DB1404_0049"
+          ],
+          "elapsed_ms": 163.386
+        },
+        "multi_prototype": {
+          "rank": 6,
+          "nearest_expected_source": "0049/0049+242.jpg",
+          "nearest_expected_distance": 8784,
+          "top_ids": [
+            "DB1404_1051",
+            "DB1404_0164",
+            "DB1404_0691",
+            "DB1404_0581",
+            "DB1404_0601"
+          ],
+          "elapsed_ms": 872.735
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 6,
+          "nearest_expected_source": "0049/0049+242.jpg",
+          "nearest_expected_distance": 8784,
+          "top_ids": [
+            "DB1404_1051",
+            "DB1404_0164",
+            "DB1404_0691",
+            "DB1404_0581",
+            "DB1404_0601"
+          ],
+          "elapsed_ms": 1009.12
+        }
+      }
+    },
+    {
+      "name": "睡",
+      "file": "睡.jpg",
+      "sha256": "92dc0ab0481057b4f3d57713b9ba0bee03d16b38e5d3d1061d3bc0c3f67ffd56",
+      "expected_ids": [
+        "DB1404_0070"
+      ],
+      "query_size": [
+        512,
+        419
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": null,
+          "nearest_expected_source": null,
+          "nearest_expected_distance": null,
+          "top_ids": [
+            "DB1404_0330",
+            "DB1404_0797",
+            "DB1404_1125",
+            "DB1404_1205",
+            "DB1404_0124"
+          ],
+          "elapsed_ms": 64.682
+        },
+        "primary_variant": {
+          "rank": null,
+          "nearest_expected_source": null,
+          "nearest_expected_distance": null,
+          "top_ids": [
+            "DB1404_0953",
+            "DB1404_0330",
+            "DB1404_0797",
+            "DB1404_1125",
+            "DB1404_1205"
+          ],
+          "elapsed_ms": 162.214
+        },
+        "multi_prototype": {
+          "rank": 44,
+          "nearest_expected_source": "0070/0070+150.jpg",
+          "nearest_expected_distance": 9375,
+          "top_ids": [
+            "DB1404_0331",
+            "DB1404_0330",
+            "DB1404_1397",
+            "DB1404_0124",
+            "DB1404_0834"
+          ],
+          "elapsed_ms": 701.359
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 44,
+          "nearest_expected_source": "0070/0070+150.jpg",
+          "nearest_expected_distance": 9375,
+          "top_ids": [
+            "DB1404_0331",
+            "DB1404_0330",
+            "DB1404_1397",
+            "DB1404_0124",
+            "DB1404_0834"
+          ],
+          "elapsed_ms": 624.768
+        }
+      }
+    },
+    {
+      "name": "石",
+      "file": "石.jpg",
+      "sha256": "ae57f2f8c208a13db6fe4f65c560967dfab9ecf288e418782b5d130f092ffd56",
+      "expected_ids": [
+        "DB1404_0030"
+      ],
+      "query_size": [
+        512,
+        419
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 139,
+          "nearest_expected_source": "0030/0030+260.jpg",
+          "nearest_expected_distance": 12900,
+          "top_ids": [
+            "DB1404_1298",
+            "DB1404_0462",
+            "DB1404_0479",
+            "DB1404_0460",
+            "DB1404_1034"
+          ],
+          "elapsed_ms": 48.507
+        },
+        "primary_variant": {
+          "rank": 155,
+          "nearest_expected_source": "0030/0030+260.jpg",
+          "nearest_expected_distance": 12900,
+          "top_ids": [
+            "DB1404_1298",
+            "DB1404_0462",
+            "DB1404_0479",
+            "DB1404_0460",
+            "DB1404_1034"
+          ],
+          "elapsed_ms": 94.946
+        },
+        "multi_prototype": {
+          "rank": 8,
+          "nearest_expected_source": "0030/0030+309.jpg",
+          "nearest_expected_distance": 10716,
+          "top_ids": [
+            "DB1404_0946",
+            "DB1404_0202",
+            "DB1404_0131",
+            "DB1404_0460",
+            "DB1404_0523"
+          ],
+          "elapsed_ms": 665.417
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 8,
+          "nearest_expected_source": "0030/0030+309.jpg",
+          "nearest_expected_distance": 10716,
+          "top_ids": [
+            "DB1404_0946",
+            "DB1404_0202",
+            "DB1404_0131",
+            "DB1404_0460",
+            "DB1404_0523"
+          ],
+          "elapsed_ms": 761.47
+        }
+      }
+    },
+    {
+      "name": "立",
+      "file": "立.jpg",
+      "sha256": "1b9a5e603e09f9b31aee3e433b7949770dfc46a9c8cf32ef6e5f59b1a2898182",
+      "expected_ids": [
+        "DB1404_0052"
+      ],
+      "query_size": [
+        421,
+        512
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 6,
+          "nearest_expected_source": "0052/0052+240.jpg",
+          "nearest_expected_distance": 10284,
+          "top_ids": [
+            "DB1404_0765",
+            "DB1404_0691",
+            "DB1404_0654",
+            "DB1404_1170",
+            "DB1404_0370"
+          ],
+          "elapsed_ms": 102.706
+        },
+        "primary_variant": {
+          "rank": 6,
+          "nearest_expected_source": "0052/0052+240.jpg",
+          "nearest_expected_distance": 10284,
+          "top_ids": [
+            "DB1404_0765",
+            "DB1404_0691",
+            "DB1404_0654",
+            "DB1404_1170",
+            "DB1404_0370"
+          ],
+          "elapsed_ms": 187.982
+        },
+        "multi_prototype": {
+          "rank": 12,
+          "nearest_expected_source": "0052/0052+240.jpg",
+          "nearest_expected_distance": 10218,
+          "top_ids": [
+            "DB1404_0074",
+            "DB1404_0901",
+            "DB1404_0085",
+            "DB1404_0486",
+            "DB1404_0098"
+          ],
+          "elapsed_ms": 842.126
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 12,
+          "nearest_expected_source": "0052/0052+240.jpg",
+          "nearest_expected_distance": 10218,
+          "top_ids": [
+            "DB1404_0074",
+            "DB1404_0901",
+            "DB1404_0085",
+            "DB1404_0486",
+            "DB1404_0098"
+          ],
+          "elapsed_ms": 923.06
+        }
+      }
+    },
+    {
+      "name": "粗",
+      "file": "粗.jpg",
+      "sha256": "df416082c67238d08020d48cc5dd2d53f85b1c11a646f6aa54858a8cd5c3c287",
+      "expected_ids": [
+        "DB1404_0042",
+        "DB1404_1114"
+      ],
+      "query_size": [
+        336,
+        512
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 5,
+          "nearest_expected_source": "0042/0042+151.jpg",
+          "nearest_expected_distance": 5516,
+          "top_ids": [
+            "DB1404_1206",
+            "DB1404_1200",
+            "DB1404_0899",
+            "DB1404_0711",
+            "DB1404_0042"
+          ],
+          "elapsed_ms": 151.328
+        },
+        "primary_variant": {
+          "rank": 9,
+          "nearest_expected_source": "0042/0042+151.jpg",
+          "nearest_expected_distance": 5516,
+          "top_ids": [
+            "DB1404_1206",
+            "DB1404_1200",
+            "DB1404_0899",
+            "DB1404_1021",
+            "DB1404_1320"
+          ],
+          "elapsed_ms": 285.515
+        },
+        "multi_prototype": {
+          "rank": 26,
+          "nearest_expected_source": "0042/0042+58.jpg",
+          "nearest_expected_distance": 5960,
+          "top_ids": [
+            "DB1404_1216",
+            "DB1404_1206",
+            "DB1404_1021",
+            "DB1404_1180",
+            "DB1404_1039"
+          ],
+          "elapsed_ms": 1063.743
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 26,
+          "nearest_expected_source": "0042/0042+58.jpg",
+          "nearest_expected_distance": 5960,
+          "top_ids": [
+            "DB1404_1216",
+            "DB1404_1206",
+            "DB1404_1021",
+            "DB1404_1180",
+            "DB1404_1039"
+          ],
+          "elapsed_ms": 913.352
+        }
+      }
+    },
+    {
+      "name": "背",
+      "file": "背.jpg",
+      "sha256": "7a50f281ccd1a082807d6415d285952c871606f87f2cacc10b48ef0f7778d1b4",
+      "expected_ids": [
+        "DB1404_0064"
+      ],
+      "query_size": [
+        512,
+        492
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 1,
+          "nearest_expected_source": "0064/0064+354.jpg",
+          "nearest_expected_distance": 13611,
+          "top_ids": [
+            "DB1404_0064",
+            "DB1404_1158",
+            "DB1404_0034",
+            "DB1404_0881",
+            "DB1404_0801"
+          ],
+          "elapsed_ms": 173.842
+        },
+        "primary_variant": {
+          "rank": 1,
+          "nearest_expected_source": "0064/0064+354.jpg",
+          "nearest_expected_distance": 13611,
+          "top_ids": [
+            "DB1404_0064",
+            "DB1404_1158",
+            "DB1404_0034",
+            "DB1404_0881",
+            "DB1404_0801"
+          ],
+          "elapsed_ms": 229.795
+        },
+        "multi_prototype": {
+          "rank": 19,
+          "nearest_expected_source": "0064/0064+176.jpg",
+          "nearest_expected_distance": 13886,
+          "top_ids": [
+            "DB1404_0062",
+            "DB1404_0552",
+            "DB1404_1144",
+            "DB1404_0533",
+            "DB1404_0583"
+          ],
+          "elapsed_ms": 966.917
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 19,
+          "nearest_expected_source": "0064/0064+176.jpg",
+          "nearest_expected_distance": 13886,
+          "top_ids": [
+            "DB1404_0062",
+            "DB1404_0552",
+            "DB1404_1144",
+            "DB1404_0533",
+            "DB1404_0583"
+          ],
+          "elapsed_ms": 562.871
+        }
+      }
+    },
+    {
+      "name": "舞",
+      "file": "舞.jpg",
+      "sha256": "e806db811c006621311f7ceb9a08f90795df0c9f94e3b6dac8a8648f12550ba9",
+      "expected_ids": [
+        "DB1404_0061"
+      ],
+      "query_size": [
+        489,
+        512
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": null,
+          "nearest_expected_source": null,
+          "nearest_expected_distance": null,
+          "top_ids": [
+            "DB1404_0651",
+            "DB1404_0370",
+            "DB1404_0611",
+            "DB1404_1170",
+            "DB1404_0095"
+          ],
+          "elapsed_ms": 92.58
+        },
+        "primary_variant": {
+          "rank": null,
+          "nearest_expected_source": null,
+          "nearest_expected_distance": null,
+          "top_ids": [
+            "DB1404_0651",
+            "DB1404_0370",
+            "DB1404_0611",
+            "DB1404_1170",
+            "DB1404_0095"
+          ],
+          "elapsed_ms": 177.803
+        },
+        "multi_prototype": {
+          "rank": 452,
+          "nearest_expected_source": "0061/0061+5.jpg",
+          "nearest_expected_distance": 11690,
+          "top_ids": [
+            "DB1404_0646",
+            "DB1404_0076",
+            "DB1404_0095",
+            "DB1404_0601",
+            "DB1404_0072"
+          ],
+          "elapsed_ms": 867.385
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 452,
+          "nearest_expected_source": "0061/0061+5.jpg",
+          "nearest_expected_distance": 11690,
+          "top_ids": [
+            "DB1404_0646",
+            "DB1404_0076",
+            "DB1404_0095",
+            "DB1404_0601",
+            "DB1404_0072"
+          ],
+          "elapsed_ms": 711.74
+        }
+      }
+    },
+    {
+      "name": "草",
+      "file": "草.jpg",
+      "sha256": "863788e532cb7de2300982eed73784405bc316f28239b882ba8f9361fc1ec7a9",
+      "expected_ids": [
+        "DB1404_0039"
+      ],
+      "query_size": [
+        512,
+        512
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": null,
+          "nearest_expected_source": null,
+          "nearest_expected_distance": null,
+          "top_ids": [
+            "DB1404_0631",
+            "DB1404_1153",
+            "DB1404_0701",
+            "DB1404_0393",
+            "DB1404_0686"
+          ],
+          "elapsed_ms": 67.366
+        },
+        "primary_variant": {
+          "rank": null,
+          "nearest_expected_source": null,
+          "nearest_expected_distance": null,
+          "top_ids": [
+            "DB1404_1076",
+            "DB1404_0631",
+            "DB1404_1153",
+            "DB1404_0701",
+            "DB1404_0393"
+          ],
+          "elapsed_ms": 122.809
+        },
+        "multi_prototype": {
+          "rank": 1,
+          "nearest_expected_source": "0039/0039+16.jpg",
+          "nearest_expected_distance": 7112,
+          "top_ids": [
+            "DB1404_0039",
+            "DB1404_0686",
+            "DB1404_0631",
+            "DB1404_1387",
+            "DB1404_0395"
+          ],
+          "elapsed_ms": 756.932
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 1,
+          "nearest_expected_source": "0039/0039+16.jpg",
+          "nearest_expected_distance": 7112,
+          "top_ids": [
+            "DB1404_0039",
+            "DB1404_0686",
+            "DB1404_0631",
+            "DB1404_1387",
+            "DB1404_0395"
+          ],
+          "elapsed_ms": 857.274
+        }
+      }
+    },
+    {
+      "name": "菌",
+      "file": "菌.jpg",
+      "sha256": "b842619f1de0cce43b024427f2e839a646af3eaa2f0dd79eecd5236f924f6776",
+      "expected_ids": [
+        "DB1404_0045"
+      ],
+      "query_size": [
+        512,
+        479
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 270,
+          "nearest_expected_source": "0045/0045+594.jpg",
+          "nearest_expected_distance": 11190,
+          "top_ids": [
+            "DB1404_0274",
+            "DB1404_1168",
+            "DB1404_1211",
+            "DB1404_1277",
+            "DB1404_1006"
+          ],
+          "elapsed_ms": 90.955
+        },
+        "primary_variant": {
+          "rank": 294,
+          "nearest_expected_source": "0045/0045+594.jpg",
+          "nearest_expected_distance": 11190,
+          "top_ids": [
+            "DB1404_0274",
+            "DB1404_1168",
+            "DB1404_1211",
+            "DB1404_1277",
+            "DB1404_1006"
+          ],
+          "elapsed_ms": 116.607
+        },
+        "multi_prototype": {
+          "rank": 1,
+          "nearest_expected_source": "0045/0045+349.jpg",
+          "nearest_expected_distance": 9022,
+          "top_ids": [
+            "DB1404_0045",
+            "DB1404_0775",
+            "DB1404_0001",
+            "DB1404_0127",
+            "DB1404_0128"
+          ],
+          "elapsed_ms": 683.276
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 1,
+          "nearest_expected_source": "0045/0045+349.jpg",
+          "nearest_expected_distance": 9022,
+          "top_ids": [
+            "DB1404_0045",
+            "DB1404_0775",
+            "DB1404_0001",
+            "DB1404_0127",
+            "DB1404_0128"
+          ],
+          "elapsed_ms": 933.574
+        }
+      }
+    },
+    {
+      "name": "落",
+      "file": "落.jpg",
+      "sha256": "61a0b1427f6e1ce90c1773da630da7b148a19d88084d44713e86ed591342e3b1",
+      "expected_ids": [
+        "DB1404_0041"
+      ],
+      "query_size": [
+        512,
+        442
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 159,
+          "nearest_expected_source": "0041/0041+71.jpg",
+          "nearest_expected_distance": 12711,
+          "top_ids": [
+            "DB1404_1285",
+            "DB1404_1336",
+            "DB1404_0533",
+            "DB1404_0543",
+            "DB1404_0423"
+          ],
+          "elapsed_ms": 94.641
+        },
+        "primary_variant": {
+          "rank": 179,
+          "nearest_expected_source": "0041/0041+71.jpg",
+          "nearest_expected_distance": 12711,
+          "top_ids": [
+            "DB1404_1285",
+            "DB1404_1184",
+            "DB1404_1336",
+            "DB1404_0533",
+            "DB1404_0543"
+          ],
+          "elapsed_ms": 234.75
+        },
+        "multi_prototype": {
+          "rank": 1,
+          "nearest_expected_source": "0041/0041+203.jpg",
+          "nearest_expected_distance": 11050,
+          "top_ids": [
+            "DB1404_0041",
+            "DB1404_1261",
+            "DB1404_0034",
+            "DB1404_0533",
+            "DB1404_1144"
+          ],
+          "elapsed_ms": 827.265
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 1,
+          "nearest_expected_source": "0041/0041+203.jpg",
+          "nearest_expected_distance": 11050,
+          "top_ids": [
+            "DB1404_0041",
+            "DB1404_1261",
+            "DB1404_0034",
+            "DB1404_0533",
+            "DB1404_1144"
+          ],
+          "elapsed_ms": 1045.918
+        }
+      }
+    },
+    {
+      "name": "起",
+      "file": "起.jpg",
+      "sha256": "1b212674f764f9e565eccc3b4291d8654b04f9886ec1291fc4205705aef16889",
+      "expected_ids": [
+        "DB1404_0054"
+      ],
+      "query_size": [
+        512,
+        476
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 74,
+          "nearest_expected_source": "0054/0054+196.jpg",
+          "nearest_expected_distance": 10752,
+          "top_ids": [
+            "DB1404_0256",
+            "DB1404_0620",
+            "DB1404_0572",
+            "DB1404_0388",
+            "DB1404_0765"
+          ],
+          "elapsed_ms": 114.281
+        },
+        "primary_variant": {
+          "rank": 106,
+          "nearest_expected_source": "0054/0054+196.jpg",
+          "nearest_expected_distance": 10752,
+          "top_ids": [
+            "DB1404_0256",
+            "DB1404_0620",
+            "DB1404_0572",
+            "DB1404_0388",
+            "DB1404_0765"
+          ],
+          "elapsed_ms": 187.718
+        },
+        "multi_prototype": {
+          "rank": 3,
+          "nearest_expected_source": "0054/0054+393.jpg",
+          "nearest_expected_distance": 9276,
+          "top_ids": [
+            "DB1404_0088",
+            "DB1404_1005",
+            "DB1404_0054",
+            "DB1404_0256",
+            "DB1404_0262"
+          ],
+          "elapsed_ms": 758.932
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 3,
+          "nearest_expected_source": "0054/0054+393.jpg",
+          "nearest_expected_distance": 9276,
+          "top_ids": [
+            "DB1404_0088",
+            "DB1404_1005",
+            "DB1404_0054",
+            "DB1404_0256",
+            "DB1404_0262"
+          ],
+          "elapsed_ms": 902.366
+        }
+      }
+    },
+    {
+      "name": "跌",
+      "file": "跌.jpg",
+      "sha256": "4de1322e1bfae50f4921539304e0b294a61e837449424074db8f31203ef1c880",
+      "expected_ids": [
+        "DB1404_0057"
+      ],
+      "query_size": [
+        512,
+        447
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 282,
+          "nearest_expected_source": "0057/0057+17.jpg",
+          "nearest_expected_distance": 9615,
+          "top_ids": [
+            "DB1404_0863",
+            "DB1404_0750",
+            "DB1404_0474",
+            "DB1404_1076",
+            "DB1404_0447"
+          ],
+          "elapsed_ms": 131.335
+        },
+        "primary_variant": {
+          "rank": 297,
+          "nearest_expected_source": "0057/0057+17.jpg",
+          "nearest_expected_distance": 9615,
+          "top_ids": [
+            "DB1404_0863",
+            "DB1404_0750",
+            "DB1404_0474",
+            "DB1404_1076",
+            "DB1404_0447"
+          ],
+          "elapsed_ms": 203.203
+        },
+        "multi_prototype": {
+          "rank": 450,
+          "nearest_expected_source": "0057/0057+219.jpg",
+          "nearest_expected_distance": 9905,
+          "top_ids": [
+            "DB1404_1102",
+            "DB1404_1016",
+            "DB1404_0417",
+            "DB1404_0398",
+            "DB1404_1017"
+          ],
+          "elapsed_ms": 698.247
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 450,
+          "nearest_expected_source": "0057/0057+219.jpg",
+          "nearest_expected_distance": 9905,
+          "top_ids": [
+            "DB1404_1102",
+            "DB1404_1016",
+            "DB1404_0417",
+            "DB1404_0398",
+            "DB1404_1017"
+          ],
+          "elapsed_ms": 721.484
+        }
+      }
+    },
+    {
+      "name": "跪",
+      "file": "跪.jpg",
+      "sha256": "7306a79e7806fefc2b54b1d057f8c2c2bf0970088c8cb0e8ffaa98c4af210ff1",
+      "expected_ids": [
+        "DB1404_0055"
+      ],
+      "query_size": [
+        403,
+        512
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 93,
+          "nearest_expected_source": "0055/0055+158.jpg",
+          "nearest_expected_distance": 10782,
+          "top_ids": [
+            "DB1404_1200",
+            "DB1404_1180",
+            "DB1404_0659",
+            "DB1404_0042",
+            "DB1404_0275"
+          ],
+          "elapsed_ms": 80.575
+        },
+        "primary_variant": {
+          "rank": 127,
+          "nearest_expected_source": "0055/0055+158.jpg",
+          "nearest_expected_distance": 10782,
+          "top_ids": [
+            "DB1404_1060",
+            "DB1404_1200",
+            "DB1404_1180",
+            "DB1404_1264",
+            "DB1404_0659"
+          ],
+          "elapsed_ms": 131.78
+        },
+        "multi_prototype": {
+          "rank": 5,
+          "nearest_expected_source": "0055/0055+22.jpg",
+          "nearest_expected_distance": 9169,
+          "top_ids": [
+            "DB1404_0916",
+            "DB1404_1366",
+            "DB1404_1085",
+            "DB1404_0042",
+            "DB1404_0055"
+          ],
+          "elapsed_ms": 758.71
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 5,
+          "nearest_expected_source": "0055/0055+22.jpg",
+          "nearest_expected_distance": 9169,
+          "top_ids": [
+            "DB1404_0916",
+            "DB1404_1366",
+            "DB1404_1085",
+            "DB1404_0042",
+            "DB1404_0055"
+          ],
+          "elapsed_ms": 726.989
+        }
+      }
+    },
+    {
+      "name": "躲",
+      "file": "躲.jpg",
+      "sha256": "eed82b2adfd4d8cf0cd0ceb0b77f3de1d8b72a23b612b8df5e98fc3d7cb1c315",
+      "expected_ids": [
+        "DB1404_0069"
+      ],
+      "query_size": [
+        512,
+        446
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 32,
+          "nearest_expected_source": "0069/0069+156.jpg",
+          "nearest_expected_distance": 9505,
+          "top_ids": [
+            "DB1404_0460",
+            "DB1404_0479",
+            "DB1404_0419",
+            "DB1404_0484",
+            "DB1404_1034"
+          ],
+          "elapsed_ms": 78.793
+        },
+        "primary_variant": {
+          "rank": 32,
+          "nearest_expected_source": "0069/0069+156.jpg",
+          "nearest_expected_distance": 9505,
+          "top_ids": [
+            "DB1404_0460",
+            "DB1404_0479",
+            "DB1404_0419",
+            "DB1404_0484",
+            "DB1404_1034"
+          ],
+          "elapsed_ms": 218.887
+        },
+        "multi_prototype": {
+          "rank": null,
+          "nearest_expected_source": null,
+          "nearest_expected_distance": null,
+          "top_ids": [
+            "DB1404_0457",
+            "DB1404_0180",
+            "DB1404_0492",
+            "DB1404_0373",
+            "DB1404_0460"
+          ],
+          "elapsed_ms": 771.237
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": null,
+          "nearest_expected_source": null,
+          "nearest_expected_distance": null,
+          "top_ids": [
+            "DB1404_0457",
+            "DB1404_0180",
+            "DB1404_0492",
+            "DB1404_0373",
+            "DB1404_0460"
+          ],
+          "elapsed_ms": 690.207
+        }
+      }
+    },
+    {
+      "name": "雨",
+      "file": "雨.jpg",
+      "sha256": "b796c36781bd2db11e6260bf67f0b796e2ba1cde7ea5c4a4aed259384f68c5fd",
+      "expected_ids": [
+        "DB1404_0006"
+      ],
+      "query_size": [
+        512,
+        274
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": null,
+          "nearest_expected_source": null,
+          "nearest_expected_distance": null,
+          "top_ids": [
+            "DB1404_0870",
+            "DB1404_1288",
+            "DB1404_1153",
+            "DB1404_0267",
+            "DB1404_0511"
+          ],
+          "elapsed_ms": 77.551
+        },
+        "primary_variant": {
+          "rank": 212,
+          "nearest_expected_source": "0006/0006+207.jpg",
+          "nearest_expected_distance": 11583,
+          "top_ids": [
+            "DB1404_0870",
+            "DB1404_1047",
+            "DB1404_1288",
+            "DB1404_0852",
+            "DB1404_0905"
+          ],
+          "elapsed_ms": 132.559
+        },
+        "multi_prototype": {
+          "rank": 238,
+          "nearest_expected_source": "0006/0006+308.jpg",
+          "nearest_expected_distance": 11550,
+          "top_ids": [
+            "DB1404_0344",
+            "DB1404_0396",
+            "DB1404_1274",
+            "DB1404_1047",
+            "DB1404_0794"
+          ],
+          "elapsed_ms": 685.855
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 238,
+          "nearest_expected_source": "0006/0006+308.jpg",
+          "nearest_expected_distance": 11550,
+          "top_ids": [
+            "DB1404_0344",
+            "DB1404_0396",
+            "DB1404_1274",
+            "DB1404_1047",
+            "DB1404_0794"
+          ],
+          "elapsed_ms": 773.93
+        }
+      }
+    },
+    {
+      "name": "雪",
+      "file": "雪.jpg",
+      "sha256": "d2142dadae10a273d612436961988179e6e29f87b1561e86d8b64babe16c71a0",
+      "expected_ids": [
+        "DB1404_0007"
+      ],
+      "query_size": [
+        512,
+        403
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 21,
+          "nearest_expected_source": "0007/0007+322.jpg",
+          "nearest_expected_distance": 5316,
+          "top_ids": [
+            "DB1404_0614",
+            "DB1404_0127",
+            "DB1404_1118",
+            "DB1404_0022",
+            "DB1404_0866"
+          ],
+          "elapsed_ms": 118.826
+        },
+        "primary_variant": {
+          "rank": 21,
+          "nearest_expected_source": "0007/0007+322.jpg",
+          "nearest_expected_distance": 5316,
+          "top_ids": [
+            "DB1404_0614",
+            "DB1404_0127",
+            "DB1404_1118",
+            "DB1404_0022",
+            "DB1404_0866"
+          ],
+          "elapsed_ms": 192.067
+        },
+        "multi_prototype": {
+          "rank": 56,
+          "nearest_expected_source": "0007/0007+260.jpg",
+          "nearest_expected_distance": 5657,
+          "top_ids": [
+            "DB1404_1226",
+            "DB1404_0128",
+            "DB1404_1132",
+            "DB1404_0851",
+            "DB1404_0942"
+          ],
+          "elapsed_ms": 597.366
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 56,
+          "nearest_expected_source": "0007/0007+260.jpg",
+          "nearest_expected_distance": 5657,
+          "top_ids": [
+            "DB1404_1226",
+            "DB1404_0128",
+            "DB1404_1132",
+            "DB1404_0851",
+            "DB1404_0942"
+          ],
+          "elapsed_ms": 742.724
+        }
+      }
+    },
+    {
+      "name": "靠",
+      "file": "靠.jpg",
+      "sha256": "b6987a639dd63b16e5123c34d51dcac2f9156e5dcbbd668b92a30505427eebb0",
+      "expected_ids": [
+        "DB1404_0073"
+      ],
+      "query_size": [
+        414,
+        512
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": null,
+          "nearest_expected_source": null,
+          "nearest_expected_distance": null,
+          "top_ids": [
+            "DB1404_0572",
+            "DB1404_0806",
+            "DB1404_0615",
+            "DB1404_0649",
+            "DB1404_0294"
+          ],
+          "elapsed_ms": 89.722
+        },
+        "primary_variant": {
+          "rank": null,
+          "nearest_expected_source": null,
+          "nearest_expected_distance": null,
+          "top_ids": [
+            "DB1404_0534",
+            "DB1404_1021",
+            "DB1404_0572",
+            "DB1404_0880",
+            "DB1404_1074"
+          ],
+          "elapsed_ms": 146.973
+        },
+        "multi_prototype": {
+          "rank": null,
+          "nearest_expected_source": null,
+          "nearest_expected_distance": null,
+          "top_ids": [
+            "DB1404_0643",
+            "DB1404_0959",
+            "DB1404_1033",
+            "DB1404_1021",
+            "DB1404_1089"
+          ],
+          "elapsed_ms": 534.16
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": null,
+          "nearest_expected_source": null,
+          "nearest_expected_distance": null,
+          "top_ids": [
+            "DB1404_0643",
+            "DB1404_0959",
+            "DB1404_1033",
+            "DB1404_1021",
+            "DB1404_1089"
+          ],
+          "elapsed_ms": 627.157
+        }
+      }
+    },
+    {
+      "name": "风",
+      "file": "风.jpg",
+      "sha256": "b065d389296b9835b4c6e25d8df20cfbfe21dfcd3e9210c8fa8d3e8852dd9e1b",
+      "expected_ids": [
+        "DB1404_0011"
+      ],
+      "query_size": [
+        512,
+        235
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 1,
+          "nearest_expected_source": "0011/0011+356.jpg",
+          "nearest_expected_distance": 3015,
+          "top_ids": [
+            "DB1404_0011",
+            "DB1404_0390",
+            "DB1404_0477",
+            "DB1404_0418",
+            "DB1404_1353"
+          ],
+          "elapsed_ms": 91.28
+        },
+        "primary_variant": {
+          "rank": 1,
+          "nearest_expected_source": "0011/0011+356.jpg",
+          "nearest_expected_distance": 3015,
+          "top_ids": [
+            "DB1404_0011",
+            "DB1404_1353",
+            "DB1404_0390",
+            "DB1404_0477",
+            "DB1404_0418"
+          ],
+          "elapsed_ms": 141.248
+        },
+        "multi_prototype": {
+          "rank": 46,
+          "nearest_expected_source": "0011/0011+230.jpg",
+          "nearest_expected_distance": 5894,
+          "top_ids": [
+            "DB1404_1218",
+            "DB1404_0008",
+            "DB1404_0298",
+            "DB1404_0477",
+            "DB1404_1353"
+          ],
+          "elapsed_ms": 644.409
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 46,
+          "nearest_expected_source": "0011/0011+230.jpg",
+          "nearest_expected_distance": 5894,
+          "top_ids": [
+            "DB1404_1218",
+            "DB1404_0008",
+            "DB1404_0298",
+            "DB1404_0477",
+            "DB1404_1353"
+          ],
+          "elapsed_ms": 550.726
+        }
+      }
+    },
+    {
+      "name": "鬼",
+      "file": "鬼.jpg",
+      "sha256": "5151d257e1758e15d10155257bbd77da0850f02bc1bfac79ea250b7e3e8bac6f",
+      "expected_ids": [
+        "DB1404_0068"
+      ],
+      "query_size": [
+        470,
+        512
+      ],
+      "exact_source_matches": [],
+      "same_feature_source_count": 0,
+      "same_feature_sources_first_20": [],
+      "methods": {
+        "primary": {
+          "rank": 122,
+          "nearest_expected_source": "0068/0068+231.jpg",
+          "nearest_expected_distance": 8400,
+          "top_ids": [
+            "DB1404_1366",
+            "DB1404_0649",
+            "DB1404_0899",
+            "DB1404_0813",
+            "DB1404_0572"
+          ],
+          "elapsed_ms": 111.415
+        },
+        "primary_variant": {
+          "rank": 155,
+          "nearest_expected_source": "0068/0068+231.jpg",
+          "nearest_expected_distance": 8400,
+          "top_ids": [
+            "DB1404_1366",
+            "DB1404_0649",
+            "DB1404_0899",
+            "DB1404_0813",
+            "DB1404_0572"
+          ],
+          "elapsed_ms": 127.817
+        },
+        "multi_prototype": {
+          "rank": 12,
+          "nearest_expected_source": "0068/0068+131.jpg",
+          "nearest_expected_distance": 6767,
+          "top_ids": [
+            "DB1404_0854",
+            "DB1404_0601",
+            "DB1404_1010",
+            "DB1404_0691",
+            "DB1404_0098"
+          ],
+          "elapsed_ms": 746.08
+        },
+        "multi_prototype_leave_exact_out": {
+          "rank": 12,
+          "nearest_expected_source": "0068/0068+131.jpg",
+          "nearest_expected_distance": 6767,
+          "top_ids": [
+            "DB1404_0854",
+            "DB1404_0601",
+            "DB1404_1010",
+            "DB1404_0691",
+            "DB1404_0098"
+          ],
+          "elapsed_ms": 591.592
+        }
+      }
+    }
+  ]
+}

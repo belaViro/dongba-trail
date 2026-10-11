@@ -1,6 +1,7 @@
 import asyncio
 import logging
 from contextlib import asynccontextmanager, suppress
+from math import ceil
 from time import perf_counter
 from typing import Annotated, Literal
 from uuid import uuid4
@@ -20,6 +21,7 @@ from backend.app.dictionary import CharacterDictionary
 from backend.app.errors import ApiError
 from backend.app.guards import RequestGuards
 from backend.app.provider_factory import create_provider
+from backend.app.provider_status import ProviderStatus, describe_provider, provider_model
 from backend.app.providers import RecognitionProvider
 from backend.app.recognition import assess_image_quality, recognize, validate_image
 from backend.app.schemas import (
@@ -148,9 +150,11 @@ def create_app(
     )
     async def ready(response: Response) -> ReadinessResponse:
         reasons = []
+        provider_configured = False
         try:
             provider_now, _ = await run_in_threadpool(current_provider)
-            if not provider_now.configured:
+            provider_configured = await run_in_threadpool(lambda: provider_now.configured)
+            if not provider_configured:
                 reasons.append("PROVIDER_NOT_CONFIGURED")
         except ApiError:
             provider_now = recognition_provider
@@ -168,8 +172,7 @@ def create_app(
             response.status_code = HTTP_503_SERVICE_UNAVAILABLE
         return ReadinessResponse(
             status="not_ready" if reasons else "ready",
-            provider_configured=provider_now.configured
-            and "PROVIDER_CONFIG_UNAVAILABLE" not in reasons,
+            provider_configured=provider_configured,
             published_characters=count,
             reasons=reasons,
         )
@@ -226,6 +229,7 @@ def create_app(
         from backend.app.system_config import (
             IMAGE_FIELDS,
             ImageModelsInput,
+            SystemConfigPublic,
             SystemConfigUpdate,
             image_effective,
             public_config,
@@ -250,12 +254,20 @@ def create_app(
                     "default_zoom": data.get("map_default_zoom", 12),
                 }
 
-        @application.get("/api/v1/admin/system-config", tags=["System configuration"])
+        @application.get(
+            "/api/v1/admin/system-config",
+            tags=["System configuration"],
+            response_model=SystemConfigPublic,
+        )
         def get_system_config(user=Depends(require_admin)):
             with application.state.database.session() as session:
                 return public_config(session, configuration)
 
-        @application.put("/api/v1/admin/system-config", tags=["System configuration"])
+        @application.put(
+            "/api/v1/admin/system-config",
+            tags=["System configuration"],
+            response_model=SystemConfigPublic,
+        )
         def save_system_config(payload: SystemConfigUpdate, user=Depends(require_admin)):
             with application.state.database.write() as session:
                 result = update(session, configuration, payload)
@@ -314,28 +326,30 @@ def create_app(
                 raise ApiError(422, "IMAGE_PROVIDER_KEY_REQUIRED", "Enter a key for a new endpoint")
             return {"items": await available_models(payload.endpoint, key)}
 
-        @application.get("/api/v1/admin/provider", tags=["Model operations"])
+        @application.get(
+            "/api/v1/admin/provider", tags=["Model operations"], response_model=ProviderStatus
+        )
         def provider_status(user=Depends(require_operations)):
             provider_now, active_settings = current_provider()
+            service = describe_provider(provider_now, active_settings)
             with application.state.database.session() as session:
                 rows = session.scalars(
                     select(RecognitionRecord)
-                    .order_by(RecognitionRecord.created_at.desc())
+                    .where(
+                        RecognitionRecord.provider == service.name,
+                        RecognitionRecord.model == service.model,
+                    )
+                    .order_by(
+                        RecognitionRecord.created_at.desc(), RecognitionRecord.request_id.desc()
+                    )
                     .limit(1000)
                 ).all()
                 latencies = sorted(row.latency_ms for row in rows if not row.error_code)
             return {
-                "configured": provider_now.configured,
-                "name": provider_now.name,
-                "model": active_settings.provider_model,
-                "endpoint_configured": bool(active_settings.provider_endpoint),
-                "timeout_seconds": active_settings.provider_timeout_seconds,
+                **service.model_dump(),
                 "recent_requests": len(rows),
                 "recent_errors": sum(bool(row.error_code) for row in rows),
-                "p95_latency_ms": latencies[min(len(latencies) - 1, int(len(latencies) * 0.95))]
-                if latencies
-                else None,
-                "calibrated_confidence": False,
+                "p95_latency_ms": latencies[ceil(len(latencies) * 0.95) - 1] if latencies else None,
             }
 
     @application.post(
@@ -401,7 +415,7 @@ def create_app(
                     user_id=user.id,
                     status="FAILED",
                     provider=provider_now.name,
-                    model=active_settings.provider_model,
+                    model=provider_model(provider_now, active_settings),
                     candidates=[],
                     observed_text="",
                     rag_hits=[],

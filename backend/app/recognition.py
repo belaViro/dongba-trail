@@ -73,7 +73,7 @@ async def recognize(
     rag_database=None,
     business_database=None,
 ) -> RecognitionResponse:
-    if not provider.configured:
+    if not await run_in_threadpool(lambda: provider.configured):
         raise ApiError(503, "PROVIDER_NOT_CONFIGURED", "Recognition provider is not configured")
     characters = dictionary.published()
     if not characters:
@@ -84,7 +84,11 @@ async def recognize(
     if getattr(provider, "uses_reference_images", True):
         try:
             references = await run_in_threadpool(
-                load_references, characters, settings.media_directory
+                load_references,
+                characters,
+                settings.media_directory,
+                query=image,
+                prototype_directory=settings.glyph_prototype_directory,
             )
         except Exception as exc:
             # Reference loading is an accuracy aid; a broken asset must not

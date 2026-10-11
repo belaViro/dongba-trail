@@ -2089,6 +2089,134 @@
         "title": "ProductInputPatch",
         "type": "object"
       },
+      "ProviderStatus": {
+        "properties": {
+          "automatic_fallback": {
+            "const": false,
+            "default": false,
+            "title": "Automatic Fallback",
+            "type": "boolean"
+          },
+          "calibrated_confidence": {
+            "const": false,
+            "default": false,
+            "title": "Calibrated Confidence",
+            "type": "boolean"
+          },
+          "configured": {
+            "title": "Configured",
+            "type": "boolean"
+          },
+          "cpu_threads": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cpu Threads"
+          },
+          "endpoint_configured": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Endpoint Configured"
+          },
+          "kind": {
+            "enum": [
+              "local",
+              "external",
+              "unconfigured"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "model": {
+            "title": "Model",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "p95_latency_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "P95 Latency Ms"
+          },
+          "recent_errors": {
+            "title": "Recent Errors",
+            "type": "integer"
+          },
+          "recent_requests": {
+            "title": "Recent Requests",
+            "type": "integer"
+          },
+          "statistics_limit": {
+            "const": 1000,
+            "default": 1000,
+            "title": "Statistics Limit",
+            "type": "integer"
+          },
+          "statistics_scope": {
+            "const": "current_provider_and_model",
+            "default": "current_provider_and_model",
+            "title": "Statistics Scope",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "ready",
+              "configured",
+              "unavailable",
+              "unconfigured"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "status_message": {
+            "title": "Status Message",
+            "type": "string"
+          },
+          "timeout_seconds": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Timeout Seconds"
+          }
+        },
+        "required": [
+          "name",
+          "model",
+          "kind",
+          "configured",
+          "status",
+          "status_message",
+          "recent_requests",
+          "recent_errors",
+          "p95_latency_ms"
+        ],
+        "title": "ProviderStatus",
+        "type": "object"
+      },
       "QuestInput": {
         "additionalProperties": false,
         "properties": {
@@ -2539,6 +2667,100 @@
         "title": "RecognitionResponse",
         "type": "object"
       },
+      "RecognitionServiceStatus": {
+        "properties": {
+          "automatic_fallback": {
+            "const": false,
+            "default": false,
+            "title": "Automatic Fallback",
+            "type": "boolean"
+          },
+          "calibrated_confidence": {
+            "const": false,
+            "default": false,
+            "title": "Calibrated Confidence",
+            "type": "boolean"
+          },
+          "configured": {
+            "title": "Configured",
+            "type": "boolean"
+          },
+          "cpu_threads": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cpu Threads"
+          },
+          "endpoint_configured": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Endpoint Configured"
+          },
+          "kind": {
+            "enum": [
+              "local",
+              "external",
+              "unconfigured"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "model": {
+            "title": "Model",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "ready",
+              "configured",
+              "unavailable",
+              "unconfigured"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "status_message": {
+            "title": "Status Message",
+            "type": "string"
+          },
+          "timeout_seconds": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Timeout Seconds"
+          }
+        },
+        "required": [
+          "name",
+          "model",
+          "kind",
+          "configured",
+          "status",
+          "status_message"
+        ],
+        "title": "RecognitionServiceStatus",
+        "type": "object"
+      },
       "Review": {
         "additionalProperties": false,
         "properties": {
@@ -2813,6 +3035,113 @@
           "display_name"
         ],
         "title": "Setup",
+        "type": "object"
+      },
+      "SystemConfigPublic": {
+        "properties": {
+          "image_provider_api_key_configured": {
+            "title": "Image Provider Api Key Configured",
+            "type": "boolean"
+          },
+          "image_provider_endpoint": {
+            "title": "Image Provider Endpoint",
+            "type": "string"
+          },
+          "image_provider_model": {
+            "title": "Image Provider Model",
+            "type": "string"
+          },
+          "image_provider_name": {
+            "title": "Image Provider Name",
+            "type": "string"
+          },
+          "image_provider_quality": {
+            "title": "Image Provider Quality",
+            "type": "string"
+          },
+          "image_provider_size": {
+            "title": "Image Provider Size",
+            "type": "string"
+          },
+          "image_provider_timeout_seconds": {
+            "title": "Image Provider Timeout Seconds",
+            "type": "number"
+          },
+          "key_editable": {
+            "title": "Key Editable",
+            "type": "boolean"
+          },
+          "local_model_threads": {
+            "title": "Local Model Threads",
+            "type": "integer"
+          },
+          "local_model_version": {
+            "title": "Local Model Version",
+            "type": "string"
+          },
+          "map_center_latitude": {
+            "title": "Map Center Latitude",
+            "type": "number"
+          },
+          "map_center_longitude": {
+            "title": "Map Center Longitude",
+            "type": "number"
+          },
+          "map_default_zoom": {
+            "title": "Map Default Zoom",
+            "type": "integer"
+          },
+          "map_web_key": {
+            "title": "Map Web Key",
+            "type": "string"
+          },
+          "provider_api_key_configured": {
+            "title": "Provider Api Key Configured",
+            "type": "boolean"
+          },
+          "provider_endpoint": {
+            "title": "Provider Endpoint",
+            "type": "string"
+          },
+          "provider_model": {
+            "title": "Provider Model",
+            "type": "string"
+          },
+          "provider_name": {
+            "title": "Provider Name",
+            "type": "string"
+          },
+          "provider_timeout_seconds": {
+            "title": "Provider Timeout Seconds",
+            "type": "number"
+          },
+          "recognition_service": {
+            "$ref": "#/components/schemas/RecognitionServiceStatus"
+          }
+        },
+        "required": [
+          "provider_name",
+          "provider_endpoint",
+          "provider_model",
+          "provider_timeout_seconds",
+          "provider_api_key_configured",
+          "local_model_version",
+          "local_model_threads",
+          "recognition_service",
+          "image_provider_name",
+          "image_provider_endpoint",
+          "image_provider_model",
+          "image_provider_timeout_seconds",
+          "image_provider_size",
+          "image_provider_quality",
+          "image_provider_api_key_configured",
+          "key_editable",
+          "map_web_key",
+          "map_center_longitude",
+          "map_center_latitude",
+          "map_default_zoom"
+        ],
+        "title": "SystemConfigPublic",
         "type": "object"
       },
       "SystemConfigUpdate": {
@@ -5128,7 +5457,9 @@
           "200": {
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/ProviderStatus"
+                }
               }
             },
             "description": "Successful Response"
@@ -6626,7 +6957,9 @@
           "200": {
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/SystemConfigPublic"
+                }
               }
             },
             "description": "Successful Response"
@@ -6653,7 +6986,9 @@
           "200": {
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/SystemConfigPublic"
+                }
               }
             },
             "description": "Successful Response"

@@ -8,6 +8,13 @@ import StatusTag from '../components/StatusTag.vue'
 import ExportButton from '../components/ExportButton.vue'
 import { session } from '../session'
 import { recordSampleLink, sampleRecordLink } from '../samples'
+import {
+  providerLabel,
+  recognitionStatus,
+  serviceStatusLabel,
+  serviceStatusType,
+  type ProviderStatus,
+} from '../recognition-status'
 const props = defineProps<{ resource: string }>()
 const route = useRoute()
 const router = useRouter()
@@ -95,7 +102,18 @@ const labels: Record<string, string> = {
 }
 const items = ref<Row[]>([])
 const total = ref(0)
-const provider = ref<Row | null>(null)
+const provider = ref<Partial<ProviderStatus> | null>(null)
+const service = computed(() => (provider.value ? recognitionStatus(provider.value) : null))
+const statisticsScoped = computed(
+  () =>
+    provider.value?.statistics_scope === 'current_provider_and_model' &&
+    provider.value.statistics_limit === 1000,
+)
+function metric(value: number | null | undefined, unit: string): string {
+  return statisticsScoped.value && typeof value === 'number' && Number.isFinite(value) && value >= 0
+    ? `${value} ${unit}`
+    : '暂无数据'
+}
 const loading = ref(false)
 const error = ref('')
 const filter = reactive({ q: '', status: '', page: 1, limit: 20 })
@@ -129,7 +147,7 @@ async function load() {
   error.value = ''
   try {
     if (props.resource === 'provider') {
-      const result = await api(endpoint.value)
+      const result = await api<Partial<ProviderStatus>>(endpoint.value)
       if (current === generation) provider.value = result
     } else {
       const data = await api<Collection>(
@@ -143,6 +161,7 @@ async function load() {
     if (current === generation) {
       items.value = []
       total.value = 0
+      provider.value = null
       error.value = errorText(e)
     }
   } finally {
@@ -218,26 +237,66 @@ onUnmounted(() => {
   </div>
   <el-alert v-if="error" :title="error" type="error" :closable="false" show-icon class="page-alert" />
   <section v-if="resource === 'provider'" v-loading="loading" class="settings-section">
-    <template v-if="provider">
+    <template v-if="provider && service">
       <div class="section-heading">
         <h2>服务状态</h2>
-        <el-tag :type="provider.configured ? 'success' : 'warning'">
-          {{ provider.configured ? '已配置' : '尚未配置' }}
+        <el-tag :type="serviceStatusType(service.status)">
+          {{ serviceStatusLabel(service.status) }}
         </el-tag>
       </div>
       <el-alert
-        v-if="!provider.configured"
-        title="识别服务尚未配置，当前无法提供识别结果。"
-        type="warning"
+        :title="service.status_message"
+        :type="serviceStatusType(service.status)"
         :closable="false"
         show-icon
         class="page-alert"
       />
       <el-descriptions :column="1" border>
-        <el-descriptions-item v-for="(value, key) in provider" :key="key" :label="labels[key] || key">
-          <span class="detail-text">{{ display(value) }}</span>
+        <el-descriptions-item label="当前提供方">{{ providerLabel(service.name) }}</el-descriptions-item>
+        <el-descriptions-item label="服务类型">
+          {{
+            service.kind === 'local'
+              ? '本地 CPU 推理'
+              : service.kind === 'external'
+                ? '外部 API 服务'
+                : '未启用'
+          }}
+        </el-descriptions-item>
+        <el-descriptions-item label="当前模型版本">
+          {{ service.kind === 'unconfigured' ? '未启用' : service.model || '暂未提供' }}
+        </el-descriptions-item>
+        <el-descriptions-item v-if="service.kind === 'external'" label="接口地址配置">
+          {{
+            service.endpoint_configured === null
+              ? '暂未提供'
+              : service.endpoint_configured
+                ? '已配置'
+                : '未配置'
+          }}
+        </el-descriptions-item>
+        <el-descriptions-item v-if="service.kind !== 'unconfigured'" label="识别超时">
+          {{ service.timeout_seconds === null ? '暂未提供' : `${service.timeout_seconds} 秒` }}
+        </el-descriptions-item>
+        <el-descriptions-item v-if="service.kind === 'local'" label="CPU 线程数">
+          {{ service.cpu_threads ?? '暂未提供' }}
+        </el-descriptions-item>
+        <el-descriptions-item label="自动付费兜底">不启用；仅支持手动切换并保存提供方</el-descriptions-item>
+        <el-descriptions-item label="候选分数">未校准，仅供参考，不代表准确率</el-descriptions-item>
+        <el-descriptions-item label="最近请求数">
+          {{ metric(provider.recent_requests, '次') }}
+        </el-descriptions-item>
+        <el-descriptions-item label="最近失败数">
+          {{ metric(provider.recent_errors, '次') }}
+        </el-descriptions-item>
+        <el-descriptions-item label="成功请求 P95 耗时">
+          {{ metric(provider.p95_latency_ms, '毫秒') }}
         </el-descriptions-item>
       </el-descriptions>
+      <p>统计范围：仅当前提供方、当前模型的最近最多 1000 条请求；P95 仅统计成功请求。</p>
+      <p v-if="!statisticsScoped">暂未提供此统计口径的数据，不展示口径不明的旧统计。</p>
+      <p v-if="service.kind === 'local'">本地模型“已加载”仅证明加载成功，不代表识别准确率。</p>
+      <p v-else-if="service.kind === 'external'">外部服务“已配置”仅表示配置完整，未探测连接。</p>
+      <p>刷新仅读取状态和统计，不调用付费识别 API；无自动付费兜底。候选仍需用户确认。</p>
     </template>
     <el-empty v-else-if="!loading" description="服务状态不可用" />
   </section>

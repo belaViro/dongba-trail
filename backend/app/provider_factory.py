@@ -16,6 +16,15 @@ def create_provider(settings: Settings) -> RecognitionProvider:
     encrypted runtime overrides are stored separately. Secrets are never exposed.
     """
     provider_name = settings.provider_name.casefold().strip()
+    if provider_name in {"local", "db1404-local"}:
+        from backend.app.local_glyph_provider import LocalGlyphProvider
+
+        return LocalGlyphProvider(
+            artifact_path=settings.local_model_path,
+            expected_sha256=settings.local_model_sha256,
+            model_version=settings.local_model_version,
+            threads=settings.local_model_threads,
+        )
     if provider_name in {"ark", "volcengine", "volcengine-ark"}:
         return VolcengineArkProvider(
             endpoint=settings.provider_endpoint or DEFAULT_ENDPOINT,
